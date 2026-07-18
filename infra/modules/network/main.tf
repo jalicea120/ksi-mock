@@ -27,6 +27,24 @@ resource "azurerm_subnet" "private_endpoints" {
   private_endpoint_network_policies = "Disabled"
 }
 
+# Dedicated, delegated subnet for the Container Apps environment. Azure requires
+# the subnet be delegated to Microsoft.App/environments; Container Apps manages
+# its own networking, so no default-deny NSG is attached here.
+resource "azurerm_subnet" "container_apps" {
+  name                 = "container-apps"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = [cidrsubnet(var.vnet_address_space[0], 8, 3)]
+
+  delegation {
+    name = "aca"
+    service_delegation {
+      name    = "Microsoft.App/environments"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
+
 # Default-deny inbound on the workload subnet. Azure's implicit rules already
 # deny arbitrary inbound, but an explicit lowest-priority deny makes the posture
 # assertable (KSI-CNA-RNT) rather than implicit.
