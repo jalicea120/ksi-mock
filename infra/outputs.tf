@@ -32,3 +32,8 @@ output "fedramp_high_assignment_id" {
   description = "FedRAMP High (audit-only) policy assignment id."
   value       = module.governance.fedramp_high_assignment_id
 }
+
+output "container_app_name" {
+  description = "Name of the mock container app."
+  value       = module.compute.container_app_name
+}

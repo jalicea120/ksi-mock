@@ -104,6 +104,18 @@ module "governance" {
   location          = azurerm_resource_group.main.location
 }
 
+module "compute" {
+  source = "./modules/compute"
+
+  name_prefix                = var.name_prefix
+  resource_group_name        = azurerm_resource_group.main.name
+  location                   = azurerm_resource_group.main.location
+  log_analytics_workspace_id = module.logging.workspace_id
+  container_apps_subnet_id   = module.network.container_apps_subnet_id
+  workload_identity_id       = module.identity.workload_identity_id
+  tags                       = local.tags
+}
+
 # Posture (Microsoft Defender for Cloud) is intentionally NOT managed in this
 # pipeline. Defender plans are subscription-scoped; keeping them out of this
 # RG-scoped deploy avoids granting the CI principal subscription-wide Security

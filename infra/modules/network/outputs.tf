@@ -9,3 +9,7 @@ output "workload_subnet_id" {
 output "private_endpoint_subnet_id" {
   value = azurerm_subnet.private_endpoints.id
 }
+
+output "container_apps_subnet_id" {
+  value = azurerm_subnet.container_apps.id
+}
