@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "name": "ksi-mock",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "editor.formatOnSave": true,
+    "files.associations": {
+      "*.tfvars.example": "terraform"
+    },
+    "[terraform]": {
+      "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[terraform-vars]": {
+      "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "python.analysis.extraPaths": [
+      "engine"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "hashicorp.terraform",
+      "github.vscode-github-actions",
+      "github.vscode-pull-request-github",
+      "ms-vscode.azurecli",
+      "ms-python.python",
+      "charliermarsh.ruff"
+    ]
+  }
+}
