@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "hashicorp.terraform",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github",
+    "ms-vscode.azurecli",
+    "ms-python.python",
+    "charliermarsh.ruff"
+  ]
+}

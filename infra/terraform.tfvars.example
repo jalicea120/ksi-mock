@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars and adjust. terraform.tfvars is gitignored (may hold sensitive values).
+location            = "usgovvirginia"
+name_prefix         = "ksimock"
+resource_group_name = "ksi-mock-rg"
+
+tags = {
+  App         = "ksi-mock"
+  Environment = "dev"
+  GBU         = "internal"
+  ITSM        = "none"
+  JobWBS      = "learning"
+  Owner       = "you@example.us"
+}

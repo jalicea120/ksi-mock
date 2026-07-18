@@ -1,0 +1,14 @@
+out/sdr/*
+.env
+*.env
+__pycache__/
+*.pyc
+.venv/
+.terraform/
+*.tfstate*
+terraform.tfvars        # may hold sensitive values; commit terraform.tfvars.example instead
+crash.log
+# NOTE: do NOT ignore .terraform.lock.hcl - commit it (provider version lock)
+
+# keep tracked placeholder dirs
+!out/sdr/.gitkeep

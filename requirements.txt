@@ -1,0 +1,7 @@
+pyyaml
+jsonschema
+ruff
+azure-identity
+azure-mgmt-resourcegraph
+msgraph-sdk
+requests

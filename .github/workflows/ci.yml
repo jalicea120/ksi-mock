@@ -1,0 +1,36 @@
+name: ci
+on:
+  pull_request:
+    branches: [ main ]
+permissions:
+  contents: read
+  id-token: write        # required for OIDC to Azure (Terraform + backend)
+env:                     # azurerm reads these; OIDC token comes from id-token: write
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_USE_OIDC: "true"
+  ARM_ENVIRONMENT: "usgovernment"
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+      - name: Lint (python)
+        run: ruff check .
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform fmt + validate
+        working-directory: infra
+        run: |
+          terraform fmt -check -recursive
+          terraform init -input=false
+          terraform validate
+      - name: Terraform plan (preview, no apply)
+        working-directory: infra
+        run: terraform plan -input=false -no-color
+      - name: SDR schema check + engine dry-run
+        run: python engine/assert.py --dry-run

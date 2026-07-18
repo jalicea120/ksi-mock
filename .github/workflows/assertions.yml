@@ -1,0 +1,32 @@
+name: assertions
+on:
+  schedule:
+    - cron: '0 12 * * *'   # daily 12:00 UTC
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+  issues: write            # to auto-file drift issues
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          environment: AzureUSGovernment
+      - name: Run collectors + compute assertions
+        run: python engine/assert.py --out out/sdr
+      - name: Upload SDR evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdr-${{ github.run_id }}
+          path: out/sdr/
+      # optional: diff vs previous run, then `gh issue create` on any Auto-indicator regression

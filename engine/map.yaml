@@ -1,0 +1,500 @@
+# KSI -> collector -> pass-criteria map
+# Source of truth: FedRAMP Consolidated Rules v2026.07.06.01 (provisional preview).
+# mode: Auto (31) | Hybrid (10) | Manual (5)   ->   46 indicators total
+# Class-varying indicators use the baseline (Class C) statement.
+#
+# Each indicator:
+#   id / name / family / mode
+#   collectors: list of { tool, ref }   (tool: arg | graph | defender_policy | sentinel | github | manual)
+#   pass: condition the assertion engine checks
+#   evidence: path to the per-indicator evidence payload
+#   review_required: true for Manual (and set where a human must complete the call)
+
+version: "2026.07.06.01"
+
+indicators:
+
+  # === KSI-PIY - Policy and Inventory (5) ===
+  - id: KSI-PIY-GIV
+    name: Generating Inventories
+    family: KSI-PIY
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-piy-giv.kql }
+    pass: Real-time inventory of all information resources generated on demand from authoritative sources.
+    evidence: out/sdr/ksi-piy-giv.json
+    review_required: false
+
+  - id: KSI-PIY-RES
+    name: Reviewing Executive Support
+    family: KSI-PIY
+    mode: Manual
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-piy-res.md }
+    pass: Executive support for security goals persistently reviewed and demonstrated.
+    evidence: out/sdr/ksi-piy-res.json
+    review_required: true
+
+  - id: KSI-PIY-RIS
+    name: Reviewing Investments in Security
+    family: KSI-PIY
+    mode: Manual
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-piy-ris.md }
+    pass: Effectiveness of security investments persistently reviewed.
+    evidence: out/sdr/ksi-piy-ris.json
+    review_required: true
+
+  - id: KSI-PIY-RSD
+    name: Reviewing Security in the SDLC
+    family: KSI-PIY
+    mode: Hybrid
+    collectors:
+      - { tool: github, ref: collectors/github/ksi-piy-rsd.py }
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-piy-rsd.json }
+      - { tool: manual, ref: docs/manual/ksi-piy-rsd.md }
+    pass: Security/privacy built into the SDLC, aligned to CISA Secure by Design; persistently reviewed.
+    evidence: out/sdr/ksi-piy-rsd.json
+    review_required: true
+
+  - id: KSI-PIY-RVD
+    name: Reviewing Vulnerability Disclosures
+    family: KSI-PIY
+    mode: Manual
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-piy-rvd.md }
+    pass: Vulnerability disclosure program persistently reviewed for effectiveness.
+    evidence: out/sdr/ksi-piy-rvd.json
+    review_required: true
+
+  # === KSI-CNA - Cloud Native Architecture (8) ===
+  - id: KSI-CNA-DFP
+    name: Defining Functionality and Privileges
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-dfp.kql }
+    pass: Least-privilege custom roles and allowed-resource-type policies enforced; privileges explicitly scoped.
+    evidence: out/sdr/ksi-cna-dfp.json
+    review_required: false
+
+  - id: KSI-CNA-EIS
+    name: Enforcing Intended State
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-cna-eis.json }
+    pass: Automated assessment + enforcement of intended state; drift auto-remediated (Class C required; Class B optional).
+    evidence: out/sdr/ksi-cna-eis.json
+    review_required: false
+
+  - id: KSI-CNA-IBP
+    name: Implementing Best Practices
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-cna-ibp.json }
+    pass: Vendor/CIS benchmark initiative assigned; high compliance against provider best practices for third-party resources.
+    evidence: out/sdr/ksi-cna-ibp.json
+    review_required: false
+
+  - id: KSI-CNA-MAT
+    name: Minimizing Attack Surface
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-mat.kql }
+    pass: No unnecessary public exposure; segmentation limits lateral movement.
+    evidence: out/sdr/ksi-cna-mat.json
+    review_required: false
+
+  - id: KSI-CNA-OFA
+    name: Optimizing for Availability
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-ofa.kql }
+    pass: Critical resources configured for HA and rapid recovery (zone redundancy / autoscale).
+    evidence: out/sdr/ksi-cna-ofa.json
+    review_required: false
+
+  - id: KSI-CNA-RNT
+    name: Restricting Network Traffic
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-rnt.kql }
+    pass: Default-deny with explicit allow rules for inbound and outbound traffic.
+    evidence: out/sdr/ksi-cna-rnt.json
+    review_required: false
+
+  - id: KSI-CNA-RVP
+    name: Reviewing Protections
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-rvp.kql }
+    pass: DDoS Protection enabled and WAF in prevention mode; effectiveness persistently reviewed.
+    evidence: out/sdr/ksi-cna-rvp.json
+    review_required: false
+
+  - id: KSI-CNA-ULN
+    name: Using Logical Networking
+    family: KSI-CNA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-cna-uln.kql }
+    pass: Logical segmentation and enforced routing implement traffic-flow controls.
+    evidence: out/sdr/ksi-cna-uln.json
+    review_required: false
+
+  # === KSI-SVC - Service Configuration (8) ===
+  - id: KSI-SVC-ACM
+    name: Automating Configuration Management
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-svc-acm.json }
+    pass: Config managed via automation; persistently reviewed for drift.
+    evidence: out/sdr/ksi-svc-acm.json
+    review_required: false
+
+  - id: KSI-SVC-ASM
+    name: Automating Secret Management
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-svc-asm.kql }
+      - { tool: graph, ref: collectors/graph/ksi-svc-asm.json }
+    pass: Secrets/keys/certs managed in Key Vault with automated rotation; no hardcoded secrets.
+    evidence: out/sdr/ksi-svc-asm.json
+    review_required: false
+
+  - id: KSI-SVC-EIS
+    name: Evaluating and Improving Security
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-svc-eis.json }
+    pass: Security persistently evaluated for improvements and those improvements persistently made.
+    evidence: out/sdr/ksi-svc-eis.json
+    review_required: false
+
+  - id: KSI-SVC-PRR
+    name: Preventing Residual Risk
+    family: KSI-SVC
+    mode: Hybrid
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-svc-prr.json }
+      - { tool: manual, ref: docs/manual/ksi-svc-prr.md }
+    pass: Residual risk reviewed and removed after changes (Class C required; Class B optional).
+    evidence: out/sdr/ksi-svc-prr.json
+    review_required: true
+
+  - id: KSI-SVC-RUD
+    name: Removing Unwanted Data
+    family: KSI-SVC
+    mode: Hybrid
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-svc-rud.kql }
+      - { tool: manual, ref: docs/manual/ksi-svc-rud.md }
+    pass: Unwanted federal customer data removed promptly on request, incl. backups (Class C required; Class B optional).
+    evidence: out/sdr/ksi-svc-rud.json
+    review_required: true
+
+  - id: KSI-SVC-SIN
+    name: Securing Information
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-svc-sin.kql }
+    pass: Information encrypted at rest and TLS 1.2+ in transit everywhere.
+    evidence: out/sdr/ksi-svc-sin.json
+    review_required: false
+
+  - id: KSI-SVC-VCM
+    name: Validating Communications
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-svc-vcm.kql }
+    pass: Authenticity and integrity of machine-to-machine comms validated via automation (Class C required; Class B optional).
+    evidence: out/sdr/ksi-svc-vcm.json
+    review_required: false
+
+  - id: KSI-SVC-VRI
+    name: Validating Resource Integrity
+    family: KSI-SVC
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-svc-vri.json }
+    pass: Cryptographic integrity of resources validated (artifacts signed + verified before deploy).
+    evidence: out/sdr/ksi-svc-vri.json
+    review_required: false
+
+  # === KSI-IAM - Identity and Access Management (6) ===
+  - id: KSI-IAM-AAM
+    name: Automating Account Management
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: graph, ref: collectors/graph/ksi-iam-aam.json }
+    pass: Automated joiner/mover/leaver provisioning and de-provisioning; recurring access reviews.
+    evidence: out/sdr/ksi-iam-aam.json
+    review_required: false
+
+  - id: KSI-IAM-APM
+    name: Adopting Passwordless Methods
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: graph, ref: collectors/graph/ksi-iam-apm.json }
+    pass: Passwordless methods in use where feasible; otherwise strong passwords + phishing-resistant MFA enforced by CA.
+    evidence: out/sdr/ksi-iam-apm.json
+    review_required: false
+
+  - id: KSI-IAM-ELP
+    name: Ensuring Least Privilege
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: graph, ref: collectors/graph/ksi-iam-elp.json }
+      - { tool: arg, ref: collectors/arg/ksi-iam-elp.kql }
+    pass: Access scoped to need; least privilege persistently reviewed.
+    evidence: out/sdr/ksi-iam-elp.json
+    review_required: false
+
+  - id: KSI-IAM-JIT
+    name: Authorizing Just-in-Time
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: graph, ref: collectors/graph/ksi-iam-jit.json }
+    pass: Privileged roles are PIM-eligible (not permanent); activation gated by approval + MFA; applies to user and non-user.
+    evidence: out/sdr/ksi-iam-jit.json
+    review_required: false
+
+  - id: KSI-IAM-SNU
+    name: Securing Non-User Authentication
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-iam-snu.kql }
+      - { tool: graph, ref: collectors/graph/ksi-iam-snu.json }
+    pass: Non-user auth uses managed identities / federation; no stale long-lived service-principal secrets.
+    evidence: out/sdr/ksi-iam-snu.json
+    review_required: false
+
+  - id: KSI-IAM-SUS
+    name: Responding to Suspicious Activity
+    family: KSI-IAM
+    mode: Auto
+    collectors:
+      - { tool: graph, ref: collectors/graph/ksi-iam-sus.json }
+    pass: Risk-based policies disable/secure privileged accounts automatically on suspicious activity.
+    evidence: out/sdr/ksi-iam-sus.json
+    review_required: false
+
+  # === KSI-MLA - Monitoring, Logging, and Auditing (5) ===
+  - id: KSI-MLA-ALA
+    name: Authorizing Log Access
+    family: KSI-MLA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-mla-ala.kql }
+      - { tool: graph, ref: collectors/graph/ksi-mla-ala.json }
+    pass: Least-privilege, JIT, reviewed access to log data by sensitivity (Class C required; Class B optional).
+    evidence: out/sdr/ksi-mla-ala.json
+    review_required: false
+
+  - id: KSI-MLA-EVC
+    name: Evaluating Configurations
+    family: KSI-MLA
+    mode: Auto
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-mla-evc.json }
+    pass: Configurations (esp. infrastructure-as-code) persistently evaluated and tested.
+    evidence: out/sdr/ksi-mla-evc.json
+    review_required: false
+
+  - id: KSI-MLA-LET
+    name: Logging Event Types
+    family: KSI-MLA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-mla-let.kql }
+    pass: Maintained log/event-type matrix; diagnostic settings present on all in-scope resources.
+    evidence: out/sdr/ksi-mla-let.json
+    review_required: false
+
+  - id: KSI-MLA-OSM
+    name: Operating SIEM Capability
+    family: KSI-MLA
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-mla-osm.kql }
+    pass: SIEM in use with centralized, tamper-resistant logging; persistently reviewed.
+    evidence: out/sdr/ksi-mla-osm.json
+    review_required: false
+
+  - id: KSI-MLA-RVL
+    name: Reviewing Logs
+    family: KSI-MLA
+    mode: Hybrid
+    collectors:
+      - { tool: sentinel, ref: collectors/sentinel/ksi-mla-rvl.kql }
+      - { tool: manual, ref: docs/manual/ksi-mla-rvl.md }
+    pass: Logs persistently reviewed and audited (active detections + documented review).
+    evidence: out/sdr/ksi-mla-rvl.json
+    review_required: true
+
+  # === KSI-CMT - Change Management (4) ===
+  - id: KSI-CMT-LMC
+    name: Logging Changes
+    family: KSI-CMT
+    mode: Auto
+    collectors:
+      - { tool: sentinel, ref: collectors/sentinel/ksi-cmt-lmc.kql }
+    pass: Activity logging enabled and shipped to Log Analytics for all in-scope resources; changes monitored/alerted.
+    evidence: out/sdr/ksi-cmt-lmc.json
+    review_required: false
+
+  - id: KSI-CMT-RMV
+    name: Redeploying vs Modifying
+    family: KSI-CMT
+    mode: Auto
+    collectors:
+      - { tool: sentinel, ref: collectors/sentinel/ksi-cmt-rmv.kql }
+      - { tool: github, ref: collectors/github/ksi-cmt-rmv.py }
+    pass: Changes traceable to version-controlled redeployments; minimal out-of-band manual modification.
+    evidence: out/sdr/ksi-cmt-rmv.json
+    review_required: false
+
+  - id: KSI-CMT-RVP
+    name: Reviewing Change Procedures
+    family: KSI-CMT
+    mode: Hybrid
+    collectors:
+      - { tool: github, ref: collectors/github/ksi-cmt-rvp.py }
+      - { tool: manual, ref: docs/manual/ksi-cmt-rvp.md }
+    pass: Documented change-management procedure with a persistent effectiveness review.
+    evidence: out/sdr/ksi-cmt-rvp.json
+    review_required: true
+
+  - id: KSI-CMT-VTD
+    name: Validating Throughout Deployment
+    family: KSI-CMT
+    mode: Auto
+    collectors:
+      - { tool: github, ref: collectors/github/ksi-cmt-vtd.py }
+    pass: Every deployment passes automated tests and policy checks before promotion.
+    evidence: out/sdr/ksi-cmt-vtd.json
+    review_required: false
+
+  # === KSI-RPL - Recovery Planning (4) ===
+  - id: KSI-RPL-ABO
+    name: Aligning Backups with Objectives
+    family: KSI-RPL
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-rpl-abo.kql }
+    pass: Backups aligned to defined recovery objectives; protection coverage persistently reviewed.
+    evidence: out/sdr/ksi-rpl-abo.json
+    review_required: false
+
+  - id: KSI-RPL-ARP
+    name: Aligning Recovery Plan
+    family: KSI-RPL
+    mode: Hybrid
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-rpl-arp.kql }
+      - { tool: manual, ref: docs/manual/ksi-rpl-arp.md }
+    pass: Recovery plan aligned to recovery objectives; persistently reviewed.
+    evidence: out/sdr/ksi-rpl-arp.json
+    review_required: true
+
+  - id: KSI-RPL-RRO
+    name: Reviewing Recovery Objectives
+    family: KSI-RPL
+    mode: Hybrid
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-rpl-rro.md }
+    pass: RTO/RPO defined and persistently reviewed against business needs and capability.
+    evidence: out/sdr/ksi-rpl-rro.json
+    review_required: true
+
+  - id: KSI-RPL-TRC
+    name: Testing Recovery Capabilities
+    family: KSI-RPL
+    mode: Auto
+    collectors:
+      - { tool: arg, ref: collectors/arg/ksi-rpl-trc.kql }
+    pass: Recovery capability persistently tested against defined objectives.
+    evidence: out/sdr/ksi-rpl-trc.json
+    review_required: false
+
+  # === KSI-SCR - Supply Chain Risk (2) ===
+  - id: KSI-SCR-MIT
+    name: Mitigating Supply Chain Risk
+    family: KSI-SCR
+    mode: Hybrid
+    collectors:
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-scr-mit.json }
+      - { tool: manual, ref: docs/manual/ksi-scr-mit.md }
+    pass: Supply chain risks persistently identified, reviewed, and mitigated.
+    evidence: out/sdr/ksi-scr-mit.json
+    review_required: true
+
+  - id: KSI-SCR-MON
+    name: Monitoring Supply Chain Risk
+    family: KSI-SCR
+    mode: Auto
+    collectors:
+      - { tool: github, ref: collectors/github/ksi-scr-mon.py }
+      - { tool: defender_policy, ref: collectors/defender_policy/ksi-scr-mon.json }
+    pass: Third-party software automatically monitored for upstream vulnerabilities with alerting.
+    evidence: out/sdr/ksi-scr-mon.json
+    review_required: false
+
+  # === KSI-INR - Incident Response (3) ===
+  - id: KSI-INR-AAR
+    name: Generating After Action Reports
+    family: KSI-INR
+    mode: Hybrid
+    collectors:
+      - { tool: sentinel, ref: collectors/sentinel/ksi-inr-aar.kql }
+      - { tool: manual, ref: docs/manual/ksi-inr-aar.md }
+    pass: After-action report produced per incident; lessons learned persistently incorporated.
+    evidence: out/sdr/ksi-inr-aar.json
+    review_required: true
+
+  - id: KSI-INR-RIR
+    name: Reviewing Incident Response Procedures
+    family: KSI-INR
+    mode: Manual
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-inr-rir.md }
+    pass: Documented IR procedures with persistent effectiveness review.
+    evidence: out/sdr/ksi-inr-rir.json
+    review_required: true
+
+  - id: KSI-INR-RPI
+    name: Reviewing Past Incidents
+    family: KSI-INR
+    mode: Hybrid
+    collectors:
+      - { tool: sentinel, ref: collectors/sentinel/ksi-inr-rpi.kql }
+    pass: Past incidents persistently reviewed for previously unidentified patterns/vulnerabilities.
+    evidence: out/sdr/ksi-inr-rpi.json
+    review_required: true
+
+  # === KSI-CED - Cybersecurity Education (1) ===
+  - id: KSI-CED-RAT
+    name: Reviewing All Training
+    family: KSI-CED
+    mode: Manual
+    collectors:
+      - { tool: manual, ref: docs/manual/ksi-ced-rat.md }
+    pass: Documented training program (general, role-specific, secure-dev, IR/DR) with a persistent effectiveness review cadence.
+    evidence: out/sdr/ksi-ced-rat.json
+    review_required: true
