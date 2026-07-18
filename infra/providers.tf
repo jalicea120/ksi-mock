@@ -36,6 +36,11 @@ provider "azurerm" {
   features {}
   environment = "usgovernment"
   use_oidc    = true # OIDC in CI; harmless locally when using az login
+
+  # Storage data-plane operations authenticate with Entra ID, not account keys
+  # (shared keys are disabled on the mock storage account). The deploy principal
+  # needs a Storage Blob Data role on the RG for this to succeed.
+  storage_use_azuread = true
 }
 
 provider "azapi" {
