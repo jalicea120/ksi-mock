@@ -29,15 +29,22 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
-# One-time reconciliation: ksi-mock-rg was created out-of-band (manually, before
-# this remote state existed), so the first pipeline apply failed with "already
-# exists". Adopt it into state instead of failing. Remove this block after the
-# first successful apply.
+# One-time reconciliation of resources that exist in Azure but not in state, so
+# apply adopts them instead of failing on "already exists". Both are idempotent
+# (a no-op once the resource is in state) and are removed after a clean apply.
+#   - ksi-mock-rg: created out-of-band before this remote state existed.
+#   - storage account: created by the previous apply, which then failed its
+#     post-create data-plane poll, so it exists in Azure but never reached state.
 data "azurerm_subscription" "current" {}
 
 import {
   to = azurerm_resource_group.main
   id = "${data.azurerm_subscription.current.id}/resourceGroups/${var.resource_group_name}"
+}
+
+import {
+  to = module.data.azurerm_storage_account.main
+  id = "${data.azurerm_subscription.current.id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Storage/storageAccounts/${var.name_prefix}st${local.suffix}"
 }
 
 module "logging" {
