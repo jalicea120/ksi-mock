@@ -29,6 +29,17 @@ resource "azurerm_resource_group" "main" {
   tags     = local.tags
 }
 
+# One-time reconciliation: ksi-mock-rg was created out-of-band (manually, before
+# this remote state existed), so the first pipeline apply failed with "already
+# exists". Adopt it into state instead of failing. Remove this block after the
+# first successful apply.
+data "azurerm_subscription" "current" {}
+
+import {
+  to = azurerm_resource_group.main
+  id = "${data.azurerm_subscription.current.id}/resourceGroups/${var.resource_group_name}"
+}
+
 module "logging" {
   source = "./modules/logging"
 
