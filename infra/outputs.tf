@@ -27,3 +27,8 @@ output "workload_identity_client_id" {
   description = "Client id of the workload managed identity."
   value       = module.identity.workload_identity_client_id
 }
+
+output "fedramp_high_assignment_id" {
+  description = "FedRAMP High (audit-only) policy assignment id."
+  value       = module.governance.fedramp_high_assignment_id
+}

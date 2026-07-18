@@ -95,3 +95,19 @@ module "recovery" {
   log_analytics_workspace_id = module.logging.workspace_id
   tags                       = local.tags
 }
+
+module "governance" {
+  source = "./modules/governance"
+
+  name_prefix       = var.name_prefix
+  resource_group_id = azurerm_resource_group.main.id
+  location          = azurerm_resource_group.main.location
+}
+
+# Posture (Microsoft Defender for Cloud) is intentionally NOT managed in this
+# pipeline. Defender plans are subscription-scoped; keeping them out of this
+# RG-scoped deploy avoids granting the CI principal subscription-wide Security
+# Admin and prevents drift with the operator-managed configuration.
+# Current operator-managed state (recorded for assessors): CSPM + CWPP for
+# VirtualMachines (P2), StorageAccounts (DefenderForStorageV2), Resource Manager
+# (Arm), and OpenSourceRelationalDatabases. Phase 2 collectors READ this posture.
