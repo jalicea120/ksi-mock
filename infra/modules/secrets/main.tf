@@ -98,6 +98,13 @@ resource "azapi_resource" "signing_key" {
       }
     }
   }
+
+  # azapi only accepts lowercase action types (rotate/notify), but Azure returns
+  # them capitalized (Rotate/Notify) - a perpetual no-op plan diff. The rotation
+  # policy is static, so ignore server-side casing drift on it.
+  lifecycle {
+    ignore_changes = [body.properties.rotationPolicy]
+  }
 }
 
 # Synthetic secret - placeholder value only, never real credentials. The value is
