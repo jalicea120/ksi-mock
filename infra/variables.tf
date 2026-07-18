@@ -38,16 +38,6 @@ variable "vnet_address_space" {
   default     = ["10.42.0.0/16"]
 }
 
-# Key Vault uses RBAC + a private endpoint (public access off). A PE-only vault
-# cannot be seeded from an external CI runner, so the rotating key + synthetic
-# secret (and the deployer's data-plane role grant) are gated behind this flag.
-# Leave false for pipeline applies; set true only when deploying from inside the
-# VNet (self-hosted runner / VPN) with a principal that can grant KV data-plane RBAC.
-variable "seed_kv_objects" {
-  description = "Create the Key Vault key + secret + data-plane role grant. Requires in-network access."
-  type        = bool
-  default     = false
-}
 
 # Standard tag set - every resource created in Phase 1 merges these in via local.tags.
 variable "tags" {

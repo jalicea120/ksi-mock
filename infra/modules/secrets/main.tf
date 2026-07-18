@@ -4,13 +4,12 @@
 # attack surface). Holds one key with an automated rotation policy and one
 # synthetic secret.
 #
-# Because the vault is private-endpoint-only, its data plane is unreachable from
-# an external (GitHub-hosted) CI runner, and under RBAC the deploy principal has
-# no data-plane rights by default. The key, secret, and the deployer's data-plane
-# role grant are therefore gated behind var.seed_kv_objects (default false):
-#   - pipeline apply -> seed_kv_objects = false : vault + PE + RBAC only
-#   - in-network apply (self-hosted runner / VPN, principal able to grant KV RBAC)
-#     -> seed_kv_objects = true : also creates the key + secret
+# The key + secret are created through the ARM CONTROL PLANE (azapi), not the
+# vault data plane. That is what lets a private-endpoint-only vault be seeded
+# from an external CI runner holding only control-plane Contributor: ARM is not
+# blocked by the vault firewall and needs no data-plane RBAC. Runtime data-plane
+# access (workload managed identity + Key Vault Secrets User over the private
+# endpoint) is granted alongside the compute workload in a later change.
 
 data "azurerm_client_config" "current" {}
 
@@ -70,46 +69,50 @@ resource "azurerm_private_endpoint" "kv" {
   }
 }
 
-# --- Data-plane objects (gated; require in-network access, see header) ---
+# Key with an automated rotation policy (the SVC-ASM signal), created via the
+# ARM control plane. Key material is generated in the vault - never exposed here.
+resource "azapi_resource" "signing_key" {
+  type      = "Microsoft.KeyVault/vaults/keys@2023-07-01"
+  name      = "${var.name_prefix}-signing-key"
+  parent_id = azurerm_key_vault.main.id
 
-# Give the deploying principal data-plane access under RBAC so it can create the
-# key/secret. Creating this assignment needs roleAssignments/write on the vault,
-# so the deploy principal must be elevated beyond plain Contributor when seeding.
-resource "azurerm_role_assignment" "deployer_kv_admin" {
-  count                = var.seed_kv_objects ? 1 : 0
-  scope                = azurerm_key_vault.main.id
-  role_definition_name = "Key Vault Administrator"
-  principal_id         = data.azurerm_client_config.current.object_id
-}
-
-# Key with an automated rotation policy (the SVC-ASM signal).
-resource "azurerm_key_vault_key" "rotating" {
-  count        = var.seed_kv_objects ? 1 : 0
-  name         = "${var.name_prefix}-signing-key"
-  key_vault_id = azurerm_key_vault.main.id
-  key_type     = "RSA"
-  key_size     = 2048
-  key_opts     = ["sign", "verify"]
-
-  rotation_policy {
-    automatic {
-      time_before_expiry = "P30D"
+  body = {
+    properties = {
+      kty     = "RSA"
+      keySize = 2048
+      keyOps  = ["sign", "verify"]
+      rotationPolicy = {
+        lifetimeActions = [
+          {
+            action  = { type = "rotate" }
+            trigger = { timeBeforeExpiry = "P30D" }
+          },
+          {
+            action  = { type = "notify" }
+            trigger = { timeBeforeExpiry = "P29D" }
+          },
+        ]
+        attributes = {
+          expiryTime = "P90D"
+        }
+      }
     }
-    expire_after         = "P90D"
-    notify_before_expiry = "P29D"
   }
-
-  depends_on = [azurerm_role_assignment.deployer_kv_admin]
 }
 
-# Synthetic secret - placeholder value only, never real credentials.
-resource "azurerm_key_vault_secret" "synthetic" {
-  count        = var.seed_kv_objects ? 1 : 0
-  name         = "synthetic-example"
-  key_vault_id = azurerm_key_vault.main.id
-  value        = "placeholder-not-a-real-secret"
+# Synthetic secret - placeholder value only, never real credentials. The value is
+# a non-sensitive placeholder, so it lives in body; a real secret would never be
+# committed to IaC (it would be seeded out-of-band or via a write-only attribute).
+resource "azapi_resource" "synthetic_secret" {
+  type      = "Microsoft.KeyVault/vaults/secrets@2023-07-01"
+  name      = "synthetic-example"
+  parent_id = azurerm_key_vault.main.id
 
-  depends_on = [azurerm_role_assignment.deployer_kv_admin]
+  body = {
+    properties = {
+      value = "placeholder-not-a-real-secret"
+    }
+  }
 }
 
 resource "azurerm_monitor_diagnostic_setting" "kv" {

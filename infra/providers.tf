@@ -10,6 +10,13 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.6"
     }
+    # azapi lets us create Key Vault keys/secrets through the ARM control plane,
+    # so a private-endpoint-only vault can still be seeded from CI (no data-plane
+    # reachability or data-plane RBAC needed - just control-plane Contributor).
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
+    }
   }
 
   # Remote state in Azure Government Storage (bootstrapped in tfstate-rg).
@@ -29,4 +36,9 @@ provider "azurerm" {
   features {}
   environment = "usgovernment"
   use_oidc    = true # OIDC in CI; harmless locally when using az login
+}
+
+provider "azapi" {
+  environment = "usgovernment"
+  use_oidc    = true
 }

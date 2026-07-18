@@ -22,11 +22,6 @@ variable "private_endpoint_subnet_id" {
   type = string
 }
 
-variable "seed_kv_objects" {
-  type    = bool
-  default = false
-}
-
 variable "log_analytics_workspace_id" {
   type = string
 }
