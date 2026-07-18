@@ -21,6 +21,23 @@ variable "resource_group_name" {
   default     = "ksi-mock-rg"
 }
 
+variable "log_retention_days" {
+  description = "Retention for the Log Analytics workspace (days)."
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.log_retention_days >= 30
+    error_message = "log_retention_days must be at least 30."
+  }
+}
+
+variable "vnet_address_space" {
+  description = "Address space for the mock VNet."
+  type        = list(string)
+  default     = ["10.42.0.0/16"]
+}
+
 # Standard tag set - every resource created in Phase 1 merges these in via local.tags.
 variable "tags" {
   description = "Standard tag set applied to every resource."
