@@ -70,6 +70,9 @@ module "secrets" {
   suffix                     = local.suffix
   resource_group_name        = azurerm_resource_group.main.name
   location                   = azurerm_resource_group.main.location
+  vnet_id                    = module.network.vnet_id
+  private_endpoint_subnet_id = module.network.private_endpoint_subnet_id
+  seed_kv_objects            = var.seed_kv_objects
   log_analytics_workspace_id = module.logging.workspace_id
   tags                       = local.tags
 }

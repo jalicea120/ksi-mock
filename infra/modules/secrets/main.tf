@@ -1,9 +1,16 @@
 # Secrets -> SVC-ASM (automating secret management).
-# Key Vault with soft-delete + purge protection, holding one key with an
-# automated rotation policy and one synthetic secret. Access-policy mode is used
-# (not RBAC) so the deploying principal - which holds Contributor, a control-plane
-# role - can create the key/secret without a separate data-plane role grant.
-# A production offering would use RBAC + a scoped data-plane role instead.
+# Key Vault with RBAC authorization, purge protection, public access OFF, reached
+# only through a private endpoint (KSI-IAM least privilege + KSI-CNA minimal
+# attack surface). Holds one key with an automated rotation policy and one
+# synthetic secret.
+#
+# Because the vault is private-endpoint-only, its data plane is unreachable from
+# an external (GitHub-hosted) CI runner, and under RBAC the deploy principal has
+# no data-plane rights by default. The key, secret, and the deployer's data-plane
+# role grant are therefore gated behind var.seed_kv_objects (default false):
+#   - pipeline apply -> seed_kv_objects = false : vault + PE + RBAC only
+#   - in-network apply (self-hosted runner / VPN, principal able to grant KV RBAC)
+#     -> seed_kv_objects = true : also creates the key + secret
 
 data "azurerm_client_config" "current" {}
 
@@ -17,32 +24,67 @@ resource "azurerm_key_vault" "main" {
   purge_protection_enabled   = true
   soft_delete_retention_days = 7
 
-  # Reachable from the deploy runner for data-plane key/secret creation; a real
-  # offering would place this behind a private endpoint and default-deny ACLs.
-  public_network_access_enabled = true
+  rbac_authorization_enabled    = true
+  public_network_access_enabled = false
 
   network_acls {
-    default_action = "Allow"
+    default_action = "Deny"
     bypass         = "AzureServices"
-  }
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "Get", "List", "Create", "Update", "GetRotationPolicy", "SetRotationPolicy",
-    ]
-    secret_permissions = [
-      "Get", "List", "Set", "Delete",
-    ]
   }
 
   tags = var.tags
 }
 
+# Private DNS + endpoint for the vault (Azure Government suffix).
+resource "azurerm_private_dns_zone" "kv" {
+  name                = "privatelink.vaultcore.usgovcloudapi.net"
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "kv" {
+  name                  = "${var.name_prefix}-kv-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.kv.name
+  virtual_network_id    = var.vnet_id
+  tags                  = var.tags
+}
+
+resource "azurerm_private_endpoint" "kv" {
+  name                = "${var.name_prefix}-kv-pe"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  subnet_id           = var.private_endpoint_subnet_id
+  tags                = var.tags
+
+  private_service_connection {
+    name                           = "vault"
+    private_connection_resource_id = azurerm_key_vault.main.id
+    subresource_names              = ["vault"]
+    is_manual_connection           = false
+  }
+
+  private_dns_zone_group {
+    name                 = "vault"
+    private_dns_zone_ids = [azurerm_private_dns_zone.kv.id]
+  }
+}
+
+# --- Data-plane objects (gated; require in-network access, see header) ---
+
+# Give the deploying principal data-plane access under RBAC so it can create the
+# key/secret. Creating this assignment needs roleAssignments/write on the vault,
+# so the deploy principal must be elevated beyond plain Contributor when seeding.
+resource "azurerm_role_assignment" "deployer_kv_admin" {
+  count                = var.seed_kv_objects ? 1 : 0
+  scope                = azurerm_key_vault.main.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 # Key with an automated rotation policy (the SVC-ASM signal).
 resource "azurerm_key_vault_key" "rotating" {
+  count        = var.seed_kv_objects ? 1 : 0
   name         = "${var.name_prefix}-signing-key"
   key_vault_id = azurerm_key_vault.main.id
   key_type     = "RSA"
@@ -56,13 +98,18 @@ resource "azurerm_key_vault_key" "rotating" {
     expire_after         = "P90D"
     notify_before_expiry = "P29D"
   }
+
+  depends_on = [azurerm_role_assignment.deployer_kv_admin]
 }
 
 # Synthetic secret - placeholder value only, never real credentials.
 resource "azurerm_key_vault_secret" "synthetic" {
+  count        = var.seed_kv_objects ? 1 : 0
   name         = "synthetic-example"
   key_vault_id = azurerm_key_vault.main.id
   value        = "placeholder-not-a-real-secret"
+
+  depends_on = [azurerm_role_assignment.deployer_kv_admin]
 }
 
 resource "azurerm_monitor_diagnostic_setting" "kv" {
