@@ -46,7 +46,7 @@ Treat all output as informational, pending review by a qualified professional.
 - COMMIT `.terraform.lock.hcl`. NEVER commit `*.tfstate` (contains secrets) or a real `terraform.tfvars`.
 - Local loop: `terraform fmt` -> `validate` -> `plan` -> `apply`. CI runs fmt/validate/plan; deploy runs apply.
 - Pass inputs via variables + `TF_VAR_` / GitHub secrets, not hardcoded values.
-- Every Azure resource carries the standard tag set: App, Environment, GBU, ITSM, JobWBS, Owner (see `infra/variables.tf`).
+- Every Azure resource carries the standard tag set: App, Environment, GBU, ITSM, JobWBS, Owner, DeployedBy, Project (see `infra/variables.tf`).
 
 ## Definition of done for any indicator work
 

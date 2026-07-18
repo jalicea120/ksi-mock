@@ -32,5 +32,7 @@ variable "tags" {
     ITSM        = "none"
     JobWBS      = "learning"
     Owner       = "juan.rodriguez@sbprojectlab.onmicrosoft.us"
+    DeployedBy  = "Juan Alicea"
+    Project     = "FR20X"
   }
 }

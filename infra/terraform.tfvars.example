@@ -10,4 +10,6 @@ tags = {
   ITSM        = "none"
   JobWBS      = "learning"
   Owner       = "you@example.us"
+  DeployedBy  = "Juan Alicea"
+  Project     = "FR20X"
 }
