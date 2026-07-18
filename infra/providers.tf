@@ -8,12 +8,11 @@ terraform {
     }
   }
 
-  # Remote state in Azure Government Storage. Bootstrap the backend once (see scripts/
-  # and CLAUDE.md / plan section 12.9), then replace storage_account_name below.
+  # Remote state in Azure Government Storage (bootstrapped in tfstate-rg).
   # For local validation without the backend: terraform init -backend=false
   backend "azurerm" {
     resource_group_name  = "tfstate-rg"
-    storage_account_name = "REPLACE_WITH_STATE_SA" # unique, lowercase, 3-24 chars
+    storage_account_name = "ksimocktf11f0ed46"
     container_name       = "tfstate"
     key                  = "ksi-mock.tfstate"
     environment          = "usgovernment"
