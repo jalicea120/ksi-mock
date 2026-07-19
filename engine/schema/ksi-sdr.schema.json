@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jalicea120/ksi-mock/engine/schema/ksi-sdr.schema.json",
+  "title": "KSI Security Data Report (SDR)",
+  "description": "Output shape of engine/assert.py: one run's KSI assertions plus provenance. Local/provisional (ksi-sdr/0.x); not a FedRAMP-published schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["info", "assertions"],
+  "properties": {
+    "info": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sdr_version", "run_id", "generated", "totals"],
+      "properties": {
+        "sdr_version": { "type": "string", "pattern": "^ksi-sdr/[0-9]+\\.[0-9]+$" },
+        "run_id": { "type": "string", "minLength": 1 },
+        "generated": { "type": "string", "format": "date-time" },
+        "rules_version": { "type": ["string", "null"] },
+        "subscription": { "type": ["string", "null"] },
+        "totals": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["total", "automated_total", "verified", "pass", "fail", "pending"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "automated_total": { "type": "integer", "minimum": 0 },
+            "verified": { "type": "integer", "minimum": 0 },
+            "pass": { "type": "integer", "minimum": 0 },
+            "fail": { "type": "integer", "minimum": 0 },
+            "pending": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "family", "mode", "result", "status", "review_required"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^KSI-[A-Z]{3}-[A-Z]{3}$" },
+          "name": { "type": "string", "minLength": 1 },
+          "family": { "type": "string", "pattern": "^KSI-[A-Z]{3}$" },
+          "mode": { "type": "string", "enum": ["Auto", "Hybrid", "Manual"] },
+          "result": { "type": ["boolean", "null"] },
+          "status": { "type": "string", "enum": ["pass", "fail", "pending"] },
+          "review_required": { "type": "boolean" },
+          "pass_criteria": { "type": ["string", "null"] },
+          "tool": { "type": ["string", "null"] },
+          "query_ref": { "type": ["string", "null"] },
+          "collected_at": { "type": ["string", "null"], "format": "date-time" },
+          "row_count": { "type": ["integer", "null"], "minimum": 0 },
+          "evidence": { "type": ["array", "null"] },
+          "error": { "type": ["string", "null"] }
+        },
+        "allOf": [
+          {
+            "description": "A null result must be reported as pending, and pending must have a null result.",
+            "if": { "properties": { "status": { "const": "pending" } } },
+            "then": { "properties": { "result": { "const": null } } },
+            "else": { "properties": { "result": { "type": "boolean" } } }
+          },
+          {
+            "description": "status and result agree: pass<->true, fail<->false.",
+            "if": { "properties": { "status": { "const": "pass" } } },
+            "then": { "properties": { "result": { "const": true } } }
+          },
+          {
+            "if": { "properties": { "status": { "const": "fail" } } },
+            "then": { "properties": { "result": { "const": false } } }
+          }
+        ]
+      }
+    }
+  }
+}
