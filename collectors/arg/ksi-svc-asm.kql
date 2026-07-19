@@ -1,0 +1,13 @@
+// KSI-SVC-ASM - Automating Secret Management
+// Key Vault inventory + protection posture (soft-delete, purge protection,
+// private-only access). Rotation of the vault's keys is verified separately
+// (the key rotation policy lives on the key, and the Graph collector checks SP
+// credential expiry). Engine pass check: vaults present, purge protection on,
+// public access disabled.
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.keyvault/vaults'
+| project name, resourceGroup,
+    public_network_access = tostring(properties.publicNetworkAccess),
+    soft_delete = tobool(properties.enableSoftDelete),
+    purge_protection = tobool(properties.enablePurgeProtection)

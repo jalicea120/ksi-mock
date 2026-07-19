@@ -1,0 +1,14 @@
+// KSI-MLA-OSM - Operating SIEM Capability
+// Microsoft Sentinel onboarding onto a Log Analytics workspace, with the
+// workspace retention that backs tamper-resistant, centralized logging. Engine
+// pass check: at least one Sentinel-onboarded workspace with adequate retention.
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.operationsmanagement/solutions' and name startswith 'SecurityInsights'
+| extend workspace_id = tostring(properties.workspaceResourceId)
+| join kind=leftouter (
+    Resources
+    | where type =~ 'microsoft.operationalinsights/workspaces'
+    | project workspace_id = tostring(id), retention_days = toint(properties.retentionInDays), workspace_sku = tostring(properties.sku.name)
+) on workspace_id
+| project sentinel_solution = name, resourceGroup, workspace_id, retention_days, workspace_sku

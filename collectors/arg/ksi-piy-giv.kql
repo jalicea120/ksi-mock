@@ -1,0 +1,7 @@
+// KSI-PIY-GIV - Generating Inventories
+// Authoritative, real-time inventory of all information resources, by type.
+// Evidence: a non-empty inventory pulled on demand from Azure Resource Graph.
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| summarize resource_count = count() by type
+| order by resource_count desc

@@ -1,0 +1,13 @@
+// KSI-CNA-MAT - Minimizing Attack Surface
+// Enumerate publicly-exposed surface: public IPs, and storage/Key Vault with
+// public network access enabled. Engine pass check: row_count == 0 (nothing
+// publicly exposed).
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where (type =~ 'microsoft.network/publicipaddresses')
+    or (type =~ 'microsoft.storage/storageaccounts' and tostring(properties.publicNetworkAccess) =~ 'Enabled')
+    or (type =~ 'microsoft.keyvault/vaults' and tostring(properties.publicNetworkAccess) =~ 'Enabled')
+| project name, type, resourceGroup,
+    exposure = case(
+        type =~ 'microsoft.network/publicipaddresses', 'public-ip',
+        'public-network-access-enabled')
