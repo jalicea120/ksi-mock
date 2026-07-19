@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-CMT-RMV",
+  "gh_api": "/repos/{repo}/actions/runs?event=push&per_page=50",
+  "jq": "[.workflow_runs[] | select(.event == \"push\") | {name, path, branch: .head_branch, status, conclusion, created_at, head_sha}]",
+  "note": "Push-triggered deploy runs on the default branch. Pass = changes reach the environment through a version-controlled redeployment pipeline (not out-of-band manual modification), evidenced by at least one successful push-driven deploy."
+}

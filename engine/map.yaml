@@ -50,7 +50,7 @@ indicators:
     family: KSI-PIY
     mode: Hybrid
     collectors:
-      - { tool: github, ref: collectors/github/ksi-piy-rsd.py }
+      - { tool: github, ref: collectors/github/ksi-piy-rsd.json }
       - { tool: defender_policy, ref: collectors/defender_policy/ksi-piy-rsd.json }
       - { tool: manual, ref: docs/manual/ksi-piy-rsd.md }
     pass: Security/privacy built into the SDLC, aligned to CISA Secure by Design; persistently reviewed.
@@ -365,7 +365,7 @@ indicators:
     mode: Auto
     collectors:
       - { tool: sentinel, ref: collectors/sentinel/ksi-cmt-rmv.kql }
-      - { tool: github, ref: collectors/github/ksi-cmt-rmv.py }
+      - { tool: github, ref: collectors/github/ksi-cmt-rmv.json }
     pass: Changes traceable to version-controlled redeployments; minimal out-of-band manual modification.
     evidence: out/sdr/ksi-cmt-rmv.json
     review_required: false
@@ -375,7 +375,7 @@ indicators:
     family: KSI-CMT
     mode: Hybrid
     collectors:
-      - { tool: github, ref: collectors/github/ksi-cmt-rvp.py }
+      - { tool: github, ref: collectors/github/ksi-cmt-rvp.json }
       - { tool: manual, ref: docs/manual/ksi-cmt-rvp.md }
     pass: Documented change-management procedure with a persistent effectiveness review.
     evidence: out/sdr/ksi-cmt-rvp.json
@@ -386,7 +386,7 @@ indicators:
     family: KSI-CMT
     mode: Auto
     collectors:
-      - { tool: github, ref: collectors/github/ksi-cmt-vtd.py }
+      - { tool: github, ref: collectors/github/ksi-cmt-vtd.json }
     pass: Every deployment passes automated tests and policy checks before promotion.
     evidence: out/sdr/ksi-cmt-vtd.json
     review_required: false
@@ -450,7 +450,7 @@ indicators:
     family: KSI-SCR
     mode: Auto
     collectors:
-      - { tool: github, ref: collectors/github/ksi-scr-mon.py }
+      - { tool: github, ref: collectors/github/ksi-scr-mon.json }
       - { tool: defender_policy, ref: collectors/defender_policy/ksi-scr-mon.json }
     pass: Third-party software automatically monitored for upstream vulnerabilities with alerting.
     evidence: out/sdr/ksi-scr-mon.json

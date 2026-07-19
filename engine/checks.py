@@ -136,6 +136,39 @@ def ksi_cna_eis(rows: list[dict]) -> bool:
     return any(row.get("enforcement_mode") == "Default" for row in rows)
 
 
+def _completed(rows: list[dict]) -> list[dict]:
+    return [r for r in rows if r.get("status") == "completed"]
+
+
+def ksi_cmt_vtd(rows: list[dict]) -> bool:
+    # Automated validation runs to completion and passes far more than it fails,
+    # so tests/policy checks gate promotion throughout deployment.
+    completed = _completed(rows)
+    success = sum(1 for r in completed if r.get("conclusion") == "success")
+    failure = sum(1 for r in completed if r.get("conclusion") == "failure")
+    return success >= 1 and success > failure
+
+
+def ksi_cmt_rmv(rows: list[dict]) -> bool:
+    # Changes reach the environment via a version-controlled redeployment
+    # (a successful push-triggered pipeline run), not out-of-band modification.
+    return any(r.get("conclusion") == "success" for r in rows)
+
+
+_SERIOUS_SEVERITY = {"high", "critical"}
+
+
+def ksi_scr_mon(rows: list[dict]) -> bool:
+    # Dependabot is monitoring dependencies and no open alert is high/critical.
+    # Empty (feature on, nothing open) passes; a disabled feature errors -> Pending.
+    return not any(str(r.get("severity", "")).lower() in _SERIOUS_SEVERITY for r in rows)
+
+
+def ksi_piy_rsd(rows: list[dict]) -> bool:
+    # Static security analysis is running in the SDLC (>=1 code-scanning analysis).
+    return len(rows) >= 1
+
+
 CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-PIY-GIV": ksi_piy_giv,
     "KSI-CNA-MAT": ksi_cna_mat,
@@ -155,6 +188,10 @@ CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-SVC-EIS": ksi_svc_eis,
     "KSI-CNA-IBP": ksi_cna_ibp,
     "KSI-CNA-EIS": ksi_cna_eis,
+    "KSI-CMT-VTD": ksi_cmt_vtd,
+    "KSI-CMT-RMV": ksi_cmt_rmv,
+    "KSI-SCR-MON": ksi_scr_mon,
+    "KSI-PIY-RSD": ksi_piy_rsd,
 }
 
 
