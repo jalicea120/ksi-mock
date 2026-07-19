@@ -87,6 +87,14 @@
   .legend div{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
   .legend .sw{width:12px;height:12px;border-radius:4px;flex:none}
   .legend b{color:var(--ink-1);font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .trend{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .trend-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .trend-h span:first-child{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .trend-h #trendMeta{font-size:12px;color:var(--ink-2)}
+  #spark{width:100%;height:64px;display:block;overflow:visible}
+  #spark .fill{fill:var(--accent-wash)}
+  #spark .line{fill:none;stroke:var(--accent);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+  #spark .pt{fill:var(--accent)}
 
   /* kpi tiles */
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px;margin-top:22px}
@@ -176,6 +184,10 @@
       <div class="lab"><span>Assurance posture · all 46 indicators</span><span id="postPct"></span></div>
       <div class="bar" id="bar" role="img" aria-label="Composition of indicator coverage"></div>
       <div class="legend" id="legend"></div>
+      <div class="trend" id="trend" hidden>
+        <div class="trend-h"><span>Verified over time</span><span id="trendMeta" class="mono"></span></div>
+        <svg id="spark" viewBox="0 0 600 64" preserveAspectRatio="none" role="img" aria-label="Verified automated indicators over time"></svg>
+      </div>
     </div>
 
     <div class="kpis" id="kpis"></div>
@@ -263,6 +275,25 @@
   document.getElementById("legend").innerHTML = segs.map(s=>
     `<div><span class="sw ${s.cls==='s-manual'?'':''}" style="background:${s.cls==='s-manual'?'repeating-linear-gradient(135deg,var(--wait) 0 3px,transparent 3px 6px),var(--wait-bg)':s.sw}"></span>${s.label} <b>${s.n}</b></div>`
   ).join("");
+
+  // trend sparkline - verified automated indicators over run history
+  const hist=(TC.history||[]).filter(h=>h.verified!=null);
+  if(hist.length>=2){
+    const W=600,H=64,pad=4, denom=(hist[hist.length-1].automated_total)||nAuto||1;
+    const xs=i=>hist.length===1?W/2:(i/(hist.length-1))*W;
+    const ys=v=>{const f=Math.max(0,Math.min(1,v/denom));return H-pad-f*(H-2*pad);};
+    const pts=hist.map((h,i)=>[xs(i),ys(h.verified)]);
+    const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+    const area=`M0 ${H} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${W} ${H} Z`;
+    const last=pts[pts.length-1];
+    document.getElementById("spark").innerHTML=
+      `<path class="fill" d="${area}"/><path class="line" d="${line}"/>`+
+      `<circle class="pt" cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3"/>`;
+    const first=hist[0], lastH=hist[hist.length-1], delta=lastH.verified-first.verified;
+    document.getElementById("trendMeta").textContent=
+      `${hist.length} runs · ${delta>=0?"+":""}${delta} vs first · now ${lastH.verified}/${denom}`;
+    document.getElementById("trend").hidden=false;
+  }
 
   // kpi tiles
   const tiles=[
