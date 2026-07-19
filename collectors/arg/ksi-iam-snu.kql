@@ -1,0 +1,11 @@
+// KSI-IAM-SNU - Securing Non-User Authentication
+// User-assigned managed identities available for workloads (secretless, no
+// long-lived credentials). Engine pass check: workloads authenticate via managed
+// identity (row_count >= 1); complemented by the Graph collector that checks for
+// stale service-principal secrets.
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.managedidentity/userassignedidentities'
+| project name, resourceGroup,
+    client_id = tostring(properties.clientId),
+    principal_id = tostring(properties.principalId)

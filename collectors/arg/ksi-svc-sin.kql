@@ -1,0 +1,12 @@
+// KSI-SVC-SIN - Securing Information
+// Storage accounts: encryption at rest posture + minimum TLS in transit.
+// Engine pass check: every row is TLS1_2 and https_only == true (and, ideally,
+// infrastructure_encryption == true).
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.storage/storageaccounts'
+| project name, resourceGroup,
+    minimum_tls_version = tostring(properties.minimumTlsVersion),
+    https_only = tobool(properties.supportsHttpsTrafficOnly),
+    infrastructure_encryption = tobool(properties.encryption.requireInfrastructureEncryption),
+    public_network_access = tostring(properties.publicNetworkAccess)

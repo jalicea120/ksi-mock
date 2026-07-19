@@ -1,4 +1,5 @@
 out/sdr/*
+out/evidence/
 .env
 *.env
 __pycache__/
