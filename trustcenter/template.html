@@ -198,6 +198,10 @@
 <script>
   const TC = /*__TC_DATA__*/ {"generated":"","rules_version":"","indicators":[]} /*__END__*/;
 
+  const SOURCE = {
+    arg:"Azure Resource Graph", graph:"Microsoft Graph", arm:"Azure Resource Manager",
+    github:"GitHub REST", sentinel:"Sentinel / Log Analytics"
+  };
   const FAMILY_NAMES = {
     "KSI-PIY":"Policy & Inventory","KSI-CNA":"Cloud Native Architecture",
     "KSI-SVC":"Service Configuration","KSI-IAM":"Identity & Access Management",
@@ -206,15 +210,18 @@
     "KSI-INR":"Incident Response","KSI-CED":"Cybersecurity Education"
   };
   // one derived state per indicator: {label, tone}
+  // Hybrid/Manual take precedence: an indicator that requires human sign-off is
+  // "Review"/"Manual" even when its automated leg passes - only Auto indicators
+  // are ever "Verified", so the headline count matches the SDR (Auto-only).
   function stateOf(x){
+    if(x.mode==="Manual") return {label:"Manual",tone:"wait"};
+    if(x.mode==="Hybrid") return {label:"Review",tone:"warn"};
     if(x.status==="pass") return {label:"Verified",tone:"ok"};
     if(x.status==="fail") return {label:"Failed",tone:"crit"};
-    if(x.mode==="Hybrid") return {label:"Review",tone:"warn"};
-    if(x.mode==="Manual") return {label:"Manual",tone:"wait"};
     return {label:"Pending",tone:"wait"};
   }
   const inds = TC.indicators;
-  const isVerified = x=>x.status==="pass";
+  const isVerified = x=>x.mode==="Auto" && x.status==="pass";
   const count = f => inds.filter(f).length;
 
   const nVerified = count(isVerified);
@@ -272,7 +279,7 @@
   // filter chips
   const filters=[
     {id:"all",label:"All",f:()=>true},
-    {id:"ok",label:"Verified",f:x=>x.status==="pass"},
+    {id:"ok",label:"Verified",f:x=>x.mode==="Auto" && x.status==="pass"},
     {id:"pending",label:"Pending",f:x=>x.status==="pending"&&x.mode==="Auto"},
     {id:"hybrid",label:"Review",f:x=>x.mode==="Hybrid"},
     {id:"manual",label:"Manual",f:x=>x.mode==="Manual"}
@@ -333,7 +340,7 @@
         <div class="ev" id="${evId}" role="region">
           <div class="crit-line">Pass criteria: <b>${esc(x.pass_criteria||"")}</b></div>
           <pre>${esc(JSON.stringify(x.evidence,null,2))}</pre>
-          <div class="src">source · ${x.id.toLowerCase()} · Azure Resource Graph · collected ${x.collected_at||""}</div>
+          <div class="src">source · ${x.id.toLowerCase()} · ${SOURCE[x.tool]||x.tool||"collector"} · collected ${x.collected_at||""}</div>
         </div>`;
       if(live){
         const btn=card.querySelector(".card-t"),ev=card.querySelector(".ev");

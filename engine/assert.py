@@ -14,6 +14,8 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
+import subprocess
 import sys
 import uuid
 from collections import Counter
@@ -24,8 +26,23 @@ from jsonschema import Draft202012Validator
 
 ENGINE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = ENGINE_DIR.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from engine import results  # noqa: E402 - path set above so the shared module imports
+
 MAP_PATH = ENGINE_DIR / "map.yaml"
 SCHEMA_PATH = ENGINE_DIR / "schema" / "fedramp-consolidated-rules.schema.json"
+SDR_VERSION = "ksi-sdr/0.1"
+
+# Collector runners, in dependency-free order. Each is invoked as a subprocess
+# with --out EVIDENCE_DIR; per-indicator errors are captured by the runners
+# themselves, so a whole-runner failure only warns and never aborts the batch.
+COLLECTORS = (
+    "collectors/arg/runner.py",
+    "collectors/graph/runner.py",
+    "collectors/github/runner.py",
+    "collectors/sentinel/runner.py",
+)
 
 REQUIRED_FIELDS = ("id", "name", "family", "mode", "collectors", "pass", "evidence")
 VALID_MODES = {"Auto", "Hybrid", "Manual"}
@@ -102,32 +119,48 @@ def missing_refs(doc: dict) -> list[str]:
     return missing
 
 
-def write_pending_sdr(doc: dict, out_dir: Path) -> Path:
-    out_dir.mkdir(parents=True, exist_ok=True)
+def collect(evidence_dir: Path) -> None:
+    """Run every collector runner into ``evidence_dir`` (best-effort)."""
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    for rel in COLLECTORS:
+        runner = REPO_ROOT / rel
+        if not runner.exists():
+            continue
+        print(f"collect: {rel}")
+        proc = subprocess.run(
+            [sys.executable, str(runner), "--out", str(evidence_dir)],
+            cwd=str(REPO_ROOT), text=True, capture_output=True,
+        )
+        for line in (proc.stdout or "").splitlines():
+            print(f"  {line}")
+        if proc.returncode != 0:
+            # A runner-level failure (e.g. no az login) degrades to Pending for
+            # its indicators; it must not abort the whole assertion run.
+            print(f"  WARN {rel} exited {proc.returncode}: "
+                  f"{(proc.stderr or '').strip()[:160]}", file=sys.stderr)
+
+
+def build_sdr(doc: dict, assessed: list[dict]) -> dict:
     run_id = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
-    sdr = {
+    return {
         "info": {
+            "sdr_version": SDR_VERSION,
             "run_id": run_id,
             "generated": dt.datetime.now(dt.timezone.utc).isoformat(),
             "rules_version": doc.get("version"),
-            "status": "pending-collectors",
-            "note": "Phase 0 placeholder: collectors not yet implemented. No result asserted.",
+            "subscription": os.environ.get("AZURE_SUBSCRIPTION_ID"),
+            "totals": results.summarize(assessed),
         },
-        "assertions": [
-            {
-                "id": ind["id"],
-                "name": ind["name"],
-                "family": ind["family"],
-                "mode": ind["mode"],
-                "result": None,
-                "review_required": bool(ind.get("review_required", False)),
-                "evidence": None,
-            }
-            for ind in doc.get("indicators", [])
-        ],
+        "assertions": assessed,
     }
-    out_path = out_dir / f"{run_id}.json"
-    out_path.write_text(json.dumps(sdr, indent=2), encoding="utf-8")
+
+
+def write_sdr(sdr: dict, out_dir: Path) -> Path:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{sdr['info']['run_id']}.json"
+    out_path.write_text(json.dumps(sdr, indent=2, default=str), encoding="utf-8")
+    latest = out_dir / "latest.json"
+    latest.write_text(json.dumps(sdr, indent=2, default=str), encoding="utf-8")
     return out_path
 
 
@@ -136,7 +169,12 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true",
                         help="validate map + schema wiring; run no collectors")
     parser.add_argument("--out", metavar="DIR",
-                        help="write an SDR to DIR (Phase 0: pending placeholder)")
+                        help="run collectors, compute results, write an SDR to DIR")
+    parser.add_argument("--evidence-dir", metavar="DIR",
+                        default=str(REPO_ROOT / "out" / "evidence"),
+                        help="where collector evidence is read/written")
+    parser.add_argument("--skip-collect", action="store_true",
+                        help="assert from existing evidence without re-running collectors")
     args = parser.parse_args()
 
     doc = load_map()
@@ -171,8 +209,17 @@ def main() -> int:
         return 0
 
     if args.out:
-        out_path = write_pending_sdr(doc, Path(args.out))
-        print(f"wrote pending SDR -> {out_path}")
+        evidence_dir = Path(args.evidence_dir)
+        if not args.skip_collect:
+            collect(evidence_dir)
+        evidence = results.load_evidence(evidence_dir)
+        assessed = results.assess(doc, evidence)
+        sdr = build_sdr(doc, assessed)
+        out_path = write_sdr(sdr, Path(args.out))
+        t = sdr["info"]["totals"]
+        print(f"wrote SDR -> {out_path}")
+        print(f"assertions: {t['verified']}/{t['automated_total']} automated verified "
+              f"(pass={t['pass']} fail={t['fail']} pending={t['pending']}) over {t['total']} indicators")
         return 0
 
     print("nothing to do (pass --dry-run or --out DIR).")
