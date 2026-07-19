@@ -89,6 +89,36 @@ def ksi_iam_elp(rows: list[dict]) -> bool:
     )
 
 
+def ksi_iam_apm(rows: list[dict]) -> bool:
+    # At least one ENABLED Conditional Access policy requires MFA or an
+    # authentication strength (phishing-resistant) - passwordless/strong-MFA posture.
+    for policy in rows:
+        if policy.get("state") != "enabled":
+            continue
+        grant = policy.get("grantControls") or {}
+        controls = [str(c).lower() for c in (grant.get("builtInControls") or [])]
+        if "mfa" in controls or grant.get("authenticationStrength"):
+            return True
+    return False
+
+
+def ksi_iam_sus(rows: list[dict]) -> bool:
+    # At least one ENABLED risk-based Conditional Access policy (sign-in or user
+    # risk) that responds to suspicious activity automatically.
+    for policy in rows:
+        if policy.get("state") != "enabled":
+            continue
+        conditions = policy.get("conditions") or {}
+        if conditions.get("signInRiskLevels") or conditions.get("userRiskLevels"):
+            return True
+    return False
+
+
+def ksi_iam_jit(rows: list[dict]) -> bool:
+    # At least one PIM-eligible (not standing) role assignment.
+    return len(rows) >= 1
+
+
 CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-PIY-GIV": ksi_piy_giv,
     "KSI-CNA-MAT": ksi_cna_mat,
@@ -102,6 +132,9 @@ CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-RPL-ABO": ksi_rpl_abo,
     "KSI-CNA-DFP": ksi_cna_dfp,
     "KSI-IAM-ELP": ksi_iam_elp,
+    "KSI-IAM-APM": ksi_iam_apm,
+    "KSI-IAM-SUS": ksi_iam_sus,
+    "KSI-IAM-JIT": ksi_iam_jit,
 }
 
 

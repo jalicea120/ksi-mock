@@ -1,0 +1,7 @@
+{
+  "indicator": "KSI-IAM-JIT",
+  "api": "arm",
+  "graph_url": "/subscriptions/{subscription}/resourceGroups/ksi-mock-rg/providers/Microsoft.Authorization/roleEligibilityScheduleInstances",
+  "params": { "api-version": "2020-10-01", "$expand": "roleDefinition,principal" },
+  "note": "ARM PIM-eligible role assignments scoped to the offering's resource group - the just-in-time authorization model in practice. Pass = at least one eligible (not standing) assignment."
+}
