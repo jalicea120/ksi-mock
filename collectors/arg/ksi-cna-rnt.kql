@@ -1,0 +1,11 @@
+// KSI-CNA-RNT - Restricting Network Traffic
+// Network security groups and their inbound deny posture. Engine pass check:
+// every NSG carries at least one inbound Deny rule (explicit default-deny).
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.network/networksecuritygroups'
+| mv-expand rule = properties.securityRules
+| extend access = tostring(rule.properties.access), direction = tostring(rule.properties.direction)
+| summarize inbound_deny_rules = countif(access =~ 'Deny' and direction =~ 'Inbound'),
+            custom_rules = count()
+    by name, resourceGroup

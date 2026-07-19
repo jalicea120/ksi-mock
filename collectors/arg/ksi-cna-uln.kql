@@ -1,0 +1,9 @@
+// KSI-CNA-ULN - Using Logical Networking
+// Virtual networks and their subnet segmentation. Engine pass check: a VNet with
+// at least two subnets (logical segmentation of traffic flows).
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.network/virtualnetworks'
+| project name, resourceGroup,
+    address_space = properties.addressSpace.addressPrefixes,
+    subnet_count = array_length(properties.subnets)

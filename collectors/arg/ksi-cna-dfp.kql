@@ -1,0 +1,11 @@
+// KSI-CNA-DFP - Defining Functionality and Privileges
+// Azure Policy assignments scoped to the offering's resource group - the
+// declarative definition of what functionality/configuration is permitted.
+// Engine pass check: at least one policy assignment governs the resource group.
+policyresources
+| where type =~ 'microsoft.authorization/policyassignments'
+| where tostring(properties.scope) endswith 'resourceGroups/ksi-mock-rg'
+| project assignment = name,
+    display_name = tostring(properties.displayName),
+    policy_definition = tostring(properties.policyDefinitionId),
+    enforcement_mode = tostring(properties.enforcementMode)

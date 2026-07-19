@@ -1,0 +1,11 @@
+// KSI-IAM-ELP - Ensuring Least Privilege
+// Azure RBAC role assignments scoped directly to the offering's resource group.
+// Engine pass check: access is explicitly scoped AND no assignment grants Owner
+// at the resource-group scope (privilege kept to the minimum needed).
+authorizationresources
+| where type =~ 'microsoft.authorization/roleassignments'
+| where tostring(properties.scope) endswith 'resourceGroups/ksi-mock-rg'
+| project principal_id = tostring(properties.principalId),
+    principal_type = tostring(properties.principalType),
+    role_definition_id = tostring(properties.roleDefinitionId),
+    scope = tostring(properties.scope)
