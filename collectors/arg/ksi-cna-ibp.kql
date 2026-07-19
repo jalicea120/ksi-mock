@@ -1,0 +1,10 @@
+// KSI-CNA-IBP - Implementing Best Practices
+// Microsoft Defender for Cloud assessments (vendor / CIS best-practice checks)
+// scoped to the offering's resources. Engine pass check: assessments are being
+// produced and healthy findings outnumber unhealthy ones.
+securityresources
+| where type =~ 'microsoft.security/assessments'
+| where id contains '/resourceGroups/ksi-mock-rg/'
+| project assessment = tostring(properties.displayName),
+    status = tostring(properties.status.code),
+    severity = tostring(properties.metadata.severity)

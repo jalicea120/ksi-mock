@@ -1,0 +1,10 @@
+// KSI-SVC-EIS - Evaluating and Improving Security
+// Microsoft Defender for Cloud secure score: the standing measure that security is
+// continuously evaluated for improvement (subscription-scoped by design). Engine
+// pass check: a secure score is being computed (the evaluation loop is active).
+securityresources
+| where type =~ 'microsoft.security/securescores'
+| project name,
+    percentage = toreal(properties.score.percentage),
+    current_score = toreal(properties.score.current),
+    max_score = toreal(properties.score.max)

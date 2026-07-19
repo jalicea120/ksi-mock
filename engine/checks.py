@@ -119,6 +119,23 @@ def ksi_iam_jit(rows: list[dict]) -> bool:
     return len(rows) >= 1
 
 
+def ksi_svc_eis(rows: list[dict]) -> bool:
+    # A Defender secure score is being computed (the improvement-evaluation loop).
+    return len(rows) >= 1
+
+
+def ksi_cna_ibp(rows: list[dict]) -> bool:
+    # Best-practice assessments are produced and healthy findings outnumber unhealthy.
+    healthy = sum(1 for row in rows if row.get("status") == "Healthy")
+    unhealthy = sum(1 for row in rows if row.get("status") == "Unhealthy")
+    return (healthy + unhealthy) >= 1 and healthy > unhealthy
+
+
+def ksi_cna_eis(rows: list[dict]) -> bool:
+    # At least one policy assignment is actively enforced (not audit-only).
+    return any(row.get("enforcement_mode") == "Default" for row in rows)
+
+
 CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-PIY-GIV": ksi_piy_giv,
     "KSI-CNA-MAT": ksi_cna_mat,
@@ -135,6 +152,9 @@ CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-IAM-APM": ksi_iam_apm,
     "KSI-IAM-SUS": ksi_iam_sus,
     "KSI-IAM-JIT": ksi_iam_jit,
+    "KSI-SVC-EIS": ksi_svc_eis,
+    "KSI-CNA-IBP": ksi_cna_ibp,
+    "KSI-CNA-EIS": ksi_cna_eis,
 }
 
 
