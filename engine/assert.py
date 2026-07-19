@@ -32,6 +32,7 @@ from engine import results  # noqa: E402 - path set above so the shared module i
 
 MAP_PATH = ENGINE_DIR / "map.yaml"
 SCHEMA_PATH = ENGINE_DIR / "schema" / "fedramp-consolidated-rules.schema.json"
+SDR_SCHEMA_PATH = ENGINE_DIR / "schema" / "ksi-sdr.schema.json"
 SDR_VERSION = "ksi-sdr/0.1"
 
 # Collector runners, in dependency-free order. Each is invoked as a subprocess
@@ -96,14 +97,27 @@ def summarize(doc: dict) -> Counter:
 
 
 def check_schema() -> list[str]:
-    if not SCHEMA_PATH.exists():
-        return [f"schema not found at {SCHEMA_PATH}"]
-    try:
-        schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-        Draft202012Validator.check_schema(schema)
-    except Exception as exc:  # noqa: BLE001 - dry-run reports any schema fault as one error
-        return [f"schema invalid: {exc}"]
-    return []
+    """Confirm every JSON Schema this engine relies on parses and is well-formed."""
+    errors: list[str] = []
+    for path in (SCHEMA_PATH, SDR_SCHEMA_PATH):
+        if not path.exists():
+            errors.append(f"schema not found at {path}")
+            continue
+        try:
+            schema = json.loads(path.read_text(encoding="utf-8"))
+            Draft202012Validator.check_schema(schema)
+        except Exception as exc:  # noqa: BLE001 - report any schema fault as one error
+            errors.append(f"{path.name} invalid: {exc}")
+    return errors
+
+
+def validate_sdr(sdr: dict) -> list[str]:
+    """Return schema-violation messages for an SDR (empty means conformant)."""
+    validator = Draft202012Validator(json.loads(SDR_SCHEMA_PATH.read_text(encoding="utf-8")))
+    return [
+        f"{'/'.join(str(p) for p in err.path) or '<root>'}: {err.message}"
+        for err in sorted(validator.iter_errors(sdr), key=lambda e: list(e.path))
+    ]
 
 
 def missing_refs(doc: dict) -> list[str]:
@@ -205,7 +219,18 @@ def main() -> int:
               f"(expected during Phase 0-2).")
 
     if args.dry_run:
-        print("dry-run OK: map + schema valid.")
+        # Build an SDR from whatever evidence exists (no collection) and confirm
+        # it conforms to the SDR schema - so CI enforces the shape on every PR
+        # without needing live Azure (empty evidence -> all Pending, still valid).
+        evidence = results.load_evidence(Path(args.evidence_dir))
+        sdr = build_sdr(doc, results.assess(doc, evidence))
+        sdr_errors = validate_sdr(sdr)
+        if sdr_errors:
+            print("SDR SCHEMA VALIDATION FAILED:", file=sys.stderr)
+            for err in sdr_errors:
+                print(f"  - {err}", file=sys.stderr)
+            return 1
+        print("dry-run OK: map + schemas valid; SDR conforms to ksi-sdr schema.")
         return 0
 
     if args.out:
@@ -215,6 +240,13 @@ def main() -> int:
         evidence = results.load_evidence(evidence_dir)
         assessed = results.assess(doc, evidence)
         sdr = build_sdr(doc, assessed)
+        sdr_errors = validate_sdr(sdr)
+        if sdr_errors:
+            # Refuse to emit a malformed SDR - downstream consumers trust the shape.
+            print("SDR SCHEMA VALIDATION FAILED (not writing):", file=sys.stderr)
+            for err in sdr_errors:
+                print(f"  - {err}", file=sys.stderr)
+            return 1
         out_path = write_sdr(sdr, Path(args.out))
         t = sdr["info"]["totals"]
         print(f"wrote SDR -> {out_path}")
