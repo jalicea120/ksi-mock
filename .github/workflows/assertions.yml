@@ -38,6 +38,7 @@ jobs:
       - name: Run collectors + compute assertions
         env:
           GH_TOKEN: ${{ github.token }}                       # github collector (gh api)
+          KSI_DEPENDABOT_PAT: ${{ secrets.KSI_DEPENDABOT_PAT }} # SCR-MON: Dependabot-read PAT (optional)
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: python engine/assert.py --out out/sdr
 
