@@ -484,6 +484,7 @@ indicators:
     mode: Hybrid
     collectors:
       - { tool: sentinel, ref: collectors/sentinel/ksi-inr-rpi.kql }
+      - { tool: manual, ref: docs/manual/ksi-inr-rpi.md }
     pass: Past incidents persistently reviewed for previously unidentified patterns/vulnerabilities.
     evidence: out/sdr/ksi-inr-rpi.json
     review_required: true

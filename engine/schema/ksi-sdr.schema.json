@@ -20,14 +20,17 @@
         "totals": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["total", "automated_total", "verified", "pass", "fail", "pending"],
+          "required": ["total", "automated_total", "verified", "pass", "fail", "pending",
+                       "attestable_total", "attested"],
           "properties": {
             "total": { "type": "integer", "minimum": 0 },
             "automated_total": { "type": "integer", "minimum": 0 },
             "verified": { "type": "integer", "minimum": 0 },
             "pass": { "type": "integer", "minimum": 0 },
             "fail": { "type": "integer", "minimum": 0 },
-            "pending": { "type": "integer", "minimum": 0 }
+            "pending": { "type": "integer", "minimum": 0 },
+            "attestable_total": { "type": "integer", "minimum": 0 },
+            "attested": { "type": "integer", "minimum": 0 }
           }
         }
       }
@@ -52,7 +55,21 @@
           "collected_at": { "type": ["string", "null"], "format": "date-time" },
           "row_count": { "type": ["integer", "null"], "minimum": 0 },
           "evidence": { "type": ["array", "null"] },
-          "error": { "type": ["string", "null"] }
+          "error": { "type": ["string", "null"] },
+          "attestation": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["attested"],
+            "properties": {
+              "attested": { "type": "boolean" },
+              "attestor": { "type": ["string", "null"] },
+              "attested_date": { "type": ["string", "null"] },
+              "review_cadence": { "type": ["string", "null"] },
+              "next_review_due": { "type": ["string", "null"] },
+              "doc": { "type": ["string", "null"] },
+              "collected_at": { "type": ["string", "null"] }
+            }
+          }
         },
         "allOf": [
           {

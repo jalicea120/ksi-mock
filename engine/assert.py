@@ -43,6 +43,7 @@ COLLECTORS = (
     "collectors/graph/runner.py",
     "collectors/github/runner.py",
     "collectors/sentinel/runner.py",
+    "collectors/manual/runner.py",
 )
 
 REQUIRED_FIELDS = ("id", "name", "family", "mode", "collectors", "pass", "evidence")
@@ -245,7 +246,8 @@ def main() -> int:
         # it conforms to the SDR schema - so CI enforces the shape on every PR
         # without needing live Azure (empty evidence -> all Pending, still valid).
         evidence = results.load_evidence(Path(args.evidence_dir))
-        sdr = build_sdr(doc, results.assess(doc, evidence))
+        attestations = results.load_attestations(Path(args.evidence_dir))
+        sdr = build_sdr(doc, results.assess(doc, evidence, attestations))
         sdr_errors = validate_sdr(sdr)
         if sdr_errors:
             print("SDR SCHEMA VALIDATION FAILED:", file=sys.stderr)
@@ -260,7 +262,8 @@ def main() -> int:
         if not args.skip_collect:
             collect(evidence_dir)
         evidence = results.load_evidence(evidence_dir)
-        assessed = results.assess(doc, evidence)
+        attestations = results.load_attestations(evidence_dir)
+        assessed = results.assess(doc, evidence, attestations)
         sdr = build_sdr(doc, assessed)
         sdr_errors = validate_sdr(sdr)
         if sdr_errors:
