@@ -1,0 +1,1556 @@
+{
+  "info": {
+    "sdr_version": "ksi-sdr/0.1",
+    "run_id": "20260719T213814Z-ae82116a",
+    "generated": "2026-07-19T21:38:14.861373+00:00",
+    "rules_version": "2026.07.06.01",
+    "subscription": "accccb65-0bd0-4cc1-8e8f-cfe4153816e0",
+    "totals": {
+      "total": 46,
+      "automated_total": 31,
+      "verified": 22,
+      "pass": 23,
+      "fail": 0,
+      "pending": 23
+    }
+  },
+  "assertions": [
+    {
+      "id": "KSI-PIY-GIV",
+      "name": "Generating Inventories",
+      "family": "KSI-PIY",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Real-time inventory of all information resources generated on demand from authoritative sources.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-piy-giv.kql",
+      "collected_at": "2026-07-19T20:52:19.481548+00:00",
+      "row_count": 15,
+      "evidence": [
+        {
+          "type": "microsoft.network/privatednszones/virtualnetworklinks",
+          "resource_count": 2
+        },
+        {
+          "type": "microsoft.network/privatednszones",
+          "resource_count": 2
+        },
+        {
+          "type": "microsoft.network/privateendpoints",
+          "resource_count": 2
+        },
+        {
+          "type": "microsoft.network/networkinterfaces",
+          "resource_count": 2
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-PIY-RES",
+      "name": "Reviewing Executive Support",
+      "family": "KSI-PIY",
+      "mode": "Manual",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Executive support for security goals persistently reviewed and demonstrated.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-PIY-RIS",
+      "name": "Reviewing Investments in Security",
+      "family": "KSI-PIY",
+      "mode": "Manual",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Effectiveness of security investments persistently reviewed.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-PIY-RSD",
+      "name": "Reviewing Security in the SDLC",
+      "family": "KSI-PIY",
+      "mode": "Hybrid",
+      "result": true,
+      "status": "pass",
+      "review_required": true,
+      "pass_criteria": "Security/privacy built into the SDLC, aligned to CISA Secure by Design; persistently reviewed.",
+      "tool": "github",
+      "query_ref": "collectors/github/ksi-piy-rsd.json",
+      "collected_at": "2026-07-19T20:52:36.676204+00:00",
+      "row_count": 8,
+      "evidence": [
+        {
+          "category": "/language:python",
+          "commit": "96977570bbf6dd8c83beb1a4158c061eb468cd91",
+          "created_at": "2026-07-19T20:45:42Z",
+          "ref": "refs/heads/main",
+          "results_count": 0,
+          "tool": "CodeQL"
+        },
+        {
+          "category": "/language:actions",
+          "commit": "96977570bbf6dd8c83beb1a4158c061eb468cd91",
+          "created_at": "2026-07-19T20:45:29Z",
+          "ref": "refs/heads/main",
+          "results_count": 0,
+          "tool": "CodeQL"
+        },
+        {
+          "category": "/language:python",
+          "commit": "8de35e28f380ab5913984d4734cb0e966d7dc0ca",
+          "created_at": "2026-07-19T20:44:15Z",
+          "ref": "refs/pull/18/head",
+          "results_count": 0,
+          "tool": "CodeQL"
+        },
+        {
+          "category": "/language:actions",
+          "commit": "8de35e28f380ab5913984d4734cb0e966d7dc0ca",
+          "created_at": "2026-07-19T20:44:12Z",
+          "ref": "refs/pull/18/head",
+          "results_count": 0,
+          "tool": "CodeQL"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-PIY-RVD",
+      "name": "Reviewing Vulnerability Disclosures",
+      "family": "KSI-PIY",
+      "mode": "Manual",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Vulnerability disclosure program persistently reviewed for effectiveness.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-DFP",
+      "name": "Defining Functionality and Privileges",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Least-privilege custom roles and allowed-resource-type policies enforced; privileges explicitly scoped.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-dfp.kql",
+      "collected_at": "2026-07-19T20:52:17.213582+00:00",
+      "row_count": 2,
+      "evidence": [
+        {
+          "assignment": "ksimock-deny-storage-pna",
+          "display_name": "Deny storage public network access (ksi-mock)",
+          "policy_definition": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/providers/Microsoft.Authorization/policyDefinitions/ksimock-deny-storage-public-network",
+          "enforcement_mode": "Default"
+        },
+        {
+          "assignment": "ksimock-fedramp-high",
+          "display_name": "FedRAMP High (audit-only, ksi-mock)",
+          "policy_definition": "/providers/Microsoft.Authorization/policySetDefinitions/d5264498-16f4-418a-b659-fa7ef418175f",
+          "enforcement_mode": "DoNotEnforce"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-EIS",
+      "name": "Enforcing Intended State",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Automated assessment + enforcement of intended state; drift auto-remediated (Class C required; Class B optional).",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-eis.kql",
+      "collected_at": "2026-07-19T20:52:17.468122+00:00",
+      "row_count": 2,
+      "evidence": [
+        {
+          "assignment": "ksimock-deny-storage-pna",
+          "display_name": "Deny storage public network access (ksi-mock)",
+          "enforcement_mode": "Default"
+        },
+        {
+          "assignment": "ksimock-fedramp-high",
+          "display_name": "FedRAMP High (audit-only, ksi-mock)",
+          "enforcement_mode": "DoNotEnforce"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-IBP",
+      "name": "Implementing Best Practices",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Vendor/CIS benchmark initiative assigned; high compliance against provider best practices for third-party resources.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-ibp.kql",
+      "collected_at": "2026-07-19T20:52:17.753325+00:00",
+      "row_count": 27,
+      "evidence": [
+        {
+          "assessment": "Storage account should use a private link connection",
+          "status": "Healthy",
+          "severity": "Medium"
+        },
+        {
+          "assessment": "Audit diagnostic setting for selected resource types",
+          "status": "Healthy",
+          "severity": "Low"
+        },
+        {
+          "assessment": "Key vaults should have soft delete enabled",
+          "status": "Healthy",
+          "severity": "High"
+        },
+        {
+          "assessment": "Secure transfer to storage accounts should be enabled",
+          "status": "Healthy",
+          "severity": "High"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-MAT",
+      "name": "Minimizing Attack Surface",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "No unnecessary public exposure; segmentation limits lateral movement.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-mat.kql",
+      "collected_at": "2026-07-19T20:52:17.976659+00:00",
+      "row_count": 0,
+      "evidence": [],
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-OFA",
+      "name": "Optimizing for Availability",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Critical resources configured for HA and rapid recovery (zone redundancy / autoscale).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-RNT",
+      "name": "Restricting Network Traffic",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Default-deny with explicit allow rules for inbound and outbound traffic.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-rnt.kql",
+      "collected_at": "2026-07-19T20:52:18.141096+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ksimock-workload-nsg",
+          "resourceGroup": "ksi-mock-rg",
+          "inbound_deny_rules": 1,
+          "custom_rules": 1
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-RVP",
+      "name": "Reviewing Protections",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "DDoS Protection enabled and WAF in prevention mode; effectiveness persistently reviewed.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-CNA-ULN",
+      "name": "Using Logical Networking",
+      "family": "KSI-CNA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Logical segmentation and enforced routing implement traffic-flow controls.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-cna-uln.kql",
+      "collected_at": "2026-07-19T20:52:18.376705+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ksimock-vnet",
+          "resourceGroup": "ksi-mock-rg",
+          "address_space": [
+            "10.42.0.0/16"
+          ],
+          "subnet_count": 3
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-ACM",
+      "name": "Automating Configuration Management",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Config managed via automation; persistently reviewed for drift.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-ASM",
+      "name": "Automating Secret Management",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Secrets/keys/certs managed in Key Vault with automated rotation; no hardcoded secrets.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-svc-asm.kql",
+      "collected_at": "2026-07-19T20:52:19.841603+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ksimockkvih6428",
+          "resourceGroup": "ksi-mock-rg",
+          "public_network_access": "Disabled",
+          "soft_delete": 1,
+          "purge_protection": 1
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-EIS",
+      "name": "Evaluating and Improving Security",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Security persistently evaluated for improvements and those improvements persistently made.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-svc-eis.kql",
+      "collected_at": "2026-07-19T20:52:20.277190+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ascScore",
+          "percentage": 0.3462,
+          "current_score": 4.5,
+          "max_score": 13.0
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-PRR",
+      "name": "Preventing Residual Risk",
+      "family": "KSI-SVC",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Residual risk reviewed and removed after changes (Class C required; Class B optional).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-RUD",
+      "name": "Removing Unwanted Data",
+      "family": "KSI-SVC",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Unwanted federal customer data removed promptly on request, incl. backups (Class C required; Class B optional).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-SIN",
+      "name": "Securing Information",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Information encrypted at rest and TLS 1.2+ in transit everywhere.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-svc-sin.kql",
+      "collected_at": "2026-07-19T20:52:20.413280+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ksimockstih6428",
+          "resourceGroup": "ksi-mock-rg",
+          "minimum_tls_version": "TLS1_2",
+          "https_only": 1,
+          "infrastructure_encryption": 1,
+          "public_network_access": "Disabled"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-VCM",
+      "name": "Validating Communications",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Authenticity and integrity of machine-to-machine comms validated via automation (Class C required; Class B optional).",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-svc-vcm.kql",
+      "collected_at": "2026-07-19T20:52:20.641682+00:00",
+      "row_count": 2,
+      "evidence": [
+        {
+          "name": "ksimock-kv-pe",
+          "resourceGroup": "ksi-mock-rg",
+          "target": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg/providers/Microsoft.KeyVault/vaults/ksimockkvih6428",
+          "connection_state": "Approved"
+        },
+        {
+          "name": "ksimock-st-blob-pe",
+          "resourceGroup": "ksi-mock-rg",
+          "target": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg/providers/Microsoft.Storage/storageAccounts/ksimockstih6428",
+          "connection_state": "Approved"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-SVC-VRI",
+      "name": "Validating Resource Integrity",
+      "family": "KSI-SVC",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Cryptographic integrity of resources validated (artifacts signed + verified before deploy).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-IAM-AAM",
+      "name": "Automating Account Management",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Automated joiner/mover/leaver provisioning and de-provisioning; recurring access reviews.",
+      "tool": "graph",
+      "query_ref": "collectors/graph/ksi-iam-aam.json",
+      "collected_at": "2026-07-19T20:52:21.431578+00:00",
+      "row_count": 0,
+      "evidence": null,
+      "error": "HTTP 403: {\"error\":{\"code\":\"\",\"message\":\"Attempted to perform an unauthorized operation.\",\"innerError\":{\"date\":\"2026-07-19T20:52:25\",\"request-id\":\"fe8cc50a-8fa7-4331-a2c7-a9550b08a7db\",\"client-request-id\":\"fe8c"
+    },
+    {
+      "id": "KSI-IAM-APM",
+      "name": "Adopting Passwordless Methods",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Passwordless methods in use where feasible; otherwise strong passwords + phishing-resistant MFA enforced by CA.",
+      "tool": "graph",
+      "query_ref": "collectors/graph/ksi-iam-apm.json",
+      "collected_at": "2026-07-19T20:52:24.946773+00:00",
+      "row_count": 15,
+      "evidence": [
+        {
+          "displayName": "Block Legacy Authentication",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "exchangeActiveSync",
+              "other"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "7271b331-e992-459a-b3f4-988574e7bc75"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "block"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for admins",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "2c55868c-2689-4bae-81c3-14667b36f5b9",
+                "27842b4b-42aa-44e1-aaef-6bb575443a27",
+                "5675d6aa-d11d-482d-97cf-af24f64dab93"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [
+                "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+                "c4e39bd9-1100-46d3-8c65-fb160da0071f",
+                "b0f54661-2d74-4c50-afa3-1ec803f12efe",
+                "158c047a-c907-4556-b7ef-446551a6b5f7",
+                "b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+                "29232cdf-9323-42fd-ade2-1d097af3e4de",
+                "62e90394-69f5-4237-9190-012177145e10",
+                "729827e3-9c14-49f7-bb1b-9608f156bbb8",
+                "966707d0-3269-4727-9be2-8c3a10f19b9d",
+                "7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+                "e8611ab8-c189-46e8-94e1-60213ab1f814",
+                "194ae4cb-b126-40b2-bd5b-6091b380977d",
+                "f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+                "fe930be7-5e62-47db-91af-98c3a49a38b1"
+              ],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for all users",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "2c55868c-2689-4bae-81c3-14667b36f5b9",
+                "27842b4b-42aa-44e1-aaef-6bb575443a27",
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "7271b331-e992-459a-b3f4-988574e7bc75",
+                "5675d6aa-d11d-482d-97cf-af24f64dab93"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for risky sign-ins",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [
+              "high",
+              "medium"
+            ],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "2c55868c-2689-4bae-81c3-14667b36f5b9"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-IAM-ELP",
+      "name": "Ensuring Least Privilege",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Access scoped to need; least privilege persistently reviewed.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-iam-elp.kql",
+      "collected_at": "2026-07-19T20:52:18.852317+00:00",
+      "row_count": 2,
+      "evidence": [
+        {
+          "principal_id": "56dda79c-66ab-42ce-bdb4-f4ec96d72385",
+          "principal_type": "ServicePrincipal",
+          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+          "scope": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg"
+        },
+        {
+          "principal_id": "56dda79c-66ab-42ce-bdb4-f4ec96d72385",
+          "principal_type": "ServicePrincipal",
+          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "scope": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-IAM-JIT",
+      "name": "Authorizing Just-in-Time",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Privileged roles are PIM-eligible (not permanent); activation gated by approval + MFA; applies to user and non-user.",
+      "tool": "arm",
+      "query_ref": "collectors/graph/ksi-iam-jit.json",
+      "collected_at": "2026-07-19T20:52:26.487710+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "properties": {
+            "roleEligibilityScheduleId": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg/providers/Microsoft.Authorization/roleEligibilitySchedules/2f574cd1-4db8-4b2c-8eb5-ba0945dc4015",
+            "scope": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg",
+            "roleDefinitionId": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+            "principalId": "21491504-105e-420d-b790-1cbf4dae04f1",
+            "principalType": "Group",
+            "status": "Provisioned",
+            "startDateTime": "2026-07-19T00:19:39.23Z",
+            "endDateTime": "2027-07-19T00:19:01.593Z",
+            "memberType": "Direct",
+            "createdOn": "2026-07-19T00:19:39.23Z",
+            "expandedProperties": {
+              "principal": {
+                "id": "21491504-105e-420d-b790-1cbf4dae04f1",
+                "displayName": "ksimock-pim-eligible",
+                "type": "Group"
+              },
+              "roleDefinition": {
+                "id": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+                "displayName": "Reader",
+                "type": "BuiltInRole"
+              },
+              "scope": {
+                "id": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg",
+                "displayName": "ksi-mock-rg",
+                "type": "resourcegroup"
+              }
+            }
+          },
+          "name": "2f574cd1-4db8-4b2c-8eb5-ba0945dc4015",
+          "id": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourceGroups/ksi-mock-rg/providers/Microsoft.Authorization/roleEligibilityScheduleInstances/2f574cd1-4db8-4b2c-8eb5-ba0945dc4015",
+          "type": "Microsoft.Authorization/roleEligibilityScheduleInstances"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-IAM-SNU",
+      "name": "Securing Non-User Authentication",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Non-user auth uses managed identities / federation; no stale long-lived service-principal secrets.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-iam-snu.kql",
+      "collected_at": "2026-07-19T20:52:19.085624+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "name": "ksimock-workload-mi",
+          "resourceGroup": "ksi-mock-rg",
+          "client_id": "abccb2a3-b817-4f27-8be6-1f702256655c",
+          "principal_id": "557855eb-c063-4045-8ba8-bd295ded73e7"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-IAM-SUS",
+      "name": "Responding to Suspicious Activity",
+      "family": "KSI-IAM",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Risk-based policies disable/secure privileged accounts automatically on suspicious activity.",
+      "tool": "graph",
+      "query_ref": "collectors/graph/ksi-iam-sus.json",
+      "collected_at": "2026-07-19T20:52:32.396248+00:00",
+      "row_count": 15,
+      "evidence": [
+        {
+          "displayName": "Block Legacy Authentication",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "exchangeActiveSync",
+              "other"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "7271b331-e992-459a-b3f4-988574e7bc75"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "block"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for admins",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "2c55868c-2689-4bae-81c3-14667b36f5b9",
+                "27842b4b-42aa-44e1-aaef-6bb575443a27",
+                "5675d6aa-d11d-482d-97cf-af24f64dab93"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [
+                "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+                "c4e39bd9-1100-46d3-8c65-fb160da0071f",
+                "b0f54661-2d74-4c50-afa3-1ec803f12efe",
+                "158c047a-c907-4556-b7ef-446551a6b5f7",
+                "b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+                "29232cdf-9323-42fd-ade2-1d097af3e4de",
+                "62e90394-69f5-4237-9190-012177145e10",
+                "729827e3-9c14-49f7-bb1b-9608f156bbb8",
+                "966707d0-3269-4727-9be2-8c3a10f19b9d",
+                "7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+                "e8611ab8-c189-46e8-94e1-60213ab1f814",
+                "194ae4cb-b126-40b2-bd5b-6091b380977d",
+                "f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+                "fe930be7-5e62-47db-91af-98c3a49a38b1"
+              ],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for all users",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "2c55868c-2689-4bae-81c3-14667b36f5b9",
+                "27842b4b-42aa-44e1-aaef-6bb575443a27",
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "7271b331-e992-459a-b3f4-988574e7bc75",
+                "5675d6aa-d11d-482d-97cf-af24f64dab93"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        },
+        {
+          "displayName": "Require multifactor authentication for risky sign-ins",
+          "state": "enabled",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [
+              "high",
+              "medium"
+            ],
+            "clientAppTypes": [
+              "all"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "platforms": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "All"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [
+                "All"
+              ],
+              "excludeUsers": [
+                "db232353-fcdf-4fc0-afbd-ba17993df8f2",
+                "2c55868c-2689-4bae-81c3-14667b36f5b9"
+              ],
+              "includeGroups": [],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            }
+          },
+          "grantControls": {
+            "operator": "OR",
+            "builtInControls": [
+              "mfa"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.us/v1.0/$metadata#identity/conditionalAccess/policies/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-MLA-ALA",
+      "name": "Authorizing Log Access",
+      "family": "KSI-MLA",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Least-privilege, JIT, reviewed access to log data by sensitivity (Class C required; Class B optional).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-MLA-EVC",
+      "name": "Evaluating Configurations",
+      "family": "KSI-MLA",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Configurations (esp. infrastructure-as-code) persistently evaluated and tested.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-MLA-LET",
+      "name": "Logging Event Types",
+      "family": "KSI-MLA",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Maintained log/event-type matrix; diagnostic settings present on all in-scope resources.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-MLA-OSM",
+      "name": "Operating SIEM Capability",
+      "family": "KSI-MLA",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "SIEM in use with centralized, tamper-resistant logging; persistently reviewed.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-mla-osm.kql",
+      "collected_at": "2026-07-19T20:52:19.325374+00:00",
+      "row_count": 1,
+      "evidence": [
+        {
+          "sentinel_solution": "SecurityInsights(ksimock-law)",
+          "resourceGroup": "ksi-mock-rg",
+          "workspace_id": "/subscriptions/accccb65-0bd0-4cc1-8e8f-cfe4153816e0/resourcegroups/ksi-mock-rg/providers/microsoft.operationalinsights/workspaces/ksimock-law",
+          "retention_days": null,
+          "workspace_sku": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-MLA-RVL",
+      "name": "Reviewing Logs",
+      "family": "KSI-MLA",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Logs persistently reviewed and audited (active detections + documented review).",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-CMT-LMC",
+      "name": "Logging Changes",
+      "family": "KSI-CMT",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Activity logging enabled and shipped to Log Analytics for all in-scope resources; changes monitored/alerted.",
+      "tool": "sentinel",
+      "query_ref": "collectors/sentinel/ksi-cmt-lmc.kql",
+      "collected_at": "2026-07-19T20:52:40.893581+00:00",
+      "row_count": 4,
+      "evidence": [
+        {
+          "ResourceProvider": "MICROSOFT.KEYVAULT",
+          "Category": "AuditEvent",
+          "events": 241,
+          "last_event": "2026-07-19T20:45:17.6433877Z"
+        },
+        {
+          "ResourceProvider": "MICROSOFT.RECOVERYSERVICES",
+          "Category": "AzureBackupReport",
+          "events": 48,
+          "last_event": "2026-07-19T12:20:55.3494959Z"
+        },
+        {
+          "ResourceProvider": "MICROSOFT.RECOVERYSERVICES",
+          "Category": "AddonAzureBackupPolicy",
+          "events": 24,
+          "last_event": "2026-07-19T12:20:55.3494959Z"
+        },
+        {
+          "ResourceProvider": "MICROSOFT.RECOVERYSERVICES",
+          "Category": "CoreAzureBackup",
+          "events": 3,
+          "last_event": "2026-07-19T11:10:47.5202341Z"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CMT-RMV",
+      "name": "Redeploying vs Modifying",
+      "family": "KSI-CMT",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Changes traceable to version-controlled redeployments; minimal out-of-band manual modification.",
+      "tool": "github",
+      "query_ref": "collectors/github/ksi-cmt-rmv.json",
+      "collected_at": "2026-07-19T20:52:34.101240+00:00",
+      "row_count": 18,
+      "evidence": [
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:44:56Z",
+          "head_sha": "96977570bbf6dd8c83beb1a4158c061eb468cd91",
+          "name": "deploy",
+          "path": ".github/workflows/deploy.yml",
+          "status": "completed"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:42:36Z",
+          "head_sha": "fef46fd5e8393ec3f7af8fddc637ff004a9615d5",
+          "name": "deploy",
+          "path": ".github/workflows/deploy.yml",
+          "status": "completed"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T10:41:24Z",
+          "head_sha": "b47e770ba4fd186f24aa3faf374a57b885f2878f",
+          "name": "deploy",
+          "path": ".github/workflows/deploy.yml",
+          "status": "completed"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T01:21:51Z",
+          "head_sha": "037098a05c5b0fccd6c35b8fa1e2b5b871cc18b1",
+          "name": "deploy",
+          "path": ".github/workflows/deploy.yml",
+          "status": "completed"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-CMT-RVP",
+      "name": "Reviewing Change Procedures",
+      "family": "KSI-CMT",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Documented change-management procedure with a persistent effectiveness review.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-CMT-VTD",
+      "name": "Validating Throughout Deployment",
+      "family": "KSI-CMT",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Every deployment passes automated tests and policy checks before promotion.",
+      "tool": "github",
+      "query_ref": "collectors/github/ksi-cmt-vtd.json",
+      "collected_at": "2026-07-19T20:52:35.046804+00:00",
+      "row_count": 43,
+      "evidence": [
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:44:56Z",
+          "event": "push",
+          "name": "deploy",
+          "path": ".github/workflows/deploy.yml",
+          "status": "completed"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:44:56Z",
+          "event": "dynamic",
+          "name": "Push on main",
+          "path": "dynamic/github-code-scanning/codeql",
+          "status": "completed"
+        },
+        {
+          "branch": "feat/sentinel-collectors",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:43:37Z",
+          "event": "pull_request",
+          "name": "ci",
+          "path": ".github/workflows/ci.yml",
+          "status": "completed"
+        },
+        {
+          "branch": "refs/pull/18/head",
+          "conclusion": "success",
+          "created_at": "2026-07-19T20:43:35Z",
+          "event": "dynamic",
+          "name": "PR #18",
+          "path": "dynamic/github-code-scanning/codeql",
+          "status": "completed"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-RPL-ABO",
+      "name": "Aligning Backups with Objectives",
+      "family": "KSI-RPL",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Backups aligned to defined recovery objectives; protection coverage persistently reviewed.",
+      "tool": "arg",
+      "query_ref": "collectors/arg/ksi-rpl-abo.kql",
+      "collected_at": "2026-07-19T20:52:19.688570+00:00",
+      "row_count": 4,
+      "evidence": [
+        {
+          "policy": "DefaultPolicy",
+          "vault": "ksimock-rsv",
+          "resourceGroup": "ksi-mock-rg",
+          "backup_frequency": "Daily",
+          "retention_type": "LongTermRetentionPolicy"
+        },
+        {
+          "policy": "EnhancedPolicy",
+          "vault": "ksimock-rsv",
+          "resourceGroup": "ksi-mock-rg",
+          "backup_frequency": "Hourly",
+          "retention_type": "LongTermRetentionPolicy"
+        },
+        {
+          "policy": "HourlyLogBackup",
+          "vault": "ksimock-rsv",
+          "resourceGroup": "ksi-mock-rg",
+          "backup_frequency": "",
+          "retention_type": ""
+        },
+        {
+          "policy": "ksimock-vm-daily",
+          "vault": "ksimock-rsv",
+          "resourceGroup": "ksi-mock-rg",
+          "backup_frequency": "Daily",
+          "retention_type": "LongTermRetentionPolicy"
+        }
+      ],
+      "error": null
+    },
+    {
+      "id": "KSI-RPL-ARP",
+      "name": "Aligning Recovery Plan",
+      "family": "KSI-RPL",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Recovery plan aligned to recovery objectives; persistently reviewed.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-RPL-RRO",
+      "name": "Reviewing Recovery Objectives",
+      "family": "KSI-RPL",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "RTO/RPO defined and persistently reviewed against business needs and capability.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-RPL-TRC",
+      "name": "Testing Recovery Capabilities",
+      "family": "KSI-RPL",
+      "mode": "Auto",
+      "result": null,
+      "status": "pending",
+      "review_required": false,
+      "pass_criteria": "Recovery capability persistently tested against defined objectives.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-SCR-MIT",
+      "name": "Mitigating Supply Chain Risk",
+      "family": "KSI-SCR",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Supply chain risks persistently identified, reviewed, and mitigated.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-SCR-MON",
+      "name": "Monitoring Supply Chain Risk",
+      "family": "KSI-SCR",
+      "mode": "Auto",
+      "result": true,
+      "status": "pass",
+      "review_required": false,
+      "pass_criteria": "Third-party software automatically monitored for upstream vulnerabilities with alerting.",
+      "tool": "github",
+      "query_ref": "collectors/github/ksi-scr-mon.json",
+      "collected_at": "2026-07-19T20:52:37.165089+00:00",
+      "row_count": 0,
+      "evidence": [],
+      "error": null
+    },
+    {
+      "id": "KSI-INR-AAR",
+      "name": "Generating After Action Reports",
+      "family": "KSI-INR",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "After-action report produced per incident; lessons learned persistently incorporated.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-INR-RIR",
+      "name": "Reviewing Incident Response Procedures",
+      "family": "KSI-INR",
+      "mode": "Manual",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Documented IR procedures with persistent effectiveness review.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    },
+    {
+      "id": "KSI-INR-RPI",
+      "name": "Reviewing Past Incidents",
+      "family": "KSI-INR",
+      "mode": "Hybrid",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Past incidents persistently reviewed for previously unidentified patterns/vulnerabilities.",
+      "tool": "sentinel",
+      "query_ref": "collectors/sentinel/ksi-inr-rpi.kql",
+      "collected_at": "2026-07-19T20:52:43.698830+00:00",
+      "row_count": 0,
+      "evidence": [],
+      "error": null
+    },
+    {
+      "id": "KSI-CED-RAT",
+      "name": "Reviewing All Training",
+      "family": "KSI-CED",
+      "mode": "Manual",
+      "result": null,
+      "status": "pending",
+      "review_required": true,
+      "pass_criteria": "Documented training program (general, role-specific, secure-dev, IR/DR) with a persistent effectiveness review cadence.",
+      "tool": null,
+      "query_ref": null,
+      "collected_at": null,
+      "row_count": null,
+      "evidence": null,
+      "error": null
+    }
+  ]
+}
