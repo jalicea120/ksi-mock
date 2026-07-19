@@ -63,8 +63,9 @@ def build_model(history_path: Path) -> dict:
     """Model from live local evidence (the operator's delegated view)."""
     spec = yaml.safe_load(MAP.read_text(encoding="utf-8"))
     evidence = results.load_evidence(EVIDENCE_DIR)
+    attestations = results.load_attestations(EVIDENCE_DIR)
     # Shared assessment - identical status logic to the SDR engine.
-    indicators = results.assess(spec, evidence)
+    indicators = results.assess(spec, evidence, attestations)
     return {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(),
         "rules_version": spec.get("version"),

@@ -146,6 +146,10 @@
   .pill.wait{background:var(--wait-bg);color:var(--wait);box-shadow:inset 0 0 0 1px var(--wait-line)}
   .pill.wait .pd{background:var(--wait)}
   .card-nm{font-size:14.5px;font-weight:560;letter-spacing:-.01em;color:var(--ink-1)}
+  .attest{margin-top:9px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.02em;
+    padding:5px 9px;border-radius:7px;display:inline-block}
+  .attest.ok{background:var(--ok-bg);color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok-line)}
+  .attest.wait{background:var(--wait-bg);color:var(--wait);box-shadow:inset 0 0 0 1px var(--wait-line)}
   .card-meta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
   .card-meta .chev{margin-left:auto;transition:transform .18s;color:var(--ink-3)}
   .card-t[aria-expanded="true"] .chev{transform:rotate(90deg)}
@@ -241,6 +245,8 @@
   const nHybrid = count(x=>x.mode==="Hybrid");
   const nManual = count(x=>x.mode==="Manual");
   const nAutoPending = count(x=>x.mode==="Auto" && x.status==="pending");
+  const nReview = count(x=>x.review_required);
+  const nAttested = count(x=>x.attestation && x.attestation.attested);
 
   function relTime(iso){
     if(!iso) return "";
@@ -301,7 +307,7 @@
     {k:"Automated",v:nAuto,s:`${nHybrid} hybrid · ${nManual} manual`},
     {k:"Live-verified",v:`${nVerified}<small>/${nAuto}</small>`,s:"all currently passing"},
     {k:"Collector coverage",v:Math.round(nVerified/nAuto*100)+`<small>%</small>`,s:"of automated indicators"},
-    {k:"Failing",v:count(x=>x.status==="fail"),s:"open findings"}
+    {k:"Attestations",v:`${nAttested}<small>/${nReview}</small>`,s:"human sign-off on record"}
   ];
   document.getElementById("kpis").innerHTML = tiles.map(t=>
     `<div class="tile"><div class="k">${t.k}</div><div class="v tnum">${t.v}</div><div class="s">${t.s}</div></div>`
@@ -364,9 +370,12 @@
           <div class="card-nm">${esc(x.name)}</div>
           <div class="card-meta">
             ${live?`<span>${x.row_count} resource${x.row_count===1?"":"s"} checked</span><span>·</span><span>${relTime(x.collected_at)}</span>`
-                 :`<span>collector staged</span>`}
+                 :(x.attestation?`<span>attestation on record</span>`:`<span>collector staged</span>`)}
             ${live?`<span class="chev">›</span>`:``}
           </div>
+          ${x.attestation?`<div class="attest ${x.attestation.attested?'ok':'wait'}">${x.attestation.attested
+              ?`&#10003; Attested${x.attestation.attestor?` &middot; ${esc(x.attestation.attestor)}`:``}${x.attestation.attested_date?` &middot; ${esc(x.attestation.attested_date)}`:``}`
+              :`Awaiting attestation${x.attestation.review_cadence?` &middot; ${esc(x.attestation.review_cadence)} review`:``}`}</div>`:``}
         </button>
         <div class="ev" id="${evId}" role="region">
           <div class="crit-line">Pass criteria: <b>${esc(x.pass_criteria||"")}</b></div>
