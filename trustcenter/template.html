@@ -1,0 +1,358 @@
+<style>
+  :root{
+    --paper:#F3F6FA; --card:#FFFFFF; --card-2:#FAFBFD; --line:#E1E7F0;
+    --ink-1:#141A26; --ink-2:#47566E; --ink-3:#7B889F;
+    --accent:#4C63E6; --accent-ink:#3348CE; --accent-wash:#ECEEFC;
+    --ok:#0E9C63; --ok-bg:#E4F4EC; --ok-line:#BFE6D2;
+    --crit:#D64841; --crit-bg:#FaEAE9; --crit-line:#F0C9C6;
+    --warn:#B67715; --warn-bg:#F8F0DD; --warn-line:#EBD8AE;
+    --wait:#66748C; --wait-bg:#EDF1F6; --wait-line:#D8E0EA;
+    --shadow:0 1px 2px rgba(16,24,40,.05), 0 6px 20px rgba(16,24,40,.05);
+    --mono:ui-monospace,"SFMono-Regular","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0A0D13; --card:#141A24; --card-2:#0F141D; --line:#232D3D;
+      --ink-1:#EAF0F8; --ink-2:#A6B4C9; --ink-3:#6C7B92;
+      --accent:#7C93FF; --accent-ink:#98ABFF; --accent-wash:#171E30;
+      --ok:#2FC286; --ok-bg:#0F2620; --ok-line:#1E4636;
+      --crit:#F0665F; --crit-bg:#2A1513; --crit-line:#4A231F;
+      --warn:#E2A63F; --warn-bg:#271D0E; --warn-line:#463719;
+      --wait:#8794A9; --wait-bg:#181F2A; --wait-line:#2A3444;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0A0D13; --card:#141A24; --card-2:#0F141D; --line:#232D3D;
+    --ink-1:#EAF0F8; --ink-2:#A6B4C9; --ink-3:#6C7B92;
+    --accent:#7C93FF; --accent-ink:#98ABFF; --accent-wash:#171E30;
+    --ok:#2FC286; --ok-bg:#0F2620; --ok-line:#1E4636;
+    --crit:#F0665F; --crit-bg:#2A1513; --crit-line:#4A231F;
+    --warn:#E2A63F; --warn-bg:#271D0E; --warn-line:#463719;
+    --wait:#8794A9; --wait-bg:#181F2A; --wait-line:#2A3444;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink-1);font-family:var(--sans);
+    line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+  a{color:var(--accent-ink);text-decoration:none}
+  h1,h2,h3{text-wrap:balance;margin:0}
+
+  /* top bar */
+  .topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .row{display:flex;align-items:center;gap:16px;height:58px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;
+    letter-spacing:.02em;font-size:14px}
+  .brand .glyph{width:22px;height:22px;border-radius:6px;background:var(--accent);
+    display:grid;place-items:center;color:#fff;font-size:13px;flex:none}
+  .brand small{color:var(--ink-3);font-weight:500}
+  .spacer{flex:1}
+  .live{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+    color:var(--ink-2);background:var(--card);border:1px solid var(--line);
+    padding:6px 11px;border-radius:999px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;
+    box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 70%,transparent);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}
+    70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+  .tgl{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink-2);
+    width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:15px;flex:none}
+  .tgl:hover{color:var(--ink-1);border-color:var(--ink-3)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+  /* hero / posture */
+  .hero{padding:40px 0 26px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent-ink);font-weight:600;margin-bottom:14px}
+  .hero h1{font-size:clamp(26px,3.4vw,38px);font-weight:680;letter-spacing:-.02em;max-width:20ch}
+  .hero h1 b{color:var(--ok);font-weight:680}
+  .hero p{color:var(--ink-2);max-width:62ch;margin:14px 0 0;font-size:15.5px}
+
+  .posture{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:20px 22px}
+  .posture .lab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .posture .lab span{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .bar{display:flex;gap:2px;height:16px;border-radius:6px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:2px;min-width:3px;transition:filter .15s}
+  .bar i.s-ok{background:var(--ok)} .bar i.s-warn{background:var(--warn)}
+  .bar i.s-wait{background:var(--wait)}
+  .bar i.s-manual{background:repeating-linear-gradient(135deg,var(--wait) 0 4px,transparent 4px 8px),var(--wait-bg);
+    box-shadow:inset 0 0 0 1px var(--wait-line)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px 22px;margin-top:16px}
+  .legend div{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}
+  .legend .sw{width:12px;height:12px;border-radius:4px;flex:none}
+  .legend b{color:var(--ink-1);font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  /* kpi tiles */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px;margin-top:22px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px;box-shadow:var(--shadow)}
+  .tile .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .tile .v{font-family:var(--mono);font-size:30px;font-weight:600;letter-spacing:-.02em;margin-top:8px;
+    color:var(--ink-1);font-variant-numeric:tabular-nums;line-height:1}
+  .tile .v small{font-size:15px;color:var(--ink-3);font-weight:500}
+  .tile .s{font-size:12.5px;color:var(--ink-2);margin-top:7px}
+
+  /* controls */
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:34px 0 18px}
+  .controls h2{font-size:15px;font-family:var(--mono);letter-spacing:.02em;color:var(--ink-2);margin-right:6px;font-weight:600}
+  .chip{appearance:none;font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink-2);padding:6px 12px;border-radius:999px;cursor:pointer}
+  .chip:hover{border-color:var(--ink-3);color:var(--ink-1)}
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip .c{opacity:.7;margin-left:6px;font-variant-numeric:tabular-nums}
+
+  /* families + cards */
+  .fam{margin-top:30px}
+  .fam-h{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .fam-h .code{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--accent-ink);
+    background:var(--accent-wash);padding:3px 9px;border-radius:7px}
+  .fam-h .nm{font-size:16px;font-weight:620;letter-spacing:-.01em}
+  .fam-h .ct{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-left:auto;font-variant-numeric:tabular-nums}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:13px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;
+    box-shadow:var(--shadow)}
+  .card.hide{display:none}
+  .card-t{width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:15px 16px;
+    display:block;color:inherit;font-family:inherit}
+  .card-t:hover{background:var(--card-2)}
+  .card-t[disabled]{cursor:default}
+  .card-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .kid{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--ink-2);letter-spacing:.01em}
+  .mode{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-3);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+  .pill{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+    font-size:11px;font-weight:600;letter-spacing:.03em;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .pill .pd{width:7px;height:7px;border-radius:50%;flex:none}
+  .pill.ok{background:var(--ok-bg);color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok-line)}
+  .pill.ok .pd{background:var(--ok)}
+  .pill.crit{background:var(--crit-bg);color:var(--crit);box-shadow:inset 0 0 0 1px var(--crit-line)}
+  .pill.crit .pd{background:var(--crit)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn-line)}
+  .pill.warn .pd{background:var(--warn)}
+  .pill.wait{background:var(--wait-bg);color:var(--wait);box-shadow:inset 0 0 0 1px var(--wait-line)}
+  .pill.wait .pd{background:var(--wait)}
+  .card-nm{font-size:14.5px;font-weight:560;letter-spacing:-.01em;color:var(--ink-1)}
+  .card-meta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+  .card-meta .chev{margin-left:auto;transition:transform .18s;color:var(--ink-3)}
+  .card-t[aria-expanded="true"] .chev{transform:rotate(90deg)}
+  .ev{border-top:1px solid var(--line);padding:0 16px;max-height:0;overflow:hidden}
+  .ev.open{padding:14px 16px;max-height:640px}
+  .ev .crit-line{font-size:12.5px;color:var(--ink-2);margin-bottom:10px}
+  .ev .crit-line b{color:var(--ink-1);font-weight:600}
+  .ev pre{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink-2);
+    background:var(--card-2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;
+    overflow-x:auto;white-space:pre;font-variant-numeric:tabular-nums}
+  .ev .src{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:9px}
+
+  footer{margin:52px 0 40px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12.5px}
+  footer .mono{color:var(--ink-2)}
+  footer p{margin:0 0 7px;max-width:78ch}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="topbar"><div class="wrap row">
+  <div class="brand"><span class="glyph">◈</span>KSI&nbsp;Trust&nbsp;Center
+    <small>· FedRAMP 20x evidence mock</small></div>
+  <div class="spacer"></div>
+  <div class="live"><span class="dot"></span><span id="liveTxt">live</span></div>
+  <button class="tgl" id="tgl" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+</div></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">FedRAMP 20x · Key Security Indicators · continuous validation</div>
+    <h1 id="heroH">Continuous, automated assurance for every Key Security Indicator.</h1>
+    <p>Each indicator below is measured from live Azure Government configuration and telemetry —
+      never hand-set. Results are computed from read-only evidence on every run, so what you see is
+      the current, provable state of this offering. <b id="heroSub"></b></p>
+
+    <div class="posture">
+      <div class="lab"><span>Assurance posture · all 46 indicators</span><span id="postPct"></span></div>
+      <div class="bar" id="bar" role="img" aria-label="Composition of indicator coverage"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <div class="controls" id="controls">
+    <h2>Indicators</h2>
+  </div>
+  <div id="families"></div>
+
+  <footer>
+    <p><b class="mono">Provisional preview — not final guidance.</b> This is a disposable mock built to
+      demonstrate how a cloud service offering generates and computes KSI evidence. It runs on synthetic
+      data in an isolated Azure Government subscription; treat all output as informational, pending review
+      by a qualified professional.</p>
+    <p class="mono" id="footMeta"></p>
+  </footer>
+</main>
+
+<script>
+  const TC = /*__TC_DATA__*/ {"generated":"","rules_version":"","indicators":[]} /*__END__*/;
+
+  const FAMILY_NAMES = {
+    "KSI-PIY":"Policy & Inventory","KSI-CNA":"Cloud Native Architecture",
+    "KSI-SVC":"Service Configuration","KSI-IAM":"Identity & Access Management",
+    "KSI-MLA":"Monitoring, Logging & Auditing","KSI-CMT":"Change Management",
+    "KSI-RPL":"Recovery Planning","KSI-SCR":"Supply Chain Risk",
+    "KSI-INR":"Incident Response","KSI-CED":"Cybersecurity Education"
+  };
+  // one derived state per indicator: {label, tone}
+  function stateOf(x){
+    if(x.status==="pass") return {label:"Verified",tone:"ok"};
+    if(x.status==="fail") return {label:"Failed",tone:"crit"};
+    if(x.mode==="Hybrid") return {label:"Review",tone:"warn"};
+    if(x.mode==="Manual") return {label:"Manual",tone:"wait"};
+    return {label:"Pending",tone:"wait"};
+  }
+  const inds = TC.indicators;
+  const isVerified = x=>x.status==="pass";
+  const count = f => inds.filter(f).length;
+
+  const nVerified = count(isVerified);
+  const nAuto = count(x=>x.mode==="Auto");
+  const nHybrid = count(x=>x.mode==="Hybrid");
+  const nManual = count(x=>x.mode==="Manual");
+  const nAutoPending = count(x=>x.mode==="Auto" && x.status==="pending");
+
+  function relTime(iso){
+    if(!iso) return "";
+    const s=Math.max(1,(Date.now()-new Date(iso))/1000);
+    if(s<90) return Math.round(s)+"s ago";
+    if(s<5400) return Math.round(s/60)+"m ago";
+    if(s<129600) return Math.round(s/3600)+"h ago";
+    return Math.round(s/86400)+"d ago";
+  }
+  const latest = inds.filter(x=>x.collected_at).map(x=>new Date(x.collected_at)).sort((a,b)=>b-a)[0];
+
+  // hero + live
+  document.getElementById("heroSub").textContent =
+    `${nVerified} of ${nAuto} automated indicators are wired to a live collector and currently verified; the rest are staged.`;
+  document.getElementById("heroH").innerHTML =
+    `<b>${nVerified}</b> indicators continuously verified from live evidence.`;
+  document.getElementById("liveTxt").textContent = latest ? "checked "+relTime(latest.toISOString()) : "live";
+
+  // posture bar
+  const segs=[
+    {cls:"s-ok",   label:"Verified (Auto)", n:nVerified,     sw:"var(--ok)"},
+    {cls:"s-wait", label:"Pending (Auto)",  n:nAutoPending,  sw:"var(--wait)"},
+    {cls:"s-warn", label:"Review (Hybrid)", n:nHybrid,       sw:"var(--warn)"},
+    {cls:"s-manual",label:"Manual",         n:nManual,       sw:"var(--wait)"}
+  ];
+  const total=inds.length;
+  document.getElementById("bar").innerHTML =
+    segs.filter(s=>s.n>0).map(s=>`<i class="${s.cls}" style="flex:${s.n}" title="${s.label}: ${s.n}"></i>`).join("");
+  document.getElementById("postPct").className="mono";
+  document.getElementById("postPct").style.color="var(--ink-2)";
+  document.getElementById("postPct").textContent = Math.round(nVerified/nAuto*100)+"% of automated verified";
+  document.getElementById("legend").innerHTML = segs.map(s=>
+    `<div><span class="sw ${s.cls==='s-manual'?'':''}" style="background:${s.cls==='s-manual'?'repeating-linear-gradient(135deg,var(--wait) 0 3px,transparent 3px 6px),var(--wait-bg)':s.sw}"></span>${s.label} <b>${s.n}</b></div>`
+  ).join("");
+
+  // kpi tiles
+  const tiles=[
+    {k:"Indicators",v:total,s:"across 10 KSI families"},
+    {k:"Automated",v:nAuto,s:`${nHybrid} hybrid · ${nManual} manual`},
+    {k:"Live-verified",v:`${nVerified}<small>/${nAuto}</small>`,s:"all currently passing"},
+    {k:"Collector coverage",v:Math.round(nVerified/nAuto*100)+`<small>%</small>`,s:"of automated indicators"},
+    {k:"Failing",v:count(x=>x.status==="fail"),s:"open findings"}
+  ];
+  document.getElementById("kpis").innerHTML = tiles.map(t=>
+    `<div class="tile"><div class="k">${t.k}</div><div class="v tnum">${t.v}</div><div class="s">${t.s}</div></div>`
+  ).join("");
+
+  // filter chips
+  const filters=[
+    {id:"all",label:"All",f:()=>true},
+    {id:"ok",label:"Verified",f:x=>x.status==="pass"},
+    {id:"pending",label:"Pending",f:x=>x.status==="pending"&&x.mode==="Auto"},
+    {id:"hybrid",label:"Review",f:x=>x.mode==="Hybrid"},
+    {id:"manual",label:"Manual",f:x=>x.mode==="Manual"}
+  ];
+  let active="all";
+  const controls=document.getElementById("controls");
+  filters.forEach(fl=>{
+    const b=document.createElement("button");
+    b.className="chip";b.setAttribute("aria-pressed",fl.id==="all");
+    b.innerHTML=`${fl.label}<span class="c">${inds.filter(fl.f).length}</span>`;
+    b.onclick=()=>{active=fl.id;document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+      b.setAttribute("aria-pressed","true");applyFilter();};
+    controls.appendChild(b);
+  });
+  function applyFilter(){
+    const fl=filters.find(f=>f.id===active);
+    document.querySelectorAll("[data-ind]").forEach(el=>{
+      const x=inds.find(i=>i.id===el.dataset.ind);
+      el.classList.toggle("hide",!fl.f(x));
+    });
+    document.querySelectorAll(".fam").forEach(fam=>{
+      const any=[...fam.querySelectorAll("[data-ind]")].some(c=>!c.classList.contains("hide"));
+      fam.style.display=any?"":"none";
+    });
+  }
+
+  // families + cards
+  const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const order=[...new Set(inds.map(x=>x.family))];
+  const host=document.getElementById("families");
+  order.forEach(fam=>{
+    const group=inds.filter(x=>x.family===fam);
+    const ver=group.filter(isVerified).length;
+    const sec=document.createElement("section");sec.className="fam";
+    sec.innerHTML=`<div class="fam-h"><span class="code">${fam}</span>
+      <span class="nm">${FAMILY_NAMES[fam]||fam}</span>
+      <span class="ct">${ver}/${group.length} verified</span></div>
+      <div class="grid"></div>`;
+    const grid=sec.querySelector(".grid");
+    group.forEach(x=>{
+      const st=stateOf(x); const live=x.collected_at!=null;
+      const card=document.createElement("div");card.className="card";card.dataset.ind=x.id;
+      const evId="ev-"+x.id;
+      card.innerHTML=`
+        <button class="card-t" aria-expanded="false" aria-controls="${evId}" ${live?"":"disabled"}>
+          <div class="card-top">
+            <span class="kid">${x.id}</span>
+            <span class="mode">${x.mode}</span>
+            <span class="pill ${st.tone}"><span class="pd"></span>${st.label}</span>
+          </div>
+          <div class="card-nm">${esc(x.name)}</div>
+          <div class="card-meta">
+            ${live?`<span>${x.row_count} resource${x.row_count===1?"":"s"} checked</span><span>·</span><span>${relTime(x.collected_at)}</span>`
+                 :`<span>collector staged</span>`}
+            ${live?`<span class="chev">›</span>`:``}
+          </div>
+        </button>
+        <div class="ev" id="${evId}" role="region">
+          <div class="crit-line">Pass criteria: <b>${esc(x.pass_criteria||"")}</b></div>
+          <pre>${esc(JSON.stringify(x.evidence,null,2))}</pre>
+          <div class="src">source · ${x.id.toLowerCase()} · Azure Resource Graph · collected ${x.collected_at||""}</div>
+        </div>`;
+      if(live){
+        const btn=card.querySelector(".card-t"),ev=card.querySelector(".ev");
+        btn.onclick=()=>{const open=btn.getAttribute("aria-expanded")==="true";
+          btn.setAttribute("aria-expanded",!open);ev.classList.toggle("open",!open);};
+      }
+      grid.appendChild(card);
+    });
+    host.appendChild(sec);
+  });
+
+  // footer meta
+  document.getElementById("footMeta").textContent =
+    `Consolidated Rules v${TC.rules_version||"—"} · generated ${TC.generated} · offering: ksi-mock-rg (Azure US Gov)`;
+
+  // theme toggle
+  const root=document.documentElement, tgl=document.getElementById("tgl");
+  tgl.onclick=()=>{
+    const cur=root.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+    root.setAttribute("data-theme",cur==="dark"?"light":"dark");
+  };
+</script>

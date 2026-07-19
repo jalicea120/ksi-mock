@@ -1,5 +1,6 @@
 out/sdr/*
 out/evidence/
+out/trustcenter/
 .env
 *.env
 __pycache__/
