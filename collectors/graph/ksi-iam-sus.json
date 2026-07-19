@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-IAM-SUS",
+  "graph_url": "/v1.0/identity/conditionalAccess/policies",
+  "params": { "$select": "displayName,state,grantControls,conditions" },
+  "note": "Conditional Access policies. Pass = at least one ENABLED risk-based policy (sign-in risk or user risk conditions) that automatically responds to suspicious activity."
+}

@@ -52,7 +52,10 @@ def build_model() -> dict:
     for item in spec["indicators"]:
         indicator_id = item["id"]
         payload = evidence.get(indicator_id)
-        result = checks.evaluate(indicator_id, payload["rows"]) if payload else None
+        # A collector that errored (e.g. missing permission) is "not measured",
+        # never a fail - honest reporting, no fabricated result.
+        usable = payload if (payload and not payload.get("error")) else None
+        result = checks.evaluate(indicator_id, usable["rows"]) if usable else None
         status = "pending" if result is None else ("pass" if result else "fail")
         indicators.append({
             "id": indicator_id,
@@ -61,9 +64,9 @@ def build_model() -> dict:
             "mode": item["mode"],
             "status": status,
             "pass_criteria": item.get("pass"),
-            "collected_at": payload["collected_at"] if payload else None,
-            "row_count": payload["row_count"] if payload else None,
-            "evidence": payload["rows"][:4] if payload else None,
+            "collected_at": usable["collected_at"] if usable else None,
+            "row_count": usable["row_count"] if usable else None,
+            "evidence": usable["rows"][:4] if usable else None,
         })
 
     return {

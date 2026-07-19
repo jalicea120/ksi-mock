@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-IAM-AAM",
+  "graph_url": "/v1.0/identityGovernance/accessReviews/definitions",
+  "params": { "$select": "displayName,status,scope,descriptionForAdmins" },
+  "note": "Access review campaigns (recurring, automated attestation of accounts/roles). Pass = at least one access review defined."
+}
