@@ -169,6 +169,12 @@ def ksi_piy_rsd(rows: list[dict]) -> bool:
     return len(rows) >= 1
 
 
+def ksi_cmt_lmc(rows: list[dict]) -> bool:
+    # Change/audit logging is enabled and shipping to Log Analytics: at least one
+    # diagnostic category is actively ingesting events (e.g. Key Vault AuditEvent).
+    return any(int(row.get("events") or 0) >= 1 for row in rows)
+
+
 CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-PIY-GIV": ksi_piy_giv,
     "KSI-CNA-MAT": ksi_cna_mat,
@@ -192,6 +198,7 @@ CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-CMT-RMV": ksi_cmt_rmv,
     "KSI-SCR-MON": ksi_scr_mon,
     "KSI-PIY-RSD": ksi_piy_rsd,
+    "KSI-CMT-LMC": ksi_cmt_lmc,
 }
 
 

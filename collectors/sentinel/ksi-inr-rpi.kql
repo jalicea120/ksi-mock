@@ -1,0 +1,10 @@
+// KSI-INR-RPI - Reviewing Past Incidents (Hybrid; review_required)
+// Automated leg: summarize Sentinel incidents over the last 90 days by severity
+// and status, so the persistent-review process has a machine-readable record to
+// work from. In a quiet mock with no incidents this returns empty - honestly
+// Pending (no automated pass asserted); the manual review confirms the practice.
+SecurityIncident
+| where TimeGenerated > ago(90d)
+| summarize arg_max(TimeGenerated, Status, Severity) by IncidentNumber
+| summarize incidents = count(), reviewed = countif(Status == "Closed") by Severity
+| sort by Severity asc
