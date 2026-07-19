@@ -178,6 +178,23 @@ def write_sdr(sdr: dict, out_dir: Path) -> Path:
     return out_path
 
 
+def append_history(sdr: dict, history_dir: Path) -> Path:
+    """Append one compact line per run to summary.jsonl - the trend series the
+    Trust Center and drift detection read. Small by design (totals + per-indicator
+    status), so history stays diffable and cheap to carry across runs."""
+    history_dir.mkdir(parents=True, exist_ok=True)
+    line = {
+        "run_id": sdr["info"]["run_id"],
+        "generated": sdr["info"]["generated"],
+        "totals": sdr["info"]["totals"],
+        "statuses": {a["id"]: a["status"] for a in sdr["assertions"]},
+    }
+    path = history_dir / "summary.jsonl"
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(line, default=str) + "\n")
+    return path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="KSI assertion engine")
     parser.add_argument("--dry-run", action="store_true",
@@ -189,6 +206,11 @@ def main() -> int:
                         help="where collector evidence is read/written")
     parser.add_argument("--skip-collect", action="store_true",
                         help="assert from existing evidence without re-running collectors")
+    parser.add_argument("--history-dir", metavar="DIR",
+                        default=str(REPO_ROOT / "out" / "history"),
+                        help="append a per-run summary line here (trend series)")
+    parser.add_argument("--no-history", action="store_true",
+                        help="do not append to the history series")
     args = parser.parse_args()
 
     doc = load_map()
@@ -248,6 +270,9 @@ def main() -> int:
                 print(f"  - {err}", file=sys.stderr)
             return 1
         out_path = write_sdr(sdr, Path(args.out))
+        if not args.no_history:
+            hist_path = append_history(sdr, Path(args.history_dir))
+            print(f"appended history -> {hist_path}")
         t = sdr["info"]["totals"]
         print(f"wrote SDR -> {out_path}")
         print(f"assertions: {t['verified']}/{t['automated_total']} automated verified "

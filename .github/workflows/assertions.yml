@@ -4,9 +4,9 @@ on:
     - cron: '0 12 * * *'   # daily 12:00 UTC
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write          # push the sdr-history branch
   id-token: write
-  issues: write            # to auto-file drift issues
+  issues: write            # file drift issues
   actions: read            # github collector: workflow run history (CMT-VTD/RMV)
   security-events: read    # github collector: code scanning analyses (PIY-RSD)
 jobs:
@@ -15,6 +15,12 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@v4
+      - name: Restore SDR history branch
+        uses: actions/checkout@v4
+        with:
+          ref: sdr-history      # bootstrapped once; holds latest.json + summary.jsonl
+          path: .history
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
       - run: pip install -r requirements.txt
@@ -24,14 +30,54 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           environment: AzureUSGovernment
+      - name: Seed accumulated history
+        run: |
+          mkdir -p out/history out/sdr
+          [ -f .history/summary.jsonl ] && cp .history/summary.jsonl out/history/summary.jsonl || true
+
       - name: Run collectors + compute assertions
         env:
           GH_TOKEN: ${{ github.token }}                       # github collector (gh api)
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: python engine/assert.py --out out/sdr
-      - name: Upload SDR evidence
+
+      - name: Detect drift vs previous run
+        id: drift
+        run: |
+          python engine/drift.py \
+            --current out/sdr/latest.json \
+            --previous .history/latest.json \
+            --out-md drift.md --github-output
+
+      - name: File drift issue
+        if: steps.drift.outputs.has_regressions == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create drift --color B60205 \
+            --description "KSI automated-indicator regression" --force || true
+          gh issue create \
+            --title "KSI drift: ${{ steps.drift.outputs.regression_count }} automated indicator(s) regressed" \
+            --body-file drift.md --label drift
+
+      - name: Regenerate Trust Center
+        run: python trustcenter/generate.py
+
+      - name: Upload SDR + Trust Center
         uses: actions/upload-artifact@v4
         with:
-          name: sdr-${{ github.run_id }}
-          path: out/sdr/
-      # optional: diff vs previous run, then `gh issue create` on any Auto-indicator regression
+          name: ksi-sdr-${{ github.run_id }}
+          path: |
+            out/sdr/
+            out/trustcenter/index.html
+
+      - name: Persist SDR history
+        run: |
+          cp out/sdr/latest.json .history/latest.json
+          cp out/history/summary.jsonl .history/summary.jsonl
+          cd .history
+          git config user.name "ksi-mock-bot"
+          git config user.email "actions@github.com"
+          git add latest.json summary.jsonl
+          git commit -m "history: run ${{ github.run_id }}" || { echo "no history change"; exit 0; }
+          git push origin HEAD:sdr-history

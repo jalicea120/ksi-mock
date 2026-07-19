@@ -32,7 +32,31 @@ from engine import results  # noqa: E402 - path set above so the shared module i
 TEMPLATE = REPO_ROOT / "trustcenter" / "template.html"
 MAP = REPO_ROOT / "engine" / "map.yaml"
 EVIDENCE_DIR = REPO_ROOT / "out" / "evidence"
+HISTORY_PATH = REPO_ROOT / "out" / "history" / "summary.jsonl"
+HISTORY_CAP = 90  # keep the trend readable - last N runs
 PLACEHOLDER = '/*__TC_DATA__*/ {"generated":"","rules_version":"","indicators":[]} /*__END__*/'
+
+
+def load_history() -> list[dict]:
+    """Compact trend series from the persisted summary.jsonl (may be absent)."""
+    if not HISTORY_PATH.exists():
+        return []
+    series = []
+    for raw in HISTORY_PATH.read_text(encoding="utf-8").splitlines():
+        raw = raw.strip()
+        if not raw:
+            continue
+        try:
+            rec = json.loads(raw)
+        except json.JSONDecodeError:
+            continue  # skip a torn line rather than fail the whole render
+        totals = rec.get("totals", {})
+        series.append({
+            "generated": rec.get("generated"),
+            "verified": totals.get("verified"),
+            "automated_total": totals.get("automated_total"),
+        })
+    return series[-HISTORY_CAP:]
 
 
 def build_model() -> dict:
@@ -44,6 +68,7 @@ def build_model() -> dict:
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(),
         "rules_version": spec.get("version"),
         "indicators": indicators,
+        "history": load_history(),
     }
 
 
