@@ -7,6 +7,8 @@ permissions:
   contents: read
   id-token: write
   issues: write            # to auto-file drift issues
+  actions: read            # github collector: workflow run history (CMT-VTD/RMV)
+  security-events: read    # github collector: code scanning analyses (PIY-RSD)
 jobs:
   collect:
     runs-on: ubuntu-latest
@@ -23,6 +25,9 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           environment: AzureUSGovernment
       - name: Run collectors + compute assertions
+        env:
+          GH_TOKEN: ${{ github.token }}                       # github collector (gh api)
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         run: python engine/assert.py --out out/sdr
       - name: Upload SDR evidence
         uses: actions/upload-artifact@v4

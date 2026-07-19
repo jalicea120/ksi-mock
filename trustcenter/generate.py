@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import glob
 import json
 import sys
 from pathlib import Path
@@ -28,7 +27,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from engine import checks  # noqa: E402 - path set above so the shared module imports
+from engine import results  # noqa: E402 - path set above so the shared module imports
 
 TEMPLATE = REPO_ROOT / "trustcenter" / "template.html"
 MAP = REPO_ROOT / "engine" / "map.yaml"
@@ -36,39 +35,11 @@ EVIDENCE_DIR = REPO_ROOT / "out" / "evidence"
 PLACEHOLDER = '/*__TC_DATA__*/ {"generated":"","rules_version":"","indicators":[]} /*__END__*/'
 
 
-def load_evidence() -> dict[str, dict]:
-    evidence: dict[str, dict] = {}
-    for path in glob.glob(str(EVIDENCE_DIR / "*.json")):
-        payload = json.loads(Path(path).read_text(encoding="utf-8"))
-        evidence[payload["indicator"]] = payload
-    return evidence
-
-
 def build_model() -> dict:
     spec = yaml.safe_load(MAP.read_text(encoding="utf-8"))
-    evidence = load_evidence()
-
-    indicators = []
-    for item in spec["indicators"]:
-        indicator_id = item["id"]
-        payload = evidence.get(indicator_id)
-        # A collector that errored (e.g. missing permission) is "not measured",
-        # never a fail - honest reporting, no fabricated result.
-        usable = payload if (payload and not payload.get("error")) else None
-        result = checks.evaluate(indicator_id, usable["rows"]) if usable else None
-        status = "pending" if result is None else ("pass" if result else "fail")
-        indicators.append({
-            "id": indicator_id,
-            "name": item["name"],
-            "family": item["family"],
-            "mode": item["mode"],
-            "status": status,
-            "pass_criteria": item.get("pass"),
-            "collected_at": usable["collected_at"] if usable else None,
-            "row_count": usable["row_count"] if usable else None,
-            "evidence": usable["rows"][:4] if usable else None,
-        })
-
+    evidence = results.load_evidence(EVIDENCE_DIR)
+    # Shared assessment - identical status logic to the SDR engine.
+    indicators = results.assess(spec, evidence)
     return {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(),
         "rules_version": spec.get("version"),
@@ -97,10 +68,9 @@ def main() -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
 
-    verified = sum(1 for i in model["indicators"] if i["status"] == "pass")
-    automated = sum(1 for i in model["indicators"] if i["mode"] == "Auto")
-    print(f"wrote {out_path} - {verified}/{automated} automated indicators verified, "
-          f"{len(model['indicators'])} total")
+    totals = results.summarize(model["indicators"])
+    print(f"wrote {out_path} - {totals['verified']}/{totals['automated_total']} "
+          f"automated indicators verified, {totals['total']} total")
     return 0
 
 
