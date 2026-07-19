@@ -83,7 +83,7 @@ indicators:
     family: KSI-CNA
     mode: Auto
     collectors:
-      - { tool: defender_policy, ref: collectors/defender_policy/ksi-cna-eis.json }
+      - { tool: arg, ref: collectors/arg/ksi-cna-eis.kql }
     pass: Automated assessment + enforcement of intended state; drift auto-remediated (Class C required; Class B optional).
     evidence: out/sdr/ksi-cna-eis.json
     review_required: false
@@ -93,7 +93,7 @@ indicators:
     family: KSI-CNA
     mode: Auto
     collectors:
-      - { tool: defender_policy, ref: collectors/defender_policy/ksi-cna-ibp.json }
+      - { tool: arg, ref: collectors/arg/ksi-cna-ibp.kql }
     pass: Vendor/CIS benchmark initiative assigned; high compliance against provider best practices for third-party resources.
     evidence: out/sdr/ksi-cna-ibp.json
     review_required: false
@@ -175,7 +175,7 @@ indicators:
     family: KSI-SVC
     mode: Auto
     collectors:
-      - { tool: defender_policy, ref: collectors/defender_policy/ksi-svc-eis.json }
+      - { tool: arg, ref: collectors/arg/ksi-svc-eis.kql }
     pass: Security persistently evaluated for improvements and those improvements persistently made.
     evidence: out/sdr/ksi-svc-eis.json
     review_required: false

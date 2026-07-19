@@ -1,0 +1,10 @@
+// KSI-CNA-EIS - Enforcing Intended State
+// Azure Policy assignments and their enforcement mode on the resource group.
+// Engine pass check: at least one assignment is actively enforced (Default mode),
+// automatically preventing configuration drift.
+policyresources
+| where type =~ 'microsoft.authorization/policyassignments'
+| where tostring(properties.scope) endswith 'resourceGroups/ksi-mock-rg'
+| project assignment = name,
+    display_name = tostring(properties.displayName),
+    enforcement_mode = tostring(properties.enforcementMode)
