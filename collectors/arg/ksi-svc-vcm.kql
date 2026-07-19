@@ -1,0 +1,10 @@
+// KSI-SVC-VCM - Validating Communications
+// Private endpoints carrying service-to-service traffic over the Microsoft
+// backbone (no public path). Engine pass check: at least one approved private
+// endpoint in use.
+Resources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.network/privateendpoints'
+| project name, resourceGroup,
+    target = tostring(properties.privateLinkServiceConnections[0].properties.privateLinkServiceId),
+    connection_state = tostring(properties.privateLinkServiceConnections[0].properties.privateLinkServiceConnectionState.status)

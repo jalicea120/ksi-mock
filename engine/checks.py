@@ -53,6 +53,42 @@ def ksi_svc_asm(rows: list[dict]) -> bool:
     )
 
 
+def ksi_cna_rnt(rows: list[dict]) -> bool:
+    # Every NSG carries at least one inbound Deny rule (explicit default-deny).
+    return len(rows) >= 1 and all(int(row.get("inbound_deny_rules") or 0) >= 1 for row in rows)
+
+
+def ksi_cna_uln(rows: list[dict]) -> bool:
+    # A VNet with real segmentation (>= 2 subnets).
+    return len(rows) >= 1 and all(int(row.get("subnet_count") or 0) >= 2 for row in rows)
+
+
+def ksi_svc_vcm(rows: list[dict]) -> bool:
+    # Service-to-service traffic uses private endpoints.
+    return len(rows) >= 1
+
+
+def ksi_rpl_abo(rows: list[dict]) -> bool:
+    # At least one backup policy is defined in the vault.
+    return len(rows) >= 1
+
+
+def ksi_cna_dfp(rows: list[dict]) -> bool:
+    # At least one policy assignment governs the resource group.
+    return len(rows) >= 1
+
+
+_OWNER_ROLE_ID = "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+
+
+def ksi_iam_elp(rows: list[dict]) -> bool:
+    # Access is explicitly scoped and no assignment grants Owner at the RG.
+    return len(rows) >= 1 and not any(
+        str(row.get("role_definition_id", "")).lower().endswith(_OWNER_ROLE_ID)
+        for row in rows
+    )
+
+
 CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-PIY-GIV": ksi_piy_giv,
     "KSI-CNA-MAT": ksi_cna_mat,
@@ -60,6 +96,12 @@ CHECKS: dict[str, Callable[[list[dict]], bool]] = {
     "KSI-MLA-OSM": ksi_mla_osm,
     "KSI-SVC-SIN": ksi_svc_sin,
     "KSI-SVC-ASM": ksi_svc_asm,
+    "KSI-CNA-RNT": ksi_cna_rnt,
+    "KSI-CNA-ULN": ksi_cna_uln,
+    "KSI-SVC-VCM": ksi_svc_vcm,
+    "KSI-RPL-ABO": ksi_rpl_abo,
+    "KSI-CNA-DFP": ksi_cna_dfp,
+    "KSI-IAM-ELP": ksi_iam_elp,
 }
 
 

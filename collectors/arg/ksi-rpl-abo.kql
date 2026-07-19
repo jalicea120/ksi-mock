@@ -1,0 +1,10 @@
+// KSI-RPL-ABO - Aligning Backups with Objectives
+// Backup policies protecting resources, with their schedule + retention (the
+// backbone of a recovery-objective alignment). Engine pass check: at least one
+// backup policy defined in the offering's Recovery Services vault.
+recoveryservicesresources
+| where resourceGroup =~ 'ksi-mock-rg'
+| where type =~ 'microsoft.recoveryservices/vaults/backuppolicies'
+| project policy = name, vault = tostring(split(id, '/')[8]), resourceGroup,
+    backup_frequency = tostring(properties.schedulePolicy.scheduleRunFrequency),
+    retention_type = tostring(properties.retentionPolicy.retentionPolicyType)
