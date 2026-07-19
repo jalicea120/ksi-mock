@@ -2,5 +2,6 @@
   "indicator": "KSI-SCR-MON",
   "gh_api": "/repos/{repo}/dependabot/alerts?state=open&per_page=100",
   "jq": "[.[] | {number, state, severity: .security_advisory.severity, package: .dependency.package.name, ghsa: .security_advisory.ghsa_id, url: .html_url}]",
-  "note": "Open Dependabot alerts. Pass = Dependabot is monitoring dependencies (endpoint responds) and no open alert is high or critical severity. A disabled feature returns an error and surfaces as Pending, never a false pass."
+  "token_env": "KSI_DEPENDABOT_PAT",
+  "note": "Open Dependabot alerts. Pass = Dependabot is monitoring dependencies (endpoint responds) and no open alert is high or critical severity. Needs a PAT with Dependabot-alerts read (GITHUB_TOKEN cannot read them); reads it from KSI_DEPENDABOT_PAT if set, else falls back to GH_TOKEN and surfaces as Pending. A disabled/unreadable feature never becomes a false pass."
 }

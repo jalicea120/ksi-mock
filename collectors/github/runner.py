@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -47,7 +48,15 @@ def run(indicator: str, repo: str) -> dict:
         cmd = [_gh(), "api", endpoint]
         if spec.get("jq"):
             cmd += ["--jq", spec["jq"]]
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        # Some endpoints (Dependabot alerts) need a scoped PAT the default
+        # GITHUB_TOKEN lacks. A spec may name a token_env; if that env is set we
+        # run this call under it, else we fall back to the ambient GH_TOKEN
+        # (which 403s -> honest Pending, never a fabricated pass).
+        env = None
+        tok_env = spec.get("token_env")
+        if tok_env and os.environ.get(tok_env):
+            env = {**os.environ, "GH_TOKEN": os.environ[tok_env]}
+        result = subprocess.run(cmd, capture_output=True, text=True, env=env)
         if result.returncode != 0:
             raise RuntimeError(result.stderr.strip()[:200])
         parsed = json.loads(result.stdout) if result.stdout.strip() else []
