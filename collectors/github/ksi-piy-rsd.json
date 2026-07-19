@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-PIY-RSD",
+  "gh_api": "/repos/{repo}/code-scanning/analyses?per_page=20",
+  "jq": "[.[] | {tool: .tool.name, ref, category, created_at, results_count, commit: .commit_sha}]",
+  "note": "Code-scanning analyses (e.g. CodeQL). Automated leg of a Hybrid indicator: pass = static security analysis is running in the SDLC (>=1 analysis produced). Manual review (review_required) still confirms Secure-by-Design alignment. No analyses returns an error and surfaces as Pending."
+}

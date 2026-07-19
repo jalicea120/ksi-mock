@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-SCR-MON",
+  "gh_api": "/repos/{repo}/dependabot/alerts?state=open&per_page=100",
+  "jq": "[.[] | {number, state, severity: .security_advisory.severity, package: .dependency.package.name, ghsa: .security_advisory.ghsa_id, url: .html_url}]",
+  "note": "Open Dependabot alerts. Pass = Dependabot is monitoring dependencies (endpoint responds) and no open alert is high or critical severity. A disabled feature returns an error and surfaces as Pending, never a false pass."
+}

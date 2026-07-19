@@ -1,0 +1,6 @@
+{
+  "indicator": "KSI-CMT-VTD",
+  "gh_api": "/repos/{repo}/actions/runs?per_page=50",
+  "jq": "[.workflow_runs[] | {name, path, event, branch: .head_branch, status, conclusion, created_at}]",
+  "note": "Workflow run history. Pass = automated validation runs to completion and passes far more often than it fails (tests/policy checks gate promotion; `ci` is a required check on protected main)."
+}
