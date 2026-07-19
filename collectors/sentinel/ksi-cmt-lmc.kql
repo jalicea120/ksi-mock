@@ -1,0 +1,10 @@
+// KSI-CMT-LMC - Logging Changes
+// Evidence that resource change/audit logging is enabled and shipped to Log
+// Analytics: each in-scope provider's diagnostic categories arriving in the
+// workspace over the last 30 days (e.g. Key Vault AuditEvent logs every secret/
+// key operation; Recovery Services backup change reports). Pass = at least one
+// change/audit log category is actively ingesting.
+AzureDiagnostics
+| where TimeGenerated > ago(30d)
+| summarize events = count(), last_event = max(TimeGenerated) by ResourceProvider, Category
+| sort by events desc
