@@ -2,7 +2,7 @@
   :root{
     --paper:#F3F6FA; --card:#FFFFFF; --card-2:#FAFBFD; --line:#E1E7F0;
     --ink-1:#141A26; --ink-2:#47566E; --ink-3:#7B889F;
-    --accent:#4C63E6; --accent-ink:#3348CE; --accent-wash:#ECEEFC;
+    --accent:#4C63E6;
     --ok:#0E9C63; --ok-bg:#E4F4EC; --ok-line:#BFE6D2;
     --crit:#D64841; --crit-bg:#FaEAE9; --crit-line:#F0C9C6;
     --warn:#B67715; --warn-bg:#F8F0DD; --warn-line:#EBD8AE;
@@ -10,68 +10,102 @@
     --shadow:0 1px 2px rgba(16,24,40,.05), 0 6px 20px rgba(16,24,40,.05);
     --mono:ui-monospace,"SFMono-Regular","Cascadia Code",Menlo,Consolas,monospace;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --accent-ink:color-mix(in srgb,var(--accent) 76%,#000);
+    --accent-wash:color-mix(in srgb,var(--accent) 11%,#fff);
   }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --paper:#0A0D13; --card:#141A24; --card-2:#0F141D; --line:#232D3D;
-      --ink-1:#EAF0F8; --ink-2:#A6B4C9; --ink-3:#6C7B92;
-      --accent:#7C93FF; --accent-ink:#98ABFF; --accent-wash:#171E30;
-      --ok:#2FC286; --ok-bg:#0F2620; --ok-line:#1E4636;
-      --crit:#F0665F; --crit-bg:#2A1513; --crit-line:#4A231F;
-      --warn:#E2A63F; --warn-bg:#271D0E; --warn-line:#463719;
-      --wait:#8794A9; --wait-bg:#181F2A; --wait-line:#2A3444;
-      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.4);
-    }
-  }
+  /* light-mode accent hues (single knob per hue; ink + wash are derived) */
+  :root[data-accent="crimson"]{--accent:#DC2626}
+  :root[data-accent="amber"]{--accent:#C2670A}
+  :root[data-accent="emerald"]{--accent:#0A8F5B}
+  :root[data-accent="violet"]{--accent:#7C3AED}
+  :root[data-accent="cyan"]{--accent:#0B7F9E}
+
   :root[data-theme="dark"]{
     --paper:#0A0D13; --card:#141A24; --card-2:#0F141D; --line:#232D3D;
     --ink-1:#EAF0F8; --ink-2:#A6B4C9; --ink-3:#6C7B92;
-    --accent:#7C93FF; --accent-ink:#98ABFF; --accent-wash:#171E30;
+    --accent:#7C93FF;
     --ok:#2FC286; --ok-bg:#0F2620; --ok-line:#1E4636;
     --crit:#F0665F; --crit-bg:#2A1513; --crit-line:#4A231F;
     --warn:#E2A63F; --warn-bg:#271D0E; --warn-line:#463719;
     --wait:#8794A9; --wait-bg:#181F2A; --wait-line:#2A3444;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.4);
+    --accent-ink:color-mix(in srgb,var(--accent) 72%,#fff);
+    --accent-wash:color-mix(in srgb,var(--accent) 17%,var(--card));
   }
+  /* dark-mode accent hues */
+  :root[data-theme="dark"][data-accent="crimson"]{--accent:#F0665F}
+  :root[data-theme="dark"][data-accent="amber"]{--accent:#E9AC44}
+  :root[data-theme="dark"][data-accent="emerald"]{--accent:#33D399}
+  :root[data-theme="dark"][data-accent="violet"]{--accent:#A78BFA}
+  :root[data-theme="dark"][data-accent="cyan"]{--accent:#3BC0E0}
 
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--ink-1);font-family:var(--sans);
-    line-height:1.5;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+    line-height:1.5;-webkit-font-smoothing:antialiased;
+    transition:background .25s ease,color .25s ease;}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
   .mono{font-family:var(--mono)}
   .tnum{font-variant-numeric:tabular-nums}
   a{color:var(--accent-ink);text-decoration:none}
   h1,h2,h3{text-wrap:balance;margin:0}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-  /* top bar */
-  .topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
-    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  .topbar .row{display:flex;align-items:center;gap:16px;height:58px}
-  .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;
-    letter-spacing:.02em;font-size:14px}
-  .brand .glyph{width:22px;height:22px;border-radius:6px;background:var(--accent);
-    display:grid;place-items:center;color:#fff;font-size:13px;flex:none}
-  .brand small{color:var(--ink-3);font-weight:500}
+  /* ---- top bar ---- */
+  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 86%,transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .topbar .row{display:flex;align-items:center;gap:14px;height:60px}
+  .brand{display:flex;align-items:baseline;gap:9px;font-family:var(--sans);
+    font-weight:800;letter-spacing:-.022em;font-size:17px;white-space:nowrap;color:var(--ink-1)}
+  .brand small{color:var(--ink-3);font-weight:500;font-size:12px;letter-spacing:0}
   .spacer{flex:1}
+
+  /* view tabs */
+  .nav{display:flex;gap:3px;background:var(--card);border:1px solid var(--line);
+    border-radius:11px;padding:3px}
+  .nav button{appearance:none;border:0;background:none;cursor:pointer;font-family:var(--sans);
+    font-size:13px;font-weight:560;color:var(--ink-2);padding:7px 13px;border-radius:8px;
+    display:flex;align-items:center;gap:7px;transition:color .15s,background .15s}
+  .nav button:hover{color:var(--ink-1)}
+  .nav button[aria-selected="true"]{background:var(--accent);color:#fff;
+    box-shadow:0 1px 4px color-mix(in srgb,var(--accent) 40%,transparent)}
+  .nav button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+
   .live{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
     color:var(--ink-2);background:var(--card);border:1px solid var(--line);
-    padding:6px 11px;border-radius:999px}
+    padding:6px 11px;border-radius:999px;white-space:nowrap}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;
     box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 70%,transparent);animation:pulse 2.4s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}
     70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
-  .tgl{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink-2);
-    width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:15px;flex:none}
-  .tgl:hover{color:var(--ink-1);border-color:var(--ink-3)}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 
-  /* hero / posture */
+  /* theme controls */
+  .swatches{display:flex;gap:5px;align-items:center;background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:5px 7px}
+  .sw-btn{width:16px;height:16px;border-radius:50%;border:2px solid transparent;cursor:pointer;
+    padding:0;transition:transform .12s,border-color .12s;flex:none}
+  .sw-btn:hover{transform:scale(1.18)}
+  .sw-btn[aria-pressed="true"]{border-color:var(--ink-1)}
+  .tgl{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink-2);
+    width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:15px;flex:none;
+    display:grid;place-items:center}
+  .tgl:hover{color:var(--ink-1);border-color:var(--ink-3)}
+
+  /* view containers */
+  .view{display:none;animation:fade .3s ease}
+  .view.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---- hero / posture ---- */
   .hero{padding:40px 0 26px}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--accent-ink);font-weight:600;margin-bottom:14px}
-  .hero h1{font-size:clamp(26px,3.4vw,38px);font-weight:680;letter-spacing:-.02em;max-width:20ch}
+  .hero .eyebrow{text-align:center}
+  .hero h1{font-size:clamp(26px,3.4vw,38px);font-weight:680;letter-spacing:-.02em;
+    max-width:24ch;margin:0 auto;text-align:center}
   .hero h1 b{color:var(--ok);font-weight:680}
-  .hero p{color:var(--ink-2);max-width:62ch;margin:14px 0 0;font-size:15.5px}
+  .hero p{color:var(--ink-2);max-width:66ch;margin:14px auto 0;font-size:15.5px;text-align:center}
+  .hero p b{color:var(--ink-1);font-weight:600}
 
   .posture{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;
     box-shadow:var(--shadow);padding:20px 22px}
@@ -124,7 +158,7 @@
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:13px}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;
-    box-shadow:var(--shadow)}
+    box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
   .card.hide{display:none}
   .card-t{width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:15px 16px;
     display:block;color:inherit;font-family:inherit}
@@ -153,54 +187,539 @@
   .card-meta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:var(--ink-3);font-family:var(--mono)}
   .card-meta .chev{margin-left:auto;transition:transform .18s;color:var(--ink-3)}
   .card-t[aria-expanded="true"] .chev{transform:rotate(90deg)}
-  .ev{border-top:1px solid var(--line);padding:0 16px;max-height:0;overflow:hidden}
-  .ev.open{padding:14px 16px;max-height:640px}
+  .ev{border-top:1px solid var(--line);padding:0 16px;max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .ev.open{padding:14px 16px;max-height:680px}
   .ev .crit-line{font-size:12.5px;color:var(--ink-2);margin-bottom:10px}
   .ev .crit-line b{color:var(--ink-1);font-weight:600}
-  .ev pre{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink-2);
+  pre.code{margin:0;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--ink-2);
     background:var(--card-2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;
     overflow-x:auto;white-space:pre;font-variant-numeric:tabular-nums}
   .ev .src{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:9px}
 
-  footer{margin:52px 0 40px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:12.5px}
+  /* ---- assessor view ---- */
+  .a-intro{margin-top:36px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:22px 24px;display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:820px){.a-intro{grid-template-columns:1.3fr 1fr}}
+  .a-intro h2{font-size:20px;font-weight:680;letter-spacing:-.02em}
+  .a-intro p{color:var(--ink-2);font-size:14.5px;margin:10px 0 0;max-width:56ch}
+  .a-flow{display:flex;flex-direction:column;gap:0;align-self:center;background:var(--card-2);
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .a-flow .fstep{display:flex;align-items:center;gap:11px;padding:7px 0;font-size:13px}
+  .a-flow .fn{width:24px;height:24px;border-radius:7px;flex:none;display:grid;place-items:center;
+    font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;background:var(--accent)}
+  .a-flow .fstep b{font-weight:600;color:var(--ink-1)}
+  .a-flow .fstep span{color:var(--ink-3);font-size:12px}
+  .a-flow .fbar{width:2px;height:9px;background:var(--line);margin-left:11px}
+
+  .arow{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);
+    overflow:hidden;transition:border-color .15s}
+  .arow.hide{display:none}
+  .arow + .arow{margin-top:10px}
+  .arow.open{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+  .arow-t{width:100%;text-align:left;background:none;border:0;cursor:pointer;color:inherit;font-family:inherit;
+    padding:15px 17px;display:flex;align-items:center;gap:12px}
+  .arow-t:hover{background:var(--card-2)}
+  .arow-t .kid{font-size:13px}
+  .arow-t .anm{font-size:14px;font-weight:560;color:var(--ink-1);flex:1;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .arow-t .chev{transition:transform .18s;color:var(--ink-3);flex:none}
+  .arow.open .arow-t .chev{transform:rotate(90deg)}
+  .abody{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .arow.open .abody{max-height:4200px}
+  .abody-in{padding:6px 18px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column}
+  .a-actions{display:flex;align-items:center;gap:10px;margin:14px 0 6px}
+  .btn{appearance:none;font-family:var(--sans);font-size:12.5px;font-weight:560;cursor:pointer;
+    border:1px solid var(--accent);background:var(--accent);color:#fff;padding:7px 13px;border-radius:9px;
+    display:inline-flex;align-items:center;gap:7px;transition:filter .15s}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.ghost{background:var(--card);color:var(--ink-2);border-color:var(--line)}
+  .btn.ghost:hover{color:var(--ink-1);border-color:var(--ink-3)}
+  .btn svg{width:14px;height:14px;fill:currentColor}
+  .a-actions .runmeta{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-left:auto}
+
+  /* the cycle timeline */
+  .pipe{position:relative;margin-top:6px;padding-left:40px}
+  .pipe::before{content:"";position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--line)}
+  .stage{position:relative;margin-bottom:16px;opacity:1;
+    transition:opacity .4s ease,filter .4s ease}
+  .stage:last-child{margin-bottom:0}
+  .pipe.lit .stage{opacity:1;filter:none}
+  /* dim only DURING the replay animation, so resting numbers stay crisp white */
+  .pipe.play .stage{opacity:.34;filter:saturate(.45)}
+  .pipe.play .stage.step{opacity:1;filter:none}
+  .stage .node{position:absolute;left:-40px;top:-1px;width:32px;height:32px;border-radius:9px;
+    display:grid;place-items:center;font-family:var(--mono);font-size:13px;font-weight:600;
+    background:var(--accent);border:1px solid var(--accent);color:#fff;z-index:1;transition:.3s}
+  .stage.step .node,.pipe.lit .stage .node{background:var(--accent);border-color:var(--accent);color:#fff}
+  .stage h4{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-3);margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .stage h4 .tag{color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:1px 7px;
+    font-size:10px;letter-spacing:.06em}
+  .stage .desc{font-size:13px;color:var(--ink-2);margin:0 0 9px;max-width:none}
+  .stage .desc b{color:var(--ink-1);font-weight:600}
+  .stage .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-3);margin:11px 0 5px}
+  .kv{font-family:var(--mono);font-size:12px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:4px}
+  .kv b{color:var(--ink-1);font-weight:600}
+
+  /* verdict stamp */
+  .verdict{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:12px 18px;
+    font-family:var(--mono);font-weight:700;letter-spacing:.04em;font-size:20px;
+    transform:scale(.9);opacity:0;transition:transform .3s cubic-bezier(.2,1.3,.5,1),opacity .3s}
+  .pipe.lit .verdict,.stage.out.step .verdict{transform:scale(1);opacity:1}
+  .verdict .vd{width:11px;height:11px;border-radius:50%}
+  .verdict small{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.02em;
+    text-transform:none;opacity:.85}
+  .verdict.ok{background:var(--ok-bg);color:var(--ok);box-shadow:inset 0 0 0 1.5px var(--ok-line)}
+  .verdict.ok .vd{background:var(--ok)}
+  .verdict.crit{background:var(--crit-bg);color:var(--crit);box-shadow:inset 0 0 0 1.5px var(--crit-line)}
+  .verdict.crit .vd{background:var(--crit)}
+  .verdict.warn{background:var(--warn-bg);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--warn-line)}
+  .verdict.warn .vd{background:var(--warn)}
+  .verdict.wait{background:var(--wait-bg);color:var(--wait);box-shadow:inset 0 0 0 1.5px var(--wait-line)}
+  .verdict.wait .vd{background:var(--wait)}
+  .assess-note{margin-top:12px;font-size:12.5px;color:var(--ink-2);background:var(--card-2);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 13px}
+  .assess-note b{color:var(--ink-1)}
+  .assess-note.fail-note{border-left-color:var(--crit);background:var(--crit-bg)}
+
+  /* failing-example teaching state */
+  .btn.danger,.btn.ghost.danger{background:var(--crit);border-color:var(--crit);color:#fff}
+  .arow.failing{border-color:color-mix(in srgb,var(--crit) 48%,var(--line))}
+  .arow.failing .abody-in{box-shadow:inset 3px 0 0 var(--crit)}
+  .lbl.fail-lbl{color:var(--crit)}
+  .teach{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--warn);background:var(--warn-bg);box-shadow:inset 0 0 0 1px var(--warn-line);
+    border-radius:5px;padding:1px 6px;margin-left:7px;vertical-align:middle}
+  pre.code.fail-pre{border-color:var(--crit-line);background:var(--crit-bg);
+    box-shadow:inset 3px 0 0 var(--crit)}
+  .assert-out{margin-top:11px;font-size:12.5px;color:var(--ink-2);font-family:var(--mono);
+    background:var(--ok-bg);box-shadow:inset 0 0 0 1px var(--ok-line);border-radius:8px;padding:9px 12px}
+  .assert-out b{color:var(--ink-1)}
+  .assert-out.fail{background:var(--crit-bg);box-shadow:inset 0 0 0 1px var(--crit-line)}
+
+  /* interactive "Visualized" cycle diagram */
+  .viz{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--card-2);
+    padding:16px;display:none}
+  .viz.on{display:block;order:-1;margin-top:2px;margin-bottom:8px;animation:fade .3s ease}
+  .viz-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:11px}
+  .viz-flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:7px}
+  .vnode{flex:1 1 128px;min-width:118px;position:relative;text-align:left;cursor:pointer;font-family:inherit;
+    background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 12px;color:inherit;
+    transition:border-color .16s,box-shadow .16s,transform .16s}
+  .vnode:hover,.vnode:focus-visible,.vnode.act{border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-wash);transform:translateY(-2px);outline:none}
+  .vnode .vn-n{width:22px;height:22px;border-radius:7px;background:var(--accent);color:#fff;
+    display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:600;margin-bottom:9px}
+  .vnode.tone-ok .vn-n{background:var(--ok)} .vnode.tone-crit .vn-n{background:var(--crit)}
+  .vnode.tone-warn .vn-n{background:var(--warn)} .vnode.tone-wait .vn-n{background:var(--wait)}
+  .vnode .vn-t{font-size:13px;font-weight:620;color:var(--ink-1);letter-spacing:-.01em}
+  .vnode .vn-v{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .varr{align-self:center;color:var(--ink-3);flex:none;font-size:15px;user-select:none}
+  @media(max-width:620px){.viz-flow{flex-direction:column}.varr{transform:rotate(90deg);align-self:flex-start;margin-left:14px}}
+  .viz-ctx{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;min-height:82px}
+  .viz-ctx .vc-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent-ink);margin-bottom:6px;display:flex;align-items:center;gap:9px}
+  .viz-ctx .vc-h .vc-b{background:var(--accent-wash);border-radius:5px;padding:2px 8px}
+  .viz-ctx .vc-h span:last-child{color:var(--ink-3)}
+  .viz-ctx h5{font-size:15px;font-weight:640;margin:0 0 5px;color:var(--ink-1);letter-spacing:-.01em}
+  .viz-ctx p{font-size:13.5px;color:var(--ink-2);margin:0;max-width:74ch}
+  .viz-ctx .vc-val{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:9px}
+  .viz-ctx .vc-val b{color:var(--accent-ink);font-weight:600}
+  .viz-hint{color:var(--ink-3);font-style:italic;font-size:13px;margin:0}
+  .search{flex:1;min-width:180px;display:flex;align-items:center;gap:9px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;padding:8px 13px}
+  .search input{flex:1;border:0;background:none;color:var(--ink-1);font-family:var(--sans);font-size:13.5px;outline:none}
+  .search svg{width:15px;height:15px;stroke:var(--ink-3);fill:none;stroke-width:1.8;flex:none}
+
+  /* ---- learning view ---- */
+  .learn{padding-top:36px}
+  .learn .lead{font-size:16px;color:var(--ink-2);max-width:70ch;margin:12px 0 0}
+  .lgrid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:26px}
+  @media(min-width:760px){.lgrid.two{grid-template-columns:1fr 1fr}}
+  .lcard{background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);
+    padding:22px 24px}
+  .lcard h3{font-size:17px;font-weight:660;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+  .lcard h3 .ic{width:30px;height:30px;border-radius:9px;background:var(--accent-wash);color:var(--accent-ink);
+    display:grid;place-items:center;flex:none;font-size:15px}
+  .lcard p{color:var(--ink-2);font-size:14px;margin:11px 0 0}
+  .lcard p b{color:var(--ink-1);font-weight:600}
+  .lcard ul{margin:12px 0 0;padding-left:0;list-style:none}
+  .lcard li{position:relative;padding-left:22px;color:var(--ink-2);font-size:13.5px;margin-bottom:9px}
+  .lcard li::before{content:"";position:absolute;left:3px;top:7px;width:7px;height:7px;border-radius:50%;
+    background:var(--accent)}
+  .lcard li b{color:var(--ink-1);font-weight:600}
+  .moderow{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .modebox{flex:1;min-width:150px;border:1px solid var(--line);border-radius:11px;padding:13px 15px;background:var(--card-2)}
+  .modebox .mt{font-family:var(--mono);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+  .modebox .mt .d{width:8px;height:8px;border-radius:50%}
+  .modebox p{font-size:12.5px;color:var(--ink-2);margin:8px 0 0}
+  .verdkey{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+  .verdkey .r{display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--ink-2)}
+  .verdkey .r .p{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;
+    padding:3px 9px;border-radius:999px;flex:none;min-width:82px;text-align:center}
+  .verdkey .r b{color:var(--ink-1)}
+  .lflow{display:grid;grid-template-columns:1fr;gap:0;margin-top:16px}
+  .lflow-s{display:flex;gap:14px;padding:2px 0}
+  .lflow-s .ln{display:flex;flex-direction:column;align-items:center;flex:none}
+  .lflow-s .cir{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;
+    display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:14px}
+  .lflow-s .bar{width:2px;flex:1;background:var(--line);min-height:12px}
+  .lflow-s:last-child .bar{display:none}
+  .lflow-s .tx{padding-bottom:16px}
+  .lflow-s .tx b{display:block;font-size:14.5px;color:var(--ink-1);font-weight:600}
+  .lflow-s .tx span{font-size:13px;color:var(--ink-2)}
+  .lflow-s .tx code{font-family:var(--mono);font-size:12px;background:var(--card-2);border:1px solid var(--line);
+    border-radius:5px;padding:1px 6px;color:var(--accent-ink)}
+
+  /* ---- history view ---- */
+  #v-history{padding-top:36px}
+  .hist-head .lead{font-size:16px;color:var(--ink-2);max-width:74ch}
+  .hist-chart{margin-top:24px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:20px 22px}
+  .hc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .hc-t{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .hc-sub{display:block;font-size:13px;color:var(--ink-2);margin-top:4px;font-family:var(--sans)}
+  .hc-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .seg{display:inline-flex;background:var(--card-2);border:1px solid var(--line);border-radius:9px;padding:3px}
+  .seg button{appearance:none;border:0;background:none;cursor:pointer;font-family:var(--mono);font-size:12px;
+    font-weight:600;color:var(--ink-3);padding:5px 11px;border-radius:6px;transition:color .15s,background .15s}
+  .seg button:hover{color:var(--ink-1)}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  .hc-legend{display:flex;gap:16px;font-size:12.5px;color:var(--ink-2)}
+  .hc-legend span{display:flex;align-items:center;gap:7px}
+  .hc-legend i{width:14px;height:4px;border-radius:2px;flex:none}
+  .hc-legend .sw-ver{background:var(--accent)} .hc-legend .sw-fail{background:var(--crit);height:9px;width:9px;border-radius:2px}
+  #histSvg{width:100%;height:220px;display:block;overflow:visible}
+  #histSvg .grid{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
+  #histSvg .fill{fill:var(--accent-wash)}
+  #histSvg .line{fill:none;stroke:var(--accent);stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+  #histSvg .failbar{fill:var(--crit)}
+  #histSvg .ytxt{fill:var(--ink-3);font-family:var(--mono);font-size:11px}
+  #histSvg .dot{fill:var(--accent)}
+  .hc-axis{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);
+    font-size:11px;color:var(--ink-3)}
+
+  .hist-controls{display:flex;flex-wrap:wrap;gap:14px 16px;align-items:flex-end;margin:26px 0 6px}
+  .hf{display:flex;flex-direction:column;gap:6px}
+  .hf.grow{flex:1;min-width:190px}
+  .hf label{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .hf select{appearance:none;font-family:var(--sans);font-size:13.5px;color:var(--ink-1);cursor:pointer;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 30px 9px 13px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+    background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .hf select:hover{border-color:var(--ink-3)}
+  .hf .search{margin:0}
+  .hf-chips{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+
+  .hist-timeline{margin-top:22px;position:relative;padding-left:34px}
+  .hist-timeline::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .hevent{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);padding:13px 16px;margin-bottom:11px;display:flex;align-items:flex-start;gap:13px}
+  .hevent::before{content:"";position:absolute;left:-30px;top:18px;width:12px;height:12px;border-radius:50%;
+    border:2.5px solid var(--card);background:var(--wait)}
+  .hevent.t-validation::before{background:var(--ok)}
+  .hevent.t-failure::before{background:var(--crit)}
+  .hevent.t-remediation::before{background:var(--warn)}
+  .hevent .hdate{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);white-space:nowrap;flex:none;
+    width:74px;padding-top:2px}
+  .hevent .hbody{flex:1;min-width:0}
+  .hevent .htop{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .hevent .hbadge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+    padding:3px 8px;border-radius:999px;white-space:nowrap}
+  .hevent.t-validation .hbadge{background:var(--ok-bg);color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok-line)}
+  .hevent.t-failure .hbadge{background:var(--crit-bg);color:var(--crit);box-shadow:inset 0 0 0 1px var(--crit-line)}
+  .hevent.t-remediation .hbadge{background:var(--warn-bg);color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn-line)}
+  .hevent .hkid{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink-2)}
+  .hevent .hnm{font-size:13.5px;font-weight:560;color:var(--ink-1)}
+  .hevent .htrans{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
+  .hevent .hnote{font-size:13px;color:var(--ink-2);margin-top:6px}
+  .hist-empty{color:var(--ink-3);font-style:italic;font-size:14px;margin:8px 0 0;padding-left:34px}
+  .hist-note{margin:24px 0 0;font-size:12px;color:var(--ink-3);max-width:82ch;font-style:italic}
+
+  footer{margin:56px 0 44px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);
+    font-size:12.5px;text-align:center}
   footer .mono{color:var(--ink-2)}
-  footer p{margin:0 0 7px;max-width:78ch}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  footer p{margin:0 auto 7px;max-width:80ch}
 </style>
 
 <div class="topbar"><div class="wrap row">
-  <div class="brand"><span class="glyph">◈</span>KSI&nbsp;Trust&nbsp;Center
-    <small>· FedRAMP 20x evidence mock</small></div>
+  <div class="brand"><span>AGS&nbsp;KSI&nbsp;Trust&nbsp;Center</span>
+    <small>· FedRAMP 20x</small></div>
+  <div class="spacer"></div>
+  <nav class="nav" id="nav" role="tablist" aria-label="Views">
+    <button role="tab" data-view="overview" aria-selected="true">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Overview</button>
+    <button role="tab" data-view="history" aria-selected="false">
+      <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+      History</button>
+    <button role="tab" data-view="assessor" aria-selected="false">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      Assessor</button>
+    <button role="tab" data-view="learning" aria-selected="false">
+      <svg viewBox="0 0 24 24"><path d="M3 6l9-3 9 3-9 3-9-3z"/><path d="M7 9v5c0 1.5 2.5 3 5 3s5-1.5 5-3V9"/></svg>
+      Learning</button>
+  </nav>
   <div class="spacer"></div>
   <div class="live"><span class="dot"></span><span id="liveTxt">live</span></div>
-  <button class="tgl" id="tgl" aria-label="Toggle color theme" title="Toggle theme">◐</button>
+  <div class="swatches" id="swatches" role="group" aria-label="Accent color"></div>
+  <button class="tgl" id="tgl" aria-label="Toggle light or dark" title="Light / dark">◐</button>
 </div></div>
 
 <main class="wrap">
-  <section class="hero">
-    <div class="eyebrow">FedRAMP 20x · Key Security Indicators · continuous validation</div>
-    <h1 id="heroH">Continuous, automated assurance for every Key Security Indicator.</h1>
-    <p>Each indicator below is measured from live Azure Government configuration and telemetry —
-      never hand-set. Results are computed from read-only evidence on every run, so what you see is
-      the current, provable state of this offering. <b id="heroSub"></b></p>
 
-    <div class="posture">
-      <div class="lab"><span>Assurance posture · all 46 indicators</span><span id="postPct"></span></div>
-      <div class="bar" id="bar" role="img" aria-label="Composition of indicator coverage"></div>
-      <div class="legend" id="legend"></div>
-      <div class="trend" id="trend" hidden>
-        <div class="trend-h"><span>Verified over time</span><span id="trendMeta" class="mono"></span></div>
-        <svg id="spark" viewBox="0 0 600 64" preserveAspectRatio="none" role="img" aria-label="Verified automated indicators over time"></svg>
+  <!-- ===================== OVERVIEW ===================== -->
+  <section class="view on" id="v-overview" role="tabpanel">
+    <div class="hero">
+      <div class="eyebrow">FedRAMP 20x · Key Security Indicators · continuous validation</div>
+      <h1 id="heroH">Continuous, automated assurance for every Key Security Indicator.</h1>
+      <p>Each indicator below is measured from live Azure Government configuration and telemetry,
+        never hand-set. Results are computed from read-only evidence on every run, so what you see is
+        the current, provable state of this offering. <b id="heroSub"></b></p>
+
+      <div class="posture">
+        <div class="lab"><span>Assurance posture · all 46 indicators</span><span id="postPct"></span></div>
+        <div class="bar" id="bar" role="img" aria-label="Composition of indicator coverage"></div>
+        <div class="legend" id="legend"></div>
+        <div class="trend" id="trend" hidden>
+          <div class="trend-h"><span>Verified over time</span><span id="trendMeta" class="mono"></span></div>
+          <svg id="spark" viewBox="0 0 600 64" preserveAspectRatio="none" role="img" aria-label="Verified automated indicators over time"></svg>
+        </div>
+      </div>
+
+      <div class="kpis" id="kpis"></div>
+    </div>
+
+    <div class="controls" id="controls"><h2>Indicators</h2></div>
+    <div id="families"></div>
+  </section>
+
+  <!-- ===================== ASSESSOR ===================== -->
+  <section class="view" id="v-assessor" role="tabpanel">
+    <div class="a-intro">
+      <div>
+        <h2>Assessor mode</h2>
+        <p>Every indicator, opened to its full validation cycle on one pane of glass:
+          the exact query we run against the environment, the exact assertion that decides pass or fail,
+          and the machine verdict it produces. Nothing here is typed by hand. Expand any indicator, then
+          <b>Replay cycle</b> to step through input, assertion, and output as the engine runs it.</p>
+      </div>
+      <div class="a-flow" aria-hidden="true">
+        <div class="fstep"><span class="fn">1</span><div><b>Input</b><br><span>read-only collector query → evidence</span></div></div>
+        <div class="fbar"></div>
+        <div class="fstep"><span class="fn">2</span><div><b>Assertion</b><br><span>Python pass-check in engine/checks.py</span></div></div>
+        <div class="fbar"></div>
+        <div class="fstep"><span class="fn">3</span><div><b>Output</b><br><span>verdict: validated / failed / pending</span></div></div>
       </div>
     </div>
 
-    <div class="kpis" id="kpis"></div>
+    <div class="controls" id="aControls" style="margin-top:26px">
+      <div class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input id="aSearch" type="search" placeholder="Search indicators by id, name, or family…" aria-label="Search indicators">
+      </div>
+    </div>
+    <div id="aList"></div>
   </section>
 
-  <div class="controls" id="controls">
-    <h2>Indicators</h2>
-  </div>
-  <div id="families"></div>
+  <!-- ===================== HISTORY ===================== -->
+  <section class="view" id="v-history" role="tabpanel">
+    <div class="hist-head">
+      <div>
+        <div class="eyebrow">Compliance over time</div>
+        <h1 style="font-size:clamp(24px,3vw,34px);font-weight:680;letter-spacing:-.02em">Continuous history.</h1>
+        <p class="lead" style="margin-top:10px">Every scheduled run is a point in the record. This is the last
+          30 days of assurance for the offering: indicators onboarding, the occasional failure, and the
+          remediation back to validated. Filter it by date, control family, or event type.</p>
+      </div>
+    </div>
+
+    <div class="hist-chart">
+      <div class="hc-head">
+        <div><span class="hc-t">Verified indicators over time</span>
+          <span class="hc-sub" id="hcSub"></span></div>
+        <div class="hc-right">
+          <div class="seg" id="hRange" role="group" aria-label="Chart range">
+            <button data-range="7" aria-pressed="false">7d</button>
+            <button data-range="14" aria-pressed="false">14d</button>
+            <button data-range="30" aria-pressed="true">30d</button>
+          </div>
+          <div class="hc-legend">
+            <span><i class="sw-ver"></i>verified</span>
+            <span><i class="sw-fail"></i>failing</span>
+          </div>
+        </div>
+      </div>
+      <svg id="histSvg" viewBox="0 0 760 220" preserveAspectRatio="none" role="img"
+        aria-label="Verified and failing automated indicators over the last 30 days"></svg>
+      <div class="hc-axis" id="hcAxis"></div>
+    </div>
+
+    <div class="hist-controls">
+      <div class="hf">
+        <label>Control family</label>
+        <select id="hFam"><option value="all">All families</option></select>
+      </div>
+      <div class="hf grow">
+        <label>Search</label>
+        <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="hSearch" type="search" placeholder="indicator id or name…" aria-label="Search history"></div>
+      </div>
+      <div class="hf-chips" id="hType" role="group" aria-label="Event type">
+        <button class="chip" data-type="all" aria-pressed="true">All events</button>
+        <button class="chip" data-type="validation" aria-pressed="false">Validated</button>
+        <button class="chip" data-type="remediation" aria-pressed="false">Remediated</button>
+        <button class="chip" data-type="failure" aria-pressed="false">Failures</button>
+      </div>
+    </div>
+
+    <div class="hist-timeline" id="histList"></div>
+    <p class="hist-empty" id="histEmpty" hidden>No events match these filters.</p>
+    <p class="hist-note">Synthetic 30-day history for demonstration. The live offering carries only days of
+      real runs so far; this emulates a matured environment so assessors can see the pass &rarr; fail &rarr;
+      remediated arc. It never changes the current live posture shown in Overview.</p>
+  </section>
+
+  <!-- ===================== LEARNING ===================== -->
+  <section class="view learn" id="v-learning" role="tabpanel">
+    <div class="eyebrow">Assessor guidance</div>
+    <h1 style="font-size:clamp(24px,3vw,34px);font-weight:680;letter-spacing:-.02em">How this Trust Center works.</h1>
+    <p class="lead">A short orientation for assessors. It explains what you are looking at, how each
+      verdict is produced, and how to use it to run an efficient, evidence-based assessment, without
+      taking anyone's word for the result.</p>
+
+    <div class="lgrid">
+      <div class="lcard">
+        <h3><span class="ic">◈</span>What a Key Security Indicator is</h3>
+        <p>FedRAMP 20x replaces long narrative control write-ups with <b>Key Security Indicators (KSIs)</b>:
+          concrete, testable statements of security posture grouped into ten families
+          (Identity, Cloud-Native Architecture, Monitoring, Change Management, and so on). Instead of asserting
+          <i>"we encrypt data"</i>, a KSI is proven by machine-readable evidence pulled straight from the
+          running system. This Trust Center is that proof surface for the offering, refreshed every run.</p>
+      </div>
+      <div class="lcard">
+        <h3><span class="ic">↻</span>Where the numbers come from</h3>
+        <p>Nothing on this page is entered by a person. On every scheduled run a <b>collector</b> executes a
+          read-only query, the result is checked by a shared <b>assertion</b>, and the outcome is written into
+          a signed <b>Security Decision Record (SDR)</b> that this page renders. The Assessor tab shows you
+          that whole chain for each indicator, so a verdict is never something you have to trust blind, you can
+          read the query and the logic that produced it.</p>
+      </div>
+    </div>
+
+    <div class="lcard" style="margin-top:16px">
+      <h3><span class="ic">⛓</span>The validation pipeline</h3>
+      <p>The same five steps run for every automated indicator. This is exactly what the
+        <b>Replay cycle</b> button animates in Assessor mode.</p>
+      <div class="lflow">
+        <div class="lflow-s"><div class="ln"><div class="cir">1</div><div class="bar"></div></div>
+          <div class="tx"><b>Collector queries the environment</b><span>A read-only query runs against Azure Resource Graph, Microsoft Graph, Sentinel, or GitHub. Read-only means the act of assessing can never change the thing being assessed.</span></div></div>
+        <div class="lflow-s"><div class="ln"><div class="cir">2</div><div class="bar"></div></div>
+          <div class="tx"><b>Evidence is captured</b><span>The rows the query returns are saved verbatim with a timestamp and the subscription they came from. That payload is the evidence, and you can see it in the Input stage.</span></div></div>
+        <div class="lflow-s"><div class="ln"><div class="cir">3</div><div class="bar"></div></div>
+          <div class="tx"><b>Assertion evaluates the evidence</b><span>A single Python function in <code>engine/checks.py</code> decides pass or fail. The <i>same</i> function feeds both the SDR and this page, so the two can never disagree.</span></div></div>
+        <div class="lflow-s"><div class="ln"><div class="cir">4</div><div class="bar"></div></div>
+          <div class="tx"><b>Verdict is recorded</b><span>Pass, fail, or pending is written to the SDR. Pending means <i>not measured</i> (a permission or table was missing) and is never silently turned into a fail.</span></div></div>
+        <div class="lflow-s"><div class="ln"><div class="cir">5</div><div class="bar"></div></div>
+          <div class="tx"><b>Trust Center republishes</b><span>This page is regenerated from the latest SDR, so the posture you read is the posture the last run actually proved.</span></div></div>
+      </div>
+    </div>
+
+    <div class="lcard" style="margin-top:16px">
+      <h3><span class="ic">◐</span>The three assurance modes</h3>
+      <p>Not every indicator can be settled by a machine. Each one carries a mode that tells you how much
+        human judgement is still required, and what your job as an assessor is.</p>
+      <div class="moderow">
+        <div class="modebox"><span class="mt"><span class="d" style="background:var(--ok)"></span>Auto</span>
+          <p>Fully machine-decided from live evidence. These are the only indicators that count toward the
+            headline <b>Verified</b> number. Your job: sanity-check the query and the assertion.</p></div>
+        <div class="modebox"><span class="mt"><span class="d" style="background:var(--warn)"></span>Hybrid</span>
+          <p>An automated leg gathers evidence, but a person must still review and sign off. Shown as
+            <b>Review</b>. Your job: confirm the attestation exists and the evidence supports it.</p></div>
+        <div class="modebox"><span class="mt"><span class="d" style="background:var(--wait)"></span>Manual</span>
+          <p>No automated test is possible (policy, training, executive review). Settled entirely by a dated
+            attestation. Your job: verify the attestation and its review cadence.</p></div>
+      </div>
+    </div>
+
+    <div class="lgrid two" style="margin-top:16px">
+      <div class="lcard">
+        <h3><span class="ic">✓</span>Reading a verdict</h3>
+        <p>Every indicator resolves to one of five states. The color always means the same thing, in any theme.</p>
+        <div class="verdkey">
+          <div class="r"><span class="p" style="background:var(--ok-bg);color:var(--ok)">VALIDATED</span><span><b>Auto</b> indicator whose assertion passed against live evidence.</span></div>
+          <div class="r"><span class="p" style="background:var(--crit-bg);color:var(--crit)">FAILED</span><span>Measured, and the evidence did <b>not</b> meet the pass criteria. A real finding.</span></div>
+          <div class="r"><span class="p" style="background:var(--warn-bg);color:var(--warn)">REVIEW</span><span><b>Hybrid</b> indicator awaiting or carrying human sign-off.</span></div>
+          <div class="r"><span class="p" style="background:var(--wait-bg);color:var(--wait)">PENDING</span><span>Not yet measured (collector staged or permission missing). Not a fail.</span></div>
+          <div class="r"><span class="p" style="background:var(--wait-bg);color:var(--wait)">MANUAL</span><span>Settled by attestation only, no automated test applies.</span></div>
+        </div>
+      </div>
+      <div class="lcard">
+        <h3><span class="ic">◆</span>Verified vs attested</h3>
+        <p>These are counted separately on purpose, and it matters when you read the headline.</p>
+        <ul>
+          <li><b>Verified</b> counts only <b>Auto</b> indicators whose assertion currently passes. That is the
+            number of things a machine can prove right now, with no human in the loop.</li>
+          <li><b>Attested</b> counts indicators where a named person has signed off a review. It never inflates
+            the verified count, an unsigned Hybrid stays out of the headline even if its automated leg looks fine.</li>
+          <li>The gap between them is honest, not a defect: it is precisely the work that still needs a human
+            decision. As an assessor, that gap is your worklist.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lcard" style="margin-top:16px">
+      <h3><span class="ic">⚠</span>What a finding looks like</h3>
+      <p>A trust surface that only ever shows green teaches you nothing about its judgement. The whole
+        point of an assertion is that it can say <b>no</b>. So every automated indicator here can be shown
+        failing, on demand, without breaking anything real.</p>
+      <ul>
+        <li>In <b>Assessor</b>, open any automated indicator and press <b>Show a failing example</b>. The same
+          query and the same assertion run, but the evidence is swapped for a deliberately non-compliant
+          example, so you watch a real finding form: a red <b>FAILED</b> verdict and a plain-language "why".</li>
+        <li>The failure is <b>engine-computed, not hand-drawn</b>. Each example is a broken evidence fixture
+          run through the exact same <code style="font-family:var(--mono)">engine/checks.py</code> function that
+          grades production; it is only shown if the real check genuinely returns <code style="font-family:var(--mono)">false</code>.</li>
+        <li>It is clearly labelled <b>synthetic / teaching only</b> and never touches the live posture count.
+          Toggle <b>Show the passing result</b> to return to the real evidence.</li>
+        <li>The <b>History</b> tab shows the other half of the story: failures that were detected and then
+          <b>remediated back to validated</b> over time. That pass &rarr; fail &rarr; pass arc is what an
+          assessor should expect from a healthy, continuously-monitored system.</li>
+      </ul>
+      <button class="btn goto-assessor" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>Try it in Assessor mode</button>
+    </div>
+
+    <div class="lcard" style="margin-top:16px">
+      <h3><span class="ic">→</span>How to run an assessment here</h3>
+      <ul>
+        <li>Start in <b>Overview</b> for posture: the bar and KPIs tell you the ratio of proven, pending, and
+          human-dependent indicators at a glance.</li>
+        <li>Open <b>Assessor</b> and work an indicator top to bottom. Read the <b>Input</b> query first, does it
+          actually measure what the pass criteria claims? Then read the <b>Assertion</b>, is the pass/fail logic
+          faithful to the intent? Only then trust the <b>Output</b>.</li>
+        <li>Use <b>Replay cycle</b> when you want to walk a stakeholder through <i>how</i> a result was reached,
+          not just <i>that</i> it passed.</li>
+        <li>Treat every <b>Pending</b> as a question, not a pass. Ask why it is not yet measured.</li>
+        <li>For <b>Review</b> and <b>Manual</b> items, check the attestation is dated, named, and within its
+          review cadence before you accept it.</li>
+      </ul>
+    </div>
+
+    <div class="lcard" style="margin-top:16px">
+      <h3><span class="ic">§</span>Glossary</h3>
+      <ul>
+        <li><b>KSI</b> — Key Security Indicator. A single testable statement of posture (id like <code style="font-family:var(--mono)">KSI-SVC-SIN</code>).</li>
+        <li><b>Collector</b> — the read-only query that gathers evidence (Azure Resource Graph, Microsoft Graph, Sentinel/Log Analytics, or GitHub REST).</li>
+        <li><b>Assertion / pass-check</b> — the Python function that turns evidence rows into pass or fail.</li>
+        <li><b>Evidence</b> — the timestamped rows a collector returned, stored verbatim.</li>
+        <li><b>SDR</b> — Security Decision Record. The signed run output this page is generated from.</li>
+        <li><b>Attestation</b> — a dated human sign-off for Hybrid and Manual indicators.</li>
+      </ul>
+    </div>
+  </section>
 
   <footer>
     <p><b class="mono">Provisional preview — not final guidance.</b> This is a disposable mock built to
@@ -216,8 +735,10 @@
 
   const SOURCE = {
     arg:"Azure Resource Graph", graph:"Microsoft Graph", arm:"Azure Resource Manager",
-    github:"GitHub REST", sentinel:"Sentinel / Log Analytics"
+    github:"GitHub REST", sentinel:"Sentinel / Log Analytics",
+    defender_policy:"Defender / Azure Policy", manual:"Human attestation"
   };
+  const LANG = {arg:"kql", sentinel:"kql", graph:"json", github:"json", defender_policy:"json", manual:"md"};
   const FAMILY_NAMES = {
     "KSI-PIY":"Policy & Inventory","KSI-CNA":"Cloud Native Architecture",
     "KSI-SVC":"Service Configuration","KSI-IAM":"Identity & Access Management",
@@ -225,10 +746,7 @@
     "KSI-RPL":"Recovery Planning","KSI-SCR":"Supply Chain Risk",
     "KSI-INR":"Incident Response","KSI-CED":"Cybersecurity Education"
   };
-  // one derived state per indicator: {label, tone}
-  // Hybrid/Manual take precedence: an indicator that requires human sign-off is
-  // "Review"/"Manual" even when its automated leg passes - only Auto indicators
-  // are ever "Verified", so the headline count matches the SDR (Auto-only).
+
   function stateOf(x){
     if(x.mode==="Manual") return {label:"Manual",tone:"wait"};
     if(x.mode==="Hybrid") return {label:"Review",tone:"warn"};
@@ -248,6 +766,7 @@
   const nReview = count(x=>x.review_required);
   const nAttested = count(x=>x.attestation && x.attestation.attested);
 
+  const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
   function relTime(iso){
     if(!iso) return "";
     const s=Math.max(1,(Date.now()-new Date(iso))/1000);
@@ -258,31 +777,73 @@
   }
   const latest = inds.filter(x=>x.collected_at).map(x=>new Date(x.collected_at)).sort((a,b)=>b-a)[0];
 
-  // hero + live
+  /* ---------------- theme ---------------- */
+  const ACCENTS=[
+    {id:"indigo",c:"#4C63E6"},{id:"crimson",c:"#DC2626"},{id:"amber",c:"#C2670A"},
+    {id:"emerald",c:"#0A8F5B"},{id:"violet",c:"#7C3AED"},{id:"cyan",c:"#0B7F9E"}
+  ];
+  const root=document.documentElement;
+  const store=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+  const read=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+  function initTheme(){
+    const mode=read("tc-mode")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+    const accent=read("tc-accent")||"indigo";
+    root.setAttribute("data-theme",mode);
+    root.setAttribute("data-accent",accent);
+    document.getElementById("tgl").textContent = mode==="dark"?"☀":"☾";
+    renderSwatches(accent);
+  }
+  function renderSwatches(active){
+    document.getElementById("swatches").innerHTML = ACCENTS.map(a=>
+      `<button class="sw-btn" data-accent="${a.id}" aria-pressed="${a.id===active}"
+        title="${a.id[0].toUpperCase()+a.id.slice(1)}" aria-label="${a.id} accent"
+        style="background:${a.c}"></button>`).join("");
+    document.querySelectorAll(".sw-btn").forEach(b=>b.onclick=()=>{
+      const id=b.dataset.accent; root.setAttribute("data-accent",id); store("tc-accent",id);
+      renderSwatches(id);
+    });
+  }
+  document.getElementById("tgl").onclick=()=>{
+    const next=(root.getAttribute("data-theme")==="dark")?"light":"dark";
+    root.setAttribute("data-theme",next); store("tc-mode",next);
+    document.getElementById("tgl").textContent = next==="dark"?"☀":"☾";
+  };
+  initTheme();
+
+  /* ---------------- view tabs ---------------- */
+  const views={overview:"v-overview",assessor:"v-assessor",history:"v-history",learning:"v-learning"};
+  document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{
+    const v=b.dataset.view;
+    document.querySelectorAll("#nav button").forEach(n=>n.setAttribute("aria-selected",n===b));
+    Object.entries(views).forEach(([k,id])=>document.getElementById(id).classList.toggle("on",k===v));
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+
+  function gotoView(v){document.querySelector(`#nav button[data-view="${v}"]`).click();}
+  document.querySelectorAll(".goto-assessor").forEach(b=>b.onclick=()=>gotoView("assessor"));
+
+  /* ---------------- overview: hero + posture ---------------- */
   document.getElementById("heroSub").textContent =
     `${nVerified} of ${nAuto} automated indicators are wired to a live collector and currently verified; the rest are staged.`;
   document.getElementById("heroH").innerHTML =
     `<b>${nVerified}</b> indicators continuously verified from live evidence.`;
   document.getElementById("liveTxt").textContent = latest ? "checked "+relTime(latest.toISOString()) : "live";
 
-  // posture bar
   const segs=[
-    {cls:"s-ok",   label:"Verified (Auto)", n:nVerified,     sw:"var(--ok)"},
-    {cls:"s-wait", label:"Pending (Auto)",  n:nAutoPending,  sw:"var(--wait)"},
-    {cls:"s-warn", label:"Review (Hybrid)", n:nHybrid,       sw:"var(--warn)"},
-    {cls:"s-manual",label:"Manual",         n:nManual,       sw:"var(--wait)"}
+    {cls:"s-ok",   label:"Verified (Auto)", n:nVerified},
+    {cls:"s-wait", label:"Pending (Auto)",  n:nAutoPending},
+    {cls:"s-warn", label:"Review (Hybrid)", n:nHybrid},
+    {cls:"s-manual",label:"Manual",         n:nManual}
   ];
   const total=inds.length;
   document.getElementById("bar").innerHTML =
     segs.filter(s=>s.n>0).map(s=>`<i class="${s.cls}" style="flex:${s.n}" title="${s.label}: ${s.n}"></i>`).join("");
-  document.getElementById("postPct").className="mono";
-  document.getElementById("postPct").style.color="var(--ink-2)";
-  document.getElementById("postPct").textContent = Math.round(nVerified/nAuto*100)+"% of automated verified";
+  const pp=document.getElementById("postPct"); pp.className="mono"; pp.style.color="var(--ink-2)";
+  pp.textContent = Math.round(nVerified/nAuto*100)+"% of automated verified";
   document.getElementById("legend").innerHTML = segs.map(s=>
-    `<div><span class="sw ${s.cls==='s-manual'?'':''}" style="background:${s.cls==='s-manual'?'repeating-linear-gradient(135deg,var(--wait) 0 3px,transparent 3px 6px),var(--wait-bg)':s.sw}"></span>${s.label} <b>${s.n}</b></div>`
+    `<div><span class="sw ${s.cls}" style="background:${s.cls==='s-manual'?'repeating-linear-gradient(135deg,var(--wait) 0 3px,transparent 3px 6px),var(--wait-bg)':`var(--${s.cls==='s-ok'?'ok':s.cls==='s-warn'?'warn':'wait'})`}"></span>${s.label} <b>${s.n}</b></div>`
   ).join("");
 
-  // trend sparkline - verified automated indicators over run history
   const hist=(TC.history||[]).filter(h=>h.verified!=null);
   if(hist.length>=2){
     const W=600,H=64,pad=4, denom=(hist[hist.length-1].automated_total)||nAuto||1;
@@ -301,7 +862,6 @@
     document.getElementById("trend").hidden=false;
   }
 
-  // kpi tiles
   const tiles=[
     {k:"Indicators",v:total,s:"across 10 KSI families"},
     {k:"Automated",v:nAuto,s:`${nHybrid} hybrid · ${nManual} manual`},
@@ -313,7 +873,7 @@
     `<div class="tile"><div class="k">${t.k}</div><div class="v tnum">${t.v}</div><div class="s">${t.s}</div></div>`
   ).join("");
 
-  // filter chips
+  /* ---------------- overview: filter chips ---------------- */
   const filters=[
     {id:"all",label:"All",f:()=>true},
     {id:"ok",label:"Verified",f:x=>x.mode==="Auto" && x.status==="pass"},
@@ -327,7 +887,7 @@
     const b=document.createElement("button");
     b.className="chip";b.setAttribute("aria-pressed",fl.id==="all");
     b.innerHTML=`${fl.label}<span class="c">${inds.filter(fl.f).length}</span>`;
-    b.onclick=()=>{active=fl.id;document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+    b.onclick=()=>{active=fl.id;document.querySelectorAll("#controls .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
       b.setAttribute("aria-pressed","true");applyFilter();};
     controls.appendChild(b);
   });
@@ -337,14 +897,13 @@
       const x=inds.find(i=>i.id===el.dataset.ind);
       el.classList.toggle("hide",!fl.f(x));
     });
-    document.querySelectorAll(".fam").forEach(fam=>{
+    document.querySelectorAll("#families .fam").forEach(fam=>{
       const any=[...fam.querySelectorAll("[data-ind]")].some(c=>!c.classList.contains("hide"));
       fam.style.display=any?"":"none";
     });
   }
 
-  // families + cards
-  const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  /* ---------------- overview: family cards ---------------- */
   const order=[...new Set(inds.map(x=>x.family))];
   const host=document.getElementById("families");
   order.forEach(fam=>{
@@ -379,7 +938,7 @@
         </button>
         <div class="ev" id="${evId}" role="region">
           <div class="crit-line">Pass criteria: <b>${esc(x.pass_criteria||"")}</b></div>
-          <pre>${esc(JSON.stringify(x.evidence,null,2))}</pre>
+          <pre class="code">${esc(JSON.stringify(x.evidence,null,2))}</pre>
           <div class="src">source · ${x.id.toLowerCase()} · ${SOURCE[x.tool]||x.tool||"collector"} · collected ${x.collected_at||""}</div>
         </div>`;
       if(live){
@@ -392,14 +951,355 @@
     host.appendChild(sec);
   });
 
-  // footer meta
+  /* ---------------- assessor: verdict model ---------------- */
+  function verdictOf(x){
+    if(x.mode==="Manual"){
+      const at=x.attestation;
+      return at&&at.attested
+        ? {tone:"ok",label:"ATTESTED",sub:"human sign-off on record"}
+        : {tone:"wait",label:"AWAITING",sub:"attestation not yet signed"};
+    }
+    if(x.mode==="Hybrid"){
+      const at=x.attestation;
+      return {tone:"warn",label:"NEEDS REVIEW",
+        sub:at&&at.attested?"automated leg passed · attested":"automated leg gathered · sign-off pending"};
+    }
+    if(x.status==="pass") return {tone:"ok",label:"VALIDATED",sub:"assertion returned true"};
+    if(x.status==="fail") return {tone:"crit",label:"FAILED",sub:"assertion returned false"};
+    return {tone:"wait",label:"PENDING",sub:"not yet measured"};
+  }
+
+  function inputStage(x,fail){
+    const tool=(x.collectors&&x.collectors[0]&&x.collectors[0].tool)||x.tool;
+    const lang=LANG[tool]||"txt";
+    const query = x.query_text
+      ? `<div class="lbl">Query · ${esc(x.query_ref||"")}</div><pre class="code">${esc(x.query_text.trim())}</pre>`
+      : `<div class="desc">No query file bound for this indicator${x.mode==="Manual"?" — evidence is a human attestation, shown below.":"."}</div>`;
+    let evidence;
+    if(fail && x.fail_example){
+      const fe=x.fail_example;
+      evidence = `<div class="lbl fail-lbl">Broken evidence · ${fe.row_count} row${fe.row_count===1?"":"s"} <span class="teach">synthetic · teaching only</span></div><pre class="code fail-pre">${esc(JSON.stringify(fe.rows,null,2))}</pre>`;
+    } else if(x.mode==="Manual"){
+      const at=x.attestation;
+      evidence = at
+        ? `<div class="lbl">Attestation record</div><pre class="code">${esc(JSON.stringify({attested:at.attested,attestor:at.attestor,attested_date:at.attested_date,review_cadence:at.review_cadence,next_review_due:at.next_review_due},null,2))}</pre>`
+        : `<div class="desc">Attestation not yet collected.</div>`;
+    } else if(x.evidence){
+      evidence = `<div class="lbl">Evidence returned · ${x.row_count} row${x.row_count===1?"":"s"}${x.evidence.length<x.row_count?` (first ${x.evidence.length} shown)`:""}</div><pre class="code">${esc(JSON.stringify(x.evidence,null,2))}</pre>`;
+    } else {
+      evidence = `<div class="desc">Collector staged — no evidence captured in this run yet.</div>`;
+    }
+    const same = fail && x.fail_example ? `<div class="desc" style="margin-bottom:9px">Same query, same assertion. Only the evidence is swapped for a deliberately non-compliant example, so you can see how a real finding surfaces.</div>` : "";
+    return `<div class="stage in"><div class="node">1</div>
+      <h4>Input <span class="tag">${SOURCE[tool]||tool||"collector"}</span></h4>
+      <div class="desc">A read-only ${lang==="kql"?"query":"call"} runs against the environment and returns evidence. Read-only, so assessing never changes what is assessed.</div>
+      ${same}${query}${evidence}</div>`;
+  }
+
+  function assertStage(x,fail){
+    const crit=`<div class="lbl">Pass criteria (intent)</div><div class="desc"><b>${esc(x.pass_criteria||"")}</b></div>`;
+    let logic;
+    if(x.check_source){
+      logic=`<div class="lbl">Assertion · engine/checks.py · ${esc(x.check_fn||"")}()</div><pre class="code">${esc(x.check_source.trim())}</pre>`;
+    } else if(x.mode==="Manual"){
+      logic=`<div class="desc">No automated assertion — this indicator is decided by human review of the attestation above against the stated criteria.</div>`;
+    } else if(x.mode==="Hybrid"){
+      logic=`<div class="desc">Automated evidence is gathered, but the pass decision requires a reviewer to confirm it against the criteria. This is why the verdict is <b>Needs review</b>, not Validated.</div>`;
+    } else {
+      logic=`<div class="desc">No pass-check is registered for this indicator yet, so it stays <b>Pending</b> rather than being counted as a pass. We never fabricate a verdict.</div>`;
+    }
+    const outcome = fail && x.fail_example
+      ? `<div class="assert-out fail">Against the evidence above, <b>${esc(x.check_fn||"")}()</b> returns <b>false</b> &rarr; the indicator fails.</div>`
+      : (x.check_source ? `<div class="assert-out">Against the live evidence above, <b>${esc(x.check_fn||"")}()</b> returns <b>true</b> &rarr; the indicator passes.</div>` : "");
+    return `<div class="stage as"><div class="node">2</div>
+      <h4>Assertion <span class="tag">${x.check_source?"executable":"human judgement"}</span></h4>
+      <div class="desc">The evidence is evaluated against the pass criteria. The same logic feeds the SDR and this page.</div>
+      ${crit}${logic}${outcome}</div>`;
+  }
+
+  function outputStage(x,fail){
+    if(fail && x.fail_example){
+      const fe=x.fail_example;
+      const meta=[`result <b>false</b>`,`rows <b>${fe.row_count}</b>`,`mode <b>${x.mode}</b>`];
+      return `<div class="stage out"><div class="node">3</div>
+        <h4>Output <span class="tag">verdict</span></h4>
+        <div class="desc">The verdict the engine records when evidence does not meet the criteria. This is what a real finding looks like on the Trust Center.</div>
+        <div class="verdict crit"><span class="vd"></span>FAILED<small>assertion returned false</small></div>
+        <div class="kv">${meta.join(" · ")}</div>
+        <div class="assess-note fail-note"><b>Why it failed.</b> ${esc(fe.why)}</div></div>`;
+    }
+    const v=verdictOf(x);
+    const meta=[];
+    if(x.mode!=="Manual"&&x.result!=null) meta.push(`result <b>${x.result}</b>`);
+    if(x.row_count!=null) meta.push(`rows <b>${x.row_count}</b>`);
+    meta.push(`mode <b>${x.mode}</b>`);
+    if(x.collected_at) meta.push(`collected <b>${esc(x.collected_at)}</b>`);
+    let note="";
+    if(v.tone==="wait"&&x.mode==="Auto") note=`<div class="assess-note"><b>Pending is a question, not a pass.</b> This indicator was not measured this run — check whether a permission or data source is missing before accepting it.</div>`;
+    else if(x.mode==="Hybrid") note=`<div class="assess-note"><b>Assessor action.</b> Confirm the attestation is dated, named, and within its review cadence, and that the evidence above supports it, before you accept this indicator.</div>`;
+    else if(x.mode==="Manual") note=`<div class="assess-note"><b>Assessor action.</b> Verify the attestation and its review cadence. No automated test applies here.</div>`;
+    return `<div class="stage out"><div class="node">3</div>
+      <h4>Output <span class="tag">verdict</span></h4>
+      <div class="desc">The verdict recorded to the Security Decision Record and published here.</div>
+      <div class="verdict ${v.tone}"><span class="vd"></span>${v.label}<small>${v.sub}</small></div>
+      <div class="kv">${meta.join(" · ")}</div>${note}</div>`;
+  }
+
+  /* ---------------- assessor: interactive "Visualized" diagram ---------------- */
+  // Per-indicator, data-driven cycle. Each step carries a human explanation (d)
+  // plus the exact value for THIS indicator (val), so hovering teaches both the
+  // general phase and the concrete thing that happened here.
+  function vizSteps(x,fail){
+    const F = !!(fail && x.fail_example);
+    const tool=(x.collectors&&x.collectors[0]&&x.collectors[0].tool)||x.tool;
+    const src=SOURCE[tool]||tool||"collector";
+    const v = F ? {tone:"crit",label:"FAILED",sub:"assertion returned false"} : verdictOf(x);
+    const manual=x.mode==="Manual";
+    const rel=x.collected_at?relTime(x.collected_at):"";
+    const rc = F ? x.fail_example.row_count : x.row_count;
+    return [
+      {n:1,t:manual?"Attest":"Collect",v:manual?(x.query_ref||"attestation"):(x.query_ref||src),
+        h:manual?"human attestation":(F?src+" · example":src),
+        d:manual
+          ? "No machine query applies here. A named reviewer records a dated attestation that the control is met, judged against the stated criteria."
+          : ("A read-only query runs against "+src+". Read-only is the whole point: the act of assessing can never change the thing being assessed, so the evidence stays trustworthy."
+             +(F?" In this example the same query is fed deliberately non-compliant evidence.":"")),
+        val:manual?`document · <b>${esc(x.query_ref||"—")}</b>`:`query · <b>${esc(x.query_ref||"—")}</b> · via ${esc(src)}`},
+      {n:2,t:"Evidence",v:(rc!=null?rc+" rows":"—"),h:F?"synthetic broken evidence":"captured verbatim",
+        d:F?"Here the evidence is a deliberately non-compliant example, so you can watch a real finding form. It is clearly labelled teaching data and never counts toward the live posture."
+            :"Whatever the query returned is stored exactly as-is, with a timestamp and the subscription it came from. This raw evidence is what the verdict must be justified by.",
+        val:`<b>${rc!=null?rc:0}</b> row(s)${(!F&&rel)?` · collected <b>${esc(rel)}</b>`:""}${F?" · <b>non-compliant</b>":""}`},
+      {n:3,t:"Assert",v:x.check_fn?x.check_fn+"()":(manual||x.mode==="Hybrid"?"human review":"staged"),
+        h:x.check_source?"engine/checks.py":"human judgement",
+        d:x.check_source
+          ? ("One Python function turns the evidence into pass or fail. The very same function feeds the signed record and this page, so the two can never drift apart."
+             +(F?" Run against the example above it returns false.":""))
+          : (manual?"A reviewer evaluates the attestation against the criteria. There is no automated test for this indicator, by design."
+                   :x.mode==="Hybrid"?"Evidence is gathered automatically, but a reviewer must confirm it before it counts as a pass. That is why the verdict is Needs review, not Validated."
+                   :"No pass-check is registered for this indicator yet, so it stays Pending rather than being counted as a pass. We never fabricate a verdict."),
+        val:x.check_fn?`function · <b>${esc(x.check_fn)}()</b> &rarr; <b>${F?"false":"true"}</b>`:`mode · <b>${esc(x.mode)}</b>`},
+      {n:4,t:"Verdict",v:v.label,tone:v.tone,h:"recorded decision",
+        d:F?("The engine records this as a finding: "+((x.fail_example||{}).why||"the evidence did not meet the pass criteria.")+" On a live run this is exactly how a failure would surface.")
+            :("The outcome written to the Security Decision Record: "+v.sub+". "+(
+          v.tone==="wait"&&x.mode==="Auto"?"Pending is a question, not a pass — check for a missing permission or data source before you accept it."
+          :(v.tone==="warn"||manual)?"Confirm the attestation is dated, named, and within its review cadence before you accept it."
+          :"This is what the headline Verified count is built from.")),
+        val:`verdict · <b>${v.label}</b>${F?` · result <b>false</b>`:((x.result!=null&&!manual)?` · result <b>${x.result}</b>`:"")}`},
+      {n:5,t:"Publish",v:"Trust Center",h:"republished each run",
+        d:F?"On a real run this failure republishes here as a red finding and, if it is a regression from a previously passing state, opens a drift issue automatically."
+            :"On every scheduled run this page is regenerated from the latest record, so the posture you are reading is exactly what the last run proved, never a stale claim.",
+        val:`rules · <b>v${esc(TC.rules_version||"—")}</b>`}
+    ];
+  }
+  function vizHTML(steps){
+    const nodes=steps.map((s,i)=>
+      `<button class="vnode${s.tone?` tone-${s.tone}`:""}" data-i="${i}" type="button">
+        <div class="vn-n">${s.n}</div><div class="vn-t">${esc(s.t)}</div><div class="vn-v">${esc(s.v)}</div>
+      </button>`+(i<steps.length-1?`<span class="varr" aria-hidden="true">→</span>`:"")).join("");
+    return `<div class="viz-cap">Interactive cycle · 5 phases</div>
+      <div class="viz-flow">${nodes}</div>
+      <div class="viz-ctx" aria-live="polite">
+        <div class="vc-h"><span class="vc-b">interactive</span><span>hover or focus a phase</span></div>
+        <p class="viz-hint">Move your mouse over any phase above (or tab to it) to see what happens there and the exact value for this indicator.</p>
+      </div>`;
+  }
+  function setCtx(ctx,s){
+    ctx.innerHTML=`<div class="vc-h"><span class="vc-b">phase ${s.n} of 5</span><span>${esc(s.h)}</span></div>
+      <h5>${esc(s.t)}</h5><p>${s.d}</p><div class="vc-val">${s.val}</div>`;
+  }
+
+  /* ---------------- assessor: list ---------------- */
+  const aList=document.getElementById("aList");
+  order.forEach(fam=>{
+    const group=inds.filter(x=>x.family===fam);
+    const ver=group.filter(isVerified).length;
+    const sec=document.createElement("section");sec.className="fam";sec.dataset.fam=fam;
+    sec.innerHTML=`<div class="fam-h"><span class="code">${fam}</span>
+      <span class="nm">${FAMILY_NAMES[fam]||fam}</span>
+      <span class="ct">${ver}/${group.length} verified</span></div>`;
+    group.forEach(x=>{
+      const st=stateOf(x);
+      const row=document.createElement("div");row.className="arow";row.dataset.aind=x.id;
+      row.dataset.q=(x.id+" "+x.name+" "+fam+" "+(FAMILY_NAMES[fam]||"")).toLowerCase();
+      const bodyId="ab-"+x.id;
+      row.innerHTML=`
+        <button class="arow-t" aria-expanded="false" aria-controls="${bodyId}">
+          <span class="kid">${x.id}</span>
+          <span class="mode">${x.mode}</span>
+          <span class="anm">${esc(x.name)}</span>
+          <span class="pill ${st.tone}"><span class="pd"></span>${st.label}</span>
+          <span class="chev">›</span>
+        </button>
+        <div class="abody" id="${bodyId}" role="region">
+          <div class="abody-in">
+            <div class="a-actions">
+              <button class="btn replay"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Replay cycle</button>
+              <button class="btn ghost showall">Show full cycle</button>
+              <button class="btn ghost viz-btn"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.4"/><circle cx="12" cy="6" r="2.4"/><circle cx="12" cy="18" r="2.4"/><circle cx="19" cy="12" r="2.4"/><path d="M6.8 11l3.5-3.4M6.8 13l3.5 3.4M13.7 7.6L17.2 11M13.7 16.4L17.2 13" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Visualized</button>
+              ${x.fail_example?`<button class="btn ghost fail-btn"><svg viewBox="0 0 24 24"><path d="M12 3.5L21 20H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="17.5" r="1.05"/></svg>Show a failing example</button>`:``}
+              <span class="runmeta"></span>
+            </div>
+            <div class="pipe">${inputStage(x)}${assertStage(x)}${outputStage(x)}</div>
+            <div class="viz"></div>
+          </div>
+        </div>`;
+      const btn=row.querySelector(".arow-t");
+      const pipe=row.querySelector(".pipe");
+      const runmeta=row.querySelector(".runmeta");
+      let timers=[];
+      let failMode=false;
+      const stg=()=>[...pipe.querySelectorAll(".stage")];  // re-queried: the pipe re-renders on fail toggle
+      const clearRun=()=>{timers.forEach(clearTimeout);timers=[];stg().forEach(s=>s.classList.remove("step"));};
+      btn.onclick=()=>{
+        const open=btn.getAttribute("aria-expanded")==="true";
+        btn.setAttribute("aria-expanded",!open);row.classList.toggle("open",!open);
+        if(!open && !pipe.classList.contains("lit") && !pipe.classList.contains("play")) play();
+      };
+      function reveal(){clearRun();pipe.classList.remove("play");pipe.classList.add("lit");
+        runmeta.textContent=failMode?"cycle complete · example failure":"cycle complete";}
+      function play(){
+        clearRun();pipe.classList.remove("lit");pipe.classList.add("play");
+        const st=stg();
+        const labels=failMode?["querying environment…","evaluating assertion…","verdict: FAILED"]
+                             :["querying environment…","evaluating assertion…","verdict recorded"];
+        st.forEach((s,i)=>{
+          timers.push(setTimeout(()=>{
+            st.forEach(o=>o.classList.remove("step"));
+            s.classList.add("step");runmeta.textContent=labels[i]||"";
+            if(i===st.length-1) timers.push(setTimeout(reveal,760));
+          }, 120 + i*820));
+        });
+      }
+      row.querySelector(".replay").onclick=play;
+      row.querySelector(".showall").onclick=reveal;
+
+      // failing-example toggle (only present when the engine produced a real failure)
+      const failBtn=row.querySelector(".fail-btn");
+      if(failBtn){
+        failBtn.onclick=()=>{
+          failMode=!failMode;
+          pipe.innerHTML=inputStage(x,failMode)+assertStage(x,failMode)+outputStage(x,failMode);
+          pipe.classList.remove("lit","play");
+          row.classList.toggle("failing",failMode);
+          failBtn.classList.toggle("danger",failMode);
+          failBtn.lastChild.textContent=failMode?"Show the passing result":"Show a failing example";
+          renderViz();
+          play();
+        };
+      }
+
+      // interactive Visualized diagram - re-rendered so it tracks the fail toggle
+      const vizBtn=row.querySelector(".viz-btn");
+      const viz=row.querySelector(".viz");
+      function renderViz(){
+        viz.innerHTML=vizHTML(vizSteps(x,failMode));
+        const vctx=viz.querySelector(".viz-ctx");
+        const steps=vizSteps(x,failMode);
+        viz.querySelectorAll(".vnode").forEach(nd=>{
+          const s=steps[+nd.dataset.i];
+          const light=()=>{viz.querySelectorAll(".vnode").forEach(o=>o.classList.remove("act"));
+            nd.classList.add("act");setCtx(vctx,s);};
+          nd.addEventListener("mouseenter",light);
+          nd.addEventListener("focus",light);
+        });
+      }
+      renderViz();
+      vizBtn.onclick=()=>{const open=viz.classList.toggle("on");
+        vizBtn.classList.toggle("ghost",!open);
+        vizBtn.lastChild.textContent=open?"Hide diagram":"Visualized";};
+      sec.appendChild(row);
+    });
+    aList.appendChild(sec);
+  });
+
+  const aSearch=document.getElementById("aSearch");
+  aSearch.oninput=()=>{
+    const q=aSearch.value.trim().toLowerCase();
+    document.querySelectorAll(".arow").forEach(r=>r.classList.toggle("hide", q && !r.dataset.q.includes(q)));
+    document.querySelectorAll("#aList .fam").forEach(f=>{
+      const any=[...f.querySelectorAll(".arow")].some(r=>!r.classList.contains("hide"));
+      f.style.display=any?"":"none";
+    });
+  };
+
+  /* ---------------- history view ---------------- */
+  (function(){
+    const daily=TC.history_daily||[];
+    const events=(TC.history_events||[]).slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0); // newest first
+    const win=TC.history_window||{};
+    const total=win.automated_total||nAuto||1;
+    if(!daily.length){document.getElementById("v-history").innerHTML='<p style="padding-top:40px;color:var(--ink-3)">No history available yet.</p>';return;}
+
+    const famSel=document.getElementById("hFam");
+    [...new Set(events.map(e=>e.family))].forEach(f=>{
+      const o=document.createElement("option");o.value=f;o.textContent=(FAMILY_NAMES[f]||f)+" ("+f+")";famSel.appendChild(o);});
+
+    const state={range:30,fam:"all",type:"all",q:""};
+    const fmt=iso=>new Date(iso+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"});
+
+    function drawChart(days){
+      const W=760,H=220,padL=34,padR=8,padT=12,padB=26,iw=W-padL-padR,ih=H-padT-padB;
+      const slice=daily.slice(Math.max(0,daily.length-days));
+      const xs=i=>padL+(slice.length<=1?iw/2:i/(slice.length-1)*iw);
+      const ys=v=>padT+ih-Math.max(0,Math.min(1,v/total))*ih;
+      const gy=[0,Math.round(total/2),total];
+      const grid=gy.map(v=>`<line class="grid" x1="${padL}" y1="${ys(v).toFixed(1)}" x2="${W-padR}" y2="${ys(v).toFixed(1)}"/><text class="ytxt" x="4" y="${(ys(v)+3).toFixed(1)}">${v}</text>`).join("");
+      const pts=slice.map((h,i)=>[xs(i),ys(h.verified)]);
+      const line=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+      const area=`M${xs(0).toFixed(1)} ${(padT+ih).toFixed(1)} `+pts.map(p=>"L"+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ")+` L${xs(slice.length-1).toFixed(1)} ${(padT+ih).toFixed(1)} Z`;
+      const bw=Math.max(2,iw/slice.length*0.5);
+      const bars=slice.map((h,i)=>h.fail>0?`<rect class="failbar" x="${(xs(i)-bw/2).toFixed(1)}" y="${ys(h.fail).toFixed(1)}" width="${bw.toFixed(1)}" height="${(padT+ih-ys(h.fail)).toFixed(1)}" rx="1.5"/>`:"").join("");
+      const last=pts[pts.length-1];
+      document.getElementById("histSvg").innerHTML=grid+`<path class="fill" d="${area}"/>`+bars+`<path class="line" d="${line}"/><circle class="dot" cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3.5"/>`;
+      const mid=slice[Math.floor(slice.length/2)];
+      document.getElementById("hcAxis").innerHTML=`<span>${fmt(slice[0].date)}</span><span>${fmt(mid.date)}</span><span>${fmt(slice[slice.length-1].date)}</span>`;
+      const failDays=slice.reduce((a,h)=>a+(h.fail>0?1:0),0);
+      document.getElementById("hcSub").textContent=`${slice[slice.length-1].verified}/${total} verified now · ${slice[0].verified}/${total} ${days} days ago · ${failDays} day${failDays===1?"":"s"} with an active failure`;
+    }
+
+    const TYPE_LABEL={validation:"Validated",failure:"Failure",remediation:"Remediated"};
+    const TRANS={validation:"pending → pass",failure:"pass → fail",remediation:"fail → pass"};
+    function cutoff(days){
+      const end=new Date((win.end||daily[daily.length-1].date)+"T00:00:00");
+      end.setDate(end.getDate()-(days-1));
+      return end.toISOString().slice(0,10);
+    }
+    function renderList(){
+      const co=cutoff(state.range), q=state.q.trim().toLowerCase();
+      const rows=events.filter(e=>
+        e.date>=co &&
+        (state.fam==="all"||e.family===state.fam) &&
+        (state.type==="all"||e.type===state.type) &&
+        (!q||(e.indicator+" "+e.name).toLowerCase().includes(q)));
+      document.getElementById("histList").innerHTML=rows.map(e=>`
+        <div class="hevent t-${e.type}">
+          <div class="hdate">${fmt(e.date)}</div>
+          <div class="hbody">
+            <div class="htop"><span class="hbadge">${TYPE_LABEL[e.type]||e.type}</span>
+              <span class="hkid">${e.indicator}</span><span class="hnm">${esc(e.name)}</span>
+              <span class="htrans">${TRANS[e.type]||""}</span></div>
+            <div class="hnote">${esc(e.note)}</div>
+          </div>
+        </div>`).join("");
+      document.getElementById("histEmpty").hidden=rows.length>0;
+    }
+
+    document.querySelectorAll("#hRange button").forEach(b=>b.onclick=()=>{
+      state.range=+b.dataset.range;
+      document.querySelectorAll("#hRange button").forEach(o=>o.setAttribute("aria-pressed",o===b));
+      drawChart(state.range);renderList();
+    });
+    famSel.onchange=e=>{state.fam=e.target.value;renderList();};
+    document.getElementById("hSearch").oninput=e=>{state.q=e.target.value;renderList();};
+    document.querySelectorAll("#hType .chip").forEach(c=>c.onclick=()=>{
+      state.type=c.dataset.type;
+      document.querySelectorAll("#hType .chip").forEach(o=>o.setAttribute("aria-pressed",o===c));
+      renderList();
+    });
+    drawChart(state.range);renderList();
+  })();
+
+  /* ---------------- footer ---------------- */
   document.getElementById("footMeta").textContent =
     `Consolidated Rules v${TC.rules_version||"—"} · generated ${TC.generated} · offering: ksi-mock-rg (Azure US Gov)`;
-
-  // theme toggle
-  const root=document.documentElement, tgl=document.getElementById("tgl");
-  tgl.onclick=()=>{
-    const cur=root.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
-    root.setAttribute("data-theme",cur==="dark"?"light":"dark");
-  };
 </script>
