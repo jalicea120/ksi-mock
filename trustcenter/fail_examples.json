@@ -1,0 +1,129 @@
+{
+  "_note": "Synthetic BROKEN evidence, one per automated indicator, used to teach assessors what a real finding looks like. The Trust Center generator runs each row set through the real engine/checks.py and only attaches it if the check genuinely returns False, so no verdict here is hand-authored. Never mixed into the live posture count.",
+
+  "KSI-PIY-GIV": {
+    "why": "The authoritative inventory query returned zero resources, so an on-demand inventory cannot be demonstrated. The check requires at least one row.",
+    "rows": []
+  },
+  "KSI-CNA-MAT": {
+    "why": "A publicly-exposed resource is present. The check passes only when the exposure query returns nothing; here it returns a public IP attachment.",
+    "rows": [
+      {"name": "vm-edge-01", "type": "microsoft.network/publicIPAddresses", "exposure": "Public IP attached to NIC"}
+    ]
+  },
+  "KSI-IAM-SNU": {
+    "why": "No managed identity was found for secretless workload authentication. The check requires at least one.",
+    "rows": []
+  },
+  "KSI-MLA-OSM": {
+    "why": "No Sentinel-onboarded Log Analytics workspace was found, so a SIEM capability cannot be evidenced.",
+    "rows": []
+  },
+  "KSI-SVC-SIN": {
+    "why": "A storage account still permits TLS 1.0 and non-HTTPS traffic. The check requires every account to enforce TLS1_2 and HTTPS-only.",
+    "rows": [
+      {"name": "ksimockstih6428", "resourceGroup": "ksi-mock-rg", "minimum_tls_version": "TLS1_0", "https_only": 0, "infrastructure_encryption": 1, "public_network_access": "Enabled"}
+    ]
+  },
+  "KSI-SVC-ASM": {
+    "why": "A Key Vault has purge protection off and public network access enabled. The check requires purge protection on and public access Disabled for every vault.",
+    "rows": [
+      {"name": "kv-ksi-mock-01", "purge_protection": false, "public_network_access": "Enabled"}
+    ]
+  },
+  "KSI-CNA-RNT": {
+    "why": "A network security group carries no inbound Deny rule, so it has no explicit default-deny. The check requires at least one inbound Deny per NSG.",
+    "rows": [
+      {"name": "nsg-app-tier", "inbound_deny_rules": 0}
+    ]
+  },
+  "KSI-CNA-ULN": {
+    "why": "A virtual network has only one subnet, so it provides no real segmentation. The check requires at least two subnets.",
+    "rows": [
+      {"name": "vnet-hub", "subnet_count": 1}
+    ]
+  },
+  "KSI-SVC-VCM": {
+    "why": "No private endpoints were found validating service-to-service communication. The check requires at least one.",
+    "rows": []
+  },
+  "KSI-RPL-ABO": {
+    "why": "No backup policy is defined in the vault, so backups cannot be aligned to recovery objectives. The check requires at least one policy.",
+    "rows": []
+  },
+  "KSI-CNA-DFP": {
+    "why": "No policy assignment governs the resource group, so functionality and privileges are not being constrained. The check requires at least one assignment.",
+    "rows": []
+  },
+  "KSI-IAM-ELP": {
+    "why": "A role assignment grants Owner at the resource group scope, which violates least privilege. The check fails if any assignment resolves to the built-in Owner role.",
+    "rows": [
+      {"principal": "svc-deploy", "scope": "ksi-mock-rg", "role_definition_id": "/subscriptions/x/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"}
+    ]
+  },
+  "KSI-IAM-APM": {
+    "why": "The only Conditional Access policy requiring MFA is disabled, so nothing is enforced. The check requires at least one ENABLED policy with MFA or an authentication strength.",
+    "rows": [
+      {"displayName": "Require MFA (legacy)", "state": "disabled", "grantControls": {"builtInControls": ["mfa"]}}
+    ]
+  },
+  "KSI-IAM-SUS": {
+    "why": "No enabled risk-based Conditional Access policy responds to suspicious sign-ins. The check requires an enabled policy keyed on sign-in or user risk.",
+    "rows": [
+      {"displayName": "Baseline access", "state": "enabled", "conditions": {}}
+    ]
+  },
+  "KSI-IAM-JIT": {
+    "why": "No PIM-eligible role assignments were found; privileged roles are standing rather than just-in-time. The check requires at least one eligible assignment.",
+    "rows": []
+  },
+  "KSI-SVC-EIS": {
+    "why": "No Defender secure score is being computed, so the evaluate-and-improve loop cannot be evidenced. The check requires at least one score.",
+    "rows": []
+  },
+  "KSI-CNA-IBP": {
+    "why": "Unhealthy best-practice findings outnumber healthy ones. The check requires healthy assessments to outnumber unhealthy.",
+    "rows": [
+      {"assessment": "Secure transfer", "status": "Unhealthy"},
+      {"assessment": "Encryption at rest", "status": "Unhealthy"},
+      {"assessment": "MFA for admins", "status": "Healthy"}
+    ]
+  },
+  "KSI-CNA-EIS": {
+    "why": "Every policy assignment is audit-only (DoNotEnforce), so intended state is observed but never enforced. The check requires at least one assignment in Default (enforced) mode.",
+    "rows": [
+      {"name": "require-tags", "enforcement_mode": "DoNotEnforce"},
+      {"name": "allowed-locations", "enforcement_mode": "DoNotEnforce"}
+    ]
+  },
+  "KSI-CMT-VTD": {
+    "why": "Automated validation fails more often than it passes, so tests are not reliably gating promotion. The check requires successes to outnumber failures.",
+    "rows": [
+      {"name": "ci", "status": "completed", "conclusion": "failure"},
+      {"name": "ci", "status": "completed", "conclusion": "failure"},
+      {"name": "ci", "status": "completed", "conclusion": "success"}
+    ]
+  },
+  "KSI-CMT-RMV": {
+    "why": "No successful version-controlled redeployment was found, so changes cannot be traced to a pipeline run. The check requires at least one successful push-triggered run.",
+    "rows": [
+      {"name": "deploy", "event": "push", "conclusion": "failure"}
+    ]
+  },
+  "KSI-SCR-MON": {
+    "why": "An open dependency alert is rated critical. The check fails when any monitored alert is high or critical severity.",
+    "rows": [
+      {"package": "log4j-core", "severity": "critical", "state": "open"}
+    ]
+  },
+  "KSI-PIY-RSD": {
+    "why": "No static code-scanning analyses were found in the SDLC. The check requires at least one analysis run.",
+    "rows": []
+  },
+  "KSI-CMT-LMC": {
+    "why": "The diagnostic category is enabled but has shipped zero events to Log Analytics, so change logging cannot be evidenced. The check requires at least one category actively ingesting events.",
+    "rows": [
+      {"resource": "kv-ksi-mock-01", "category": "AuditEvent", "events": 0}
+    ]
+  }
+}
