@@ -128,9 +128,15 @@ def enrich_assessor(indicators: list[dict]) -> list[dict]:
     spec = yaml.safe_load(MAP.read_text(encoding="utf-8"))
     by_id = {i["id"]: i for i in spec.get("indicators", [])}
     fail_examples = _load_fail_examples()
+    # Full collector rows (the SDR only carries a 4-row sample). Used so Assessor
+    # mode can show every evidence row in a scrollable block, not just the sample.
+    full_evidence = results.load_evidence(EVIDENCE_DIR) if EVIDENCE_DIR.exists() else {}
     for x in indicators:
         item = by_id.get(x["id"], {})
         x["collectors"] = item.get("collectors", [])
+        payload = full_evidence.get(x["id"])
+        if payload and not payload.get("error") and payload.get("rows"):
+            x["evidence_full"] = payload["rows"]
         # Prefer the query the evidence was actually collected from; fall back to
         # the first non-manual collector declared in the map for staged indicators.
         ref = x.get("query_ref")
