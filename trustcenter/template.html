@@ -229,7 +229,7 @@
   .arow-t .chev{transition:transform .18s;color:var(--ink-3);flex:none}
   .arow.open .arow-t .chev{transform:rotate(90deg)}
   .abody{max-height:0;overflow:hidden;transition:max-height .35s ease}
-  .arow.open .abody{max-height:4200px}
+  .arow.open .abody{max-height:6000px}
   .abody-in{padding:6px 18px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column}
   .a-actions{display:flex;align-items:center;gap:10px;margin:14px 0 6px}
   .btn{appearance:none;font-family:var(--sans);font-size:12.5px;font-weight:560;cursor:pointer;
@@ -444,6 +444,66 @@
   .hist-empty{color:var(--ink-3);font-style:italic;font-size:14px;margin:8px 0 0;padding-left:34px}
   .hist-note{margin:24px 0 0;font-size:12px;color:var(--ink-3);max-width:82ch;font-style:italic}
 
+  /* ---- reproduce + copy-to-clipboard ---- */
+  .codewrap{position:relative;margin-top:5px}
+  .codewrap > pre.code{padding-right:64px}
+  .codewrap .copy{position:absolute;top:7px;right:7px;z-index:2;appearance:none;cursor:pointer;
+    font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-2);
+    background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 9px;
+    opacity:.9;transition:opacity .15s,color .15s,border-color .15s,background .15s}
+  .codewrap .copy:hover{opacity:1;color:var(--ink-1);border-color:var(--ink-3)}
+  .codewrap .copy.done{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
+  pre.code.cmd{white-space:pre-wrap;word-break:break-word}
+  .repro{margin-top:14px;border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:9px;background:var(--card-2);padding:13px 15px}
+  .repro-h{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;margin-bottom:8px}
+  .repro-h svg{stroke:currentColor;flex:none}
+  .repro > .desc{font-size:12.5px;color:var(--ink-2);margin:0 0 4px}
+  .repro-step{margin-top:11px}
+  .repro-step .desc{font-size:12.5px;color:var(--ink-2);margin:0}
+  .repro-verify{margin-top:12px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
+  .repro-verify b{color:var(--ink-1);font-weight:600}
+
+  /* ---- guided lesson: one indicator, end to end ---- */
+  .hero-cta{text-align:center;margin-top:24px}
+  .start-here{font-size:14px;padding:11px 20px;border-radius:11px}
+  .start-here svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9}
+  .lesson{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;padding:20px}
+  .lesson[hidden]{display:none}
+  .lesson-scrim{position:absolute;inset:0;background:var(--tour-scrim);backdrop-filter:blur(3px)}
+  .lesson-card{position:relative;z-index:1;display:flex;flex-direction:column;width:648px;max-width:100%;
+    max-height:calc(100vh - 40px);background:var(--card);border:1px solid var(--line);border-radius:18px;
+    box-shadow:0 24px 64px rgba(0,0,0,.42);overflow:hidden;animation:fade .3s ease}
+  .lh{display:flex;align-items:center;gap:11px;padding:15px 20px;border-bottom:1px solid var(--line);flex:none}
+  .lh-badge{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:4px 9px}
+  .lh-kid{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink-2)}
+  .lh-x{margin-left:auto;appearance:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink-2);cursor:pointer;font-size:14px;line-height:1;display:grid;place-items:center}
+  .lh-x:hover{color:var(--ink-1);border-color:var(--ink-3)}
+  .lprog{display:flex;gap:6px;padding:14px 20px 2px;flex:none}
+  .lprog button{flex:1;height:4px;border:0;padding:0;border-radius:2px;background:var(--line);cursor:pointer;transition:background .2s}
+  .lprog button.on{background:var(--accent)}
+  .lprog button.done{background:color-mix(in srgb,var(--accent) 52%,var(--line))}
+  .lbody{padding:16px 20px 8px;overflow-y:auto;overscroll-behavior:contain}
+  .lstep-badge{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent-ink);margin-bottom:6px}
+  .ltitle{font-size:19px;font-weight:680;letter-spacing:-.02em;margin:0 0 10px}
+  .lbody > p{font-size:14px;color:var(--ink-2);margin:0 0 12px}
+  .lbody > p b{color:var(--ink-1);font-weight:600}
+  .lbody .lbl{margin-top:12px}
+  .lmeta{display:flex;align-items:center;gap:9px;margin:4px 0 8px}
+  .lname{font-size:16px;font-weight:640;letter-spacing:-.01em;margin:2px 0 8px;color:var(--ink-1)}
+  .lrecap{margin:12px 0 4px;padding-left:0;list-style:none}
+  .lrecap li{position:relative;padding-left:22px;color:var(--ink-2);font-size:13.5px;margin-bottom:8px}
+  .lrecap li::before{content:"";position:absolute;left:3px;top:7px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .lrecap li b{color:var(--ink-1);font-weight:600}
+  .lfoot{display:flex;align-items:center;gap:12px;padding:13px 20px;border-top:1px solid var(--line);
+    background:var(--card-2);flex:none}
+  .lstep-count{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+  .lnav{display:flex;gap:8px;margin-left:auto}
+
   /* ---- guided mode ---- */
   .guide-fab{position:fixed;right:20px;bottom:20px;z-index:1100;display:inline-flex;align-items:center;gap:9px;
     font-family:var(--sans);font-size:13.5px;font-weight:600;cursor:pointer;color:#fff;background:var(--accent);
@@ -535,6 +595,12 @@
       <p>Each indicator below is measured from live Azure Government configuration and telemetry,
         never hand-set. Results are computed from read-only evidence on every run, so what you see is
         the current, provable state of this offering. <b id="heroSub"></b></p>
+
+      <div class="hero-cta">
+        <button class="btn start-here open-lesson">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          Start here: one indicator, end to end</button>
+      </div>
 
       <div class="posture">
         <div class="lab"><span>Assurance posture · all 46 indicators</span><span id="postPct"></span></div>
@@ -646,6 +712,9 @@
     <p class="lead">A short orientation for assessors. It explains what you are looking at, how each
       verdict is produced, and how to use it to run an efficient, evidence-based assessment, without
       taking anyone's word for the result.</p>
+    <button class="btn start-here open-lesson" style="margin-top:16px">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+      See the whole model on one indicator</button>
 
     <div class="lgrid">
       <div class="lcard">
@@ -767,18 +836,18 @@
     <div class="lcard" style="margin-top:16px">
       <h3><span class="ic">§</span>Glossary</h3>
       <ul>
-        <li><b>KSI</b> — Key Security Indicator. A single testable statement of posture (id like <code style="font-family:var(--mono)">KSI-SVC-SIN</code>).</li>
-        <li><b>Collector</b> — the read-only query that gathers evidence (Azure Resource Graph, Microsoft Graph, Sentinel/Log Analytics, or GitHub REST).</li>
-        <li><b>Assertion / pass-check</b> — the Python function that turns evidence rows into pass or fail.</li>
-        <li><b>Evidence</b> — the timestamped rows a collector returned, stored verbatim.</li>
-        <li><b>SDR</b> — Security Decision Record. The signed run output this page is generated from.</li>
-        <li><b>Attestation</b> — a dated human sign-off for Hybrid and Manual indicators.</li>
+        <li><b>KSI</b> - Key Security Indicator. A single testable statement of posture (id like <code style="font-family:var(--mono)">KSI-SVC-SIN</code>).</li>
+        <li><b>Collector</b> - the read-only query that gathers evidence (Azure Resource Graph, Microsoft Graph, Sentinel/Log Analytics, or GitHub REST).</li>
+        <li><b>Assertion / pass-check</b> - the Python function that turns evidence rows into pass or fail.</li>
+        <li><b>Evidence</b> - the timestamped rows a collector returned, stored verbatim.</li>
+        <li><b>SDR</b> - Security Decision Record. The signed run output this page is generated from.</li>
+        <li><b>Attestation</b> - a dated human sign-off for Hybrid and Manual indicators.</li>
       </ul>
     </div>
   </section>
 
   <footer>
-    <p><b class="mono">Provisional preview — not final guidance.</b> This is a disposable mock built to
+    <p><b class="mono">Provisional preview - not final guidance.</b> This is a disposable mock built to
       demonstrate how a cloud service offering generates and computes KSI evidence. It runs on synthetic
       data in an isolated Azure Government subscription; treat all output as informational, pending review
       by a qualified professional.</p>
@@ -805,6 +874,26 @@
         <button class="tp-arrow" id="tpPrev" aria-label="Previous">‹</button>
         <button class="tp-arrow" id="tpNext" aria-label="Next">›</button>
         <button class="tp-done" id="tpDone">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson" id="lesson" hidden>
+  <div class="lesson-scrim" id="lessonScrim"></div>
+  <div class="lesson-card" role="dialog" aria-modal="true" aria-label="Guided lesson: one indicator, end to end">
+    <div class="lh">
+      <span class="lh-badge">Guided lesson</span>
+      <span class="lh-kid" id="lessonKid"></span>
+      <button class="lh-x" id="lessonX" aria-label="Close lesson">&#10005;</button>
+    </div>
+    <div class="lprog" id="lessonProg" role="group" aria-label="Lesson progress"></div>
+    <div class="lbody" id="lessonBody"></div>
+    <div class="lfoot">
+      <span class="lstep-count" id="lessonStep"></span>
+      <div class="lnav">
+        <button class="btn ghost" id="lessonPrev">Back</button>
+        <button class="btn" id="lessonNext">Next</button>
       </div>
     </div>
   </div>
@@ -1050,12 +1139,53 @@
     return {tone:"wait",label:"PENDING",sub:"not yet measured"};
   }
 
+  /* ---------------- reproduce + copy ---------------- */
+  // A code block with a copy-to-clipboard button. The copy handler (delegated,
+  // below) reads the <pre> textContent, so entities decode back to the raw text.
+  function copyPre(text,cls){
+    return `<div class="codewrap"><button class="copy" type="button" aria-label="Copy to clipboard">Copy</button>`+
+      `<pre class="code${cls?" "+cls:""}">${esc(text)}</pre></div>`;
+  }
+  // Which read-only collector emits this indicator's evidence (same code the pipeline runs).
+  const TOOL_RUNNER={arg:"collectors/arg/runner.py",graph:"collectors/graph/runner.py",
+    arm:"collectors/graph/runner.py",github:"collectors/github/runner.py",
+    sentinel:"collectors/sentinel/runner.py",defender_policy:"collectors/arg/runner.py",
+    manual:"collectors/manual/runner.py"};
+  // "Reproduce it yourself" - the strongest form of validation. Leads with the exact
+  // repo commands (matching the assessor guide), then a no-checkout direct query for
+  // the KQL tools. Never shown for Manual (there is nothing to query).
+  function reproduceBlock(x){
+    const tool=(x.collectors&&x.collectors[0]&&x.collectors[0].tool)||x.tool;
+    if(x.mode==="Manual") return "";
+    const steps=[];
+    const runner=TOOL_RUNNER[tool];
+    if(runner) steps.push({h:"Re-run this indicator's read-only collector - the exact code the pipeline runs:",
+      c:`python ${runner} --out out/evidence`});
+    steps.push({h:"Or run the whole pipeline and regrade every indicator into a fresh, schema-validated report:",
+      c:`python engine/assert.py --out out/sdr`});
+    if(tool==="arg" && x.query_text) steps.push({
+      h:"Or query Azure Resource Graph directly, no checkout needed (or paste the query into Resource Graph Explorer in the portal):",
+      c:`az cloud set --name AzureUSGovernment\naz login\naz graph query -q "${x.query_text.trim().replace(/"/g,'\\"')}"`});
+    if(tool==="sentinel" && x.query_text) steps.push({
+      h:"Or query the Log Analytics workspace directly:",
+      c:`az rest --method post --resource https://api.loganalytics.us \\\n  --url "https://api.loganalytics.us/v1/workspaces/<workspace-id>/query" \\\n  --body '{"query": "${x.query_text.trim().replace(/\s+/g," ").replace(/"/g,'\\"')}"}'`});
+    const body=steps.map(s=>`<div class="repro-step"><div class="desc">${s.h}</div>${copyPre(s.c,"cmd")}</div>`).join("");
+    const verify=x.pass_criteria
+      ? `<div class="repro-verify">You should get rows shaped like the evidence above. <b>${esc(x.id)}</b> passes when: <b>${esc(x.pass_criteria)}</b></div>`
+      : "";
+    return `<div class="repro">
+      <div class="repro-h"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke-width="1.8">
+        <path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 9A8 8 0 0 0 6 5.3L4 7M4 15a8 8 0 0 0 14 3.7L20 17"/></svg>Reproduce it yourself</div>
+      <div class="desc">Do not take the dashboard's word for it - with read access to the environment you can regenerate this exact evidence.</div>
+      ${body}${verify}</div>`;
+  }
+
   function inputStage(x,fail){
     const tool=(x.collectors&&x.collectors[0]&&x.collectors[0].tool)||x.tool;
     const lang=LANG[tool]||"txt";
     const query = x.query_text
-      ? `<div class="lbl">Query · ${esc(x.query_ref||"")}</div><pre class="code">${esc(x.query_text.trim())}</pre>`
-      : `<div class="desc">No query file bound for this indicator${x.mode==="Manual"?" — evidence is a human attestation, shown below.":"."}</div>`;
+      ? `<div class="lbl">Query · ${esc(x.query_ref||"")}</div>`+copyPre(x.query_text.trim())
+      : `<div class="desc">No query file bound for this indicator${x.mode==="Manual"?" - evidence is a human attestation, shown below.":"."}</div>`;
     let evidence;
     if(fail && x.fail_example){
       const fe=x.fail_example;
@@ -1073,22 +1203,22 @@
         : `Evidence returned · ${x.row_count} row${x.row_count===1?"":"s"} (first ${x.evidence.length} shown)`;
       evidence = `<div class="lbl">${lbl}</div><pre class="code scroll">${esc(JSON.stringify(rows,null,2))}</pre>`;
     } else {
-      evidence = `<div class="desc">Collector staged — no evidence captured in this run yet.</div>`;
+      evidence = `<div class="desc">Collector staged - no evidence captured in this run yet.</div>`;
     }
     const same = fail && x.fail_example ? `<div class="desc" style="margin-bottom:9px">Same query, same assertion. Only the evidence is swapped for a deliberately non-compliant example, so you can see how a real finding surfaces.</div>` : "";
     return `<div class="stage in"><div class="node">1</div>
       <h4>Input <span class="tag">${SOURCE[tool]||tool||"collector"}</span></h4>
       <div class="desc">A read-only ${lang==="kql"?"query":"call"} runs against the environment and returns evidence. Read-only, so assessing never changes what is assessed.</div>
-      ${same}${query}${evidence}</div>`;
+      ${same}${query}${evidence}${(!fail && x.mode!=="Manual")?reproduceBlock(x):""}</div>`;
   }
 
   function assertStage(x,fail){
     const crit=`<div class="lbl">Pass criteria (intent)</div><div class="desc"><b>${esc(x.pass_criteria||"")}</b></div>`;
     let logic;
     if(x.check_source){
-      logic=`<div class="lbl">Assertion · engine/checks.py · ${esc(x.check_fn||"")}()</div><pre class="code">${esc(x.check_source.trim())}</pre>`;
+      logic=`<div class="lbl">Assertion · engine/checks.py · ${esc(x.check_fn||"")}()</div>`+copyPre(x.check_source.trim());
     } else if(x.mode==="Manual"){
-      logic=`<div class="desc">No automated assertion — this indicator is decided by human review of the attestation above against the stated criteria.</div>`;
+      logic=`<div class="desc">No automated assertion - this indicator is decided by human review of the attestation above against the stated criteria.</div>`;
     } else if(x.mode==="Hybrid"){
       logic=`<div class="desc">Automated evidence is gathered, but the pass decision requires a reviewer to confirm it against the criteria. This is why the verdict is <b>Needs review</b>, not Validated.</div>`;
     } else {
@@ -1121,7 +1251,7 @@
     meta.push(`mode <b>${x.mode}</b>`);
     if(x.collected_at) meta.push(`collected <b>${esc(x.collected_at)}</b>`);
     let note="";
-    if(v.tone==="wait"&&x.mode==="Auto") note=`<div class="assess-note"><b>Pending is a question, not a pass.</b> This indicator was not measured this run — check whether a permission or data source is missing before accepting it.</div>`;
+    if(v.tone==="wait"&&x.mode==="Auto") note=`<div class="assess-note"><b>Pending is a question, not a pass.</b> This indicator was not measured this run - check whether a permission or data source is missing before accepting it.</div>`;
     else if(x.mode==="Hybrid") note=`<div class="assess-note"><b>Assessor action.</b> Confirm the attestation is dated, named, and within its review cadence, and that the evidence above supports it, before you accept this indicator.</div>`;
     else if(x.mode==="Manual") note=`<div class="assess-note"><b>Assessor action.</b> Verify the attestation and its review cadence. No automated test applies here.</div>`;
     return `<div class="stage out"><div class="node">3</div>
@@ -1150,8 +1280,8 @@
           ? "No machine query applies here. A named reviewer records a dated attestation that the control is met, judged against the stated criteria."
           : ("A read-only query runs against "+src+". Read-only is the whole point: the act of assessing can never change the thing being assessed, so the evidence stays trustworthy."
              +(F?" In this example the same query is fed deliberately non-compliant evidence.":"")),
-        val:manual?`document · <b>${esc(x.query_ref||"—")}</b>`:`query · <b>${esc(x.query_ref||"—")}</b> · via ${esc(src)}`},
-      {n:2,t:"Evidence",v:(rc!=null?rc+" rows":"—"),h:F?"synthetic broken evidence":"captured verbatim",
+        val:manual?`document · <b>${esc(x.query_ref||"-")}</b>`:`query · <b>${esc(x.query_ref||"-")}</b> · via ${esc(src)}`},
+      {n:2,t:"Evidence",v:(rc!=null?rc+" rows":"-"),h:F?"synthetic broken evidence":"captured verbatim",
         d:F?"Here the evidence is a deliberately non-compliant example, so you can watch a real finding form. It is clearly labelled teaching data and never counts toward the live posture."
             :"Whatever the query returned is stored exactly as-is, with a timestamp and the subscription it came from. This raw evidence is what the verdict must be justified by.",
         val:`<b>${rc!=null?rc:0}</b> row(s)${(!F&&rel)?` · collected <b>${esc(rel)}</b>`:""}${F?" · <b>non-compliant</b>":""}`},
@@ -1167,14 +1297,14 @@
       {n:4,t:"Verdict",v:v.label,tone:v.tone,h:"recorded decision",
         d:F?("The engine records this as a finding: "+((x.fail_example||{}).why||"the evidence did not meet the pass criteria.")+" On a live run this is exactly how a failure would surface.")
             :("The outcome written to the Security Decision Record: "+v.sub+". "+(
-          v.tone==="wait"&&x.mode==="Auto"?"Pending is a question, not a pass — check for a missing permission or data source before you accept it."
+          v.tone==="wait"&&x.mode==="Auto"?"Pending is a question, not a pass - check for a missing permission or data source before you accept it."
           :(v.tone==="warn"||manual)?"Confirm the attestation is dated, named, and within its review cadence before you accept it."
           :"This is what the headline Verified count is built from.")),
         val:`verdict · <b>${v.label}</b>${F?` · result <b>false</b>`:((x.result!=null&&!manual)?` · result <b>${x.result}</b>`:"")}`},
       {n:5,t:"Publish",v:"Trust Center",h:"republished each run",
         d:F?"On a real run this failure republishes here as a red finding and, if it is a regression from a previously passing state, opens a drift issue automatically."
             :"On every scheduled run this page is regenerated from the latest record, so the posture you are reading is exactly what the last run proved, never a stale claim.",
-        val:`rules · <b>v${esc(TC.rules_version||"—")}</b>`}
+        val:`rules · <b>v${esc(TC.rules_version||"-")}</b>`}
     ];
   }
   function vizHTML(steps){
@@ -1551,7 +1681,138 @@
   },{passive:false});
   addEventListener("resize",()=>{ if(!ov.hidden && gEl) gPlace(gEl,false); });
 
+  /* ---------------- copy to clipboard (delegated) ---------------- */
+  function copyFallback(text,done){
+    try{const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";
+      ta.style.opacity="0";document.body.appendChild(ta);ta.focus();ta.select();
+      document.execCommand("copy");ta.remove();done();}catch(e){}
+  }
+  document.addEventListener("click",e=>{
+    const b=e.target.closest(".copy"); if(!b) return;
+    const pre=b.parentElement.querySelector(".code"); if(!pre) return;
+    const text=pre.textContent;
+    const done=()=>{b.classList.add("done");b.textContent="Copied";
+      setTimeout(()=>{b.classList.remove("done");b.textContent="Copy";},1300);};
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(text).then(done).catch(()=>copyFallback(text,done));
+    else copyFallback(text,done);
+  });
+
+  /* ---------------- guided lesson: one indicator, end to end ---------------- */
+  // Teach the whole model on ONE real indicator, then let the assessor generalise.
+  // Prefer KSI-SVC-SIN (a clean, passing, storage-TLS check); fall back to any
+  // verified Auto indicator that carries a query, a check, and a failing example.
+  const canon =
+    inds.find(x=>x.id==="KSI-SVC-SIN" && x.status==="pass" && x.query_text && x.check_source) ||
+    inds.find(x=>x.mode==="Auto" && x.status==="pass" && x.query_text && x.check_source && x.fail_example) ||
+    inds.find(x=>x.mode==="Auto" && x.status==="pass" && x.query_text && x.check_source);
+
+  if(!canon){
+    document.querySelectorAll(".open-lesson").forEach(b=>b.style.display="none");
+  } else {
+    const L=canon, fam=FAMILY_NAMES[L.family]||L.family;
+    const LESSON=[
+      {badge:"1 · The indicator", title:"Meet one indicator",
+        html:()=>`<p>This is <b>one</b> Key Security Indicator. Every one of the ${nAuto} automated indicators in
+          this offering is proven the same five ways you are about to see - so learn it once here and you can read
+          them all.</p>
+          <div class="lmeta"><span class="kid">${L.id}</span><span class="mode">${L.mode}</span>
+            <span class="pill ok"><span class="pd"></span>Verified</span>
+            <span class="mono" style="font-size:12px;color:var(--ink-3)">${esc(fam)}</span></div>
+          <h4 class="lname">${esc(L.name)}</h4>
+          <div class="repro-verify" style="border:0;padding:0;margin-top:0">It asserts: <b>${esc(L.pass_criteria||"")}</b></div>`},
+      {badge:"2 · Input", title:"The evidence",
+        html:()=>`<p>On every run a <b>read-only</b> query asks the environment a question and stores exactly what
+          it answers. Read-only is the whole point: the act of assessing can never change the thing being assessed.</p>
+          <div class="lbl">Query · ${esc(L.query_ref||"")}</div>${copyPre((L.query_text||"").trim())}
+          <div class="lbl">Evidence returned · ${L.row_count} row${L.row_count===1?"":"s"}</div>
+          <pre class="code scroll">${esc(JSON.stringify(L.evidence_full||L.evidence||[],null,2))}</pre>`},
+      {badge:"3 · Verify", title:"Reproduce it yourself",
+        html:()=>`<p>You never have to trust this page. Run the same read-only collection yourself and you will get
+          the same rows - reproducing the result is the strongest form of validation.</p>${reproduceBlock(L)}`},
+      {badge:"4 · Assertion", title:"The pass-check",
+        html:()=>`<p>A single Python function turns those evidence rows into pass or fail. The <i>same</i> function
+          feeds the signed record and this page, so the two can never disagree.</p>
+          <div class="lbl">engine/checks.py · ${esc(L.check_fn||"")}()</div>${copyPre((L.check_source||"").trim())}
+          <div class="assert-out">Against the evidence above, <b>${esc(L.check_fn||"")}()</b> returns <b>true</b> &rarr; the indicator passes.</div>`},
+      {badge:"5 · Output", title:"The verdict",
+        html:()=>`<p>The result is written to the Security Decision Record and published here. This indicator is one
+          of the ${nVerified} that make up the headline <b>Verified</b> number.</p>
+          <div class="verdict ok"><span class="vd"></span>VALIDATED<small>assertion returned true</small></div>
+          <div class="kv" style="margin-top:10px">${[L.result!=null?`result <b>${L.result}</b>`:"",`rows <b>${L.row_count}</b>`,`mode <b>${L.mode}</b>`,L.collected_at?`collected <b>${esc(L.collected_at)}</b>`:""].filter(Boolean).join(" · ")}</div>`},
+      {badge:"6 · Prove it can fail", title:"What a finding looks like",
+        html:()=>`<p>A trust surface that only ever shows green teaches you nothing. So the <i>same</i> query and the
+          <i>same</i> check are run against deliberately broken evidence - and the engine returns <b>false</b>.</p>`+
+          (L.fail_example
+            ? `<div class="lbl fail-lbl">Broken evidence · ${L.fail_example.row_count} row${L.fail_example.row_count===1?"":"s"} <span class="teach">synthetic · teaching only</span></div>
+               <pre class="code fail-pre">${esc(JSON.stringify(L.fail_example.rows,null,2))}</pre>
+               <div class="verdict crit" style="margin-top:10px"><span class="vd"></span>FAILED<small>assertion returned false</small></div>
+               <div class="assess-note fail-note"><b>Why it failed.</b> ${esc(L.fail_example.why)}</div>`
+            : `<div class="assess-note">Every automated indicator can be shown failing on demand in Assessor mode; this one's fixture is staged.</div>`)+
+          `<p style="margin-top:12px;font-size:13px;color:var(--ink-3)">The failure is engine-computed, not hand-drawn, and never touches the live posture count.</p>`},
+      {badge:"7 · Continuous", title:"You can read them all now",
+        html:()=>`<p>Because the check runs on a schedule, a regression is caught automatically: a passing indicator
+          that flips to failing shows up in <b>History</b> and opens a drift issue, then the fix appears as a
+          remediation back to validated. That <b>pass &rarr; fail &rarr; remediated</b> arc is what a healthy,
+          continuously-monitored system looks like.</p>
+          <p>That is the entire model, on one indicator. All ${nAuto} automated indicators work exactly this way:</p>
+          <ul class="lrecap">
+            <li><b>Evidence</b> - a read-only query, captured verbatim with a timestamp.</li>
+            <li><b>Reproduce</b> - re-run it yourself and get the same rows.</li>
+            <li><b>Assertion</b> - one inspectable function decides pass or fail.</li>
+            <li><b>Verdict</b> - written to the signed record; only Auto passes count as Verified.</li>
+            <li><b>Prove-it-can-fail</b> - the same check returns false on broken evidence.</li>
+          </ul>
+          <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:16px">
+            <button class="btn" id="lessonToAssessor">Explore all ${nAuto} in Assessor mode &rarr;</button>
+            <button class="btn ghost" id="lessonHistory">See the history arc &rarr;</button>
+          </div>`}
+    ];
+
+    const lesson=document.getElementById("lesson");
+    const lBody=document.getElementById("lessonBody");
+    const lProg=document.getElementById("lessonProg");
+    let lI=0;
+
+    function openAssessorRow(id){
+      const r=document.querySelector(`.arow[data-aind="${id}"]`);
+      if(!r) return;
+      if(!r.classList.contains("open")) r.querySelector(".arow-t").click();
+      setTimeout(()=>r.scrollIntoView({block:"center",behavior:"smooth"}),140);
+    }
+    function renderLesson(){
+      const s=LESSON[lI];
+      lBody.scrollTop=0;
+      lBody.innerHTML=`<div class="lstep-badge">${esc(s.badge)}</div><h3 class="ltitle">${esc(s.title)}</h3>`+s.html();
+      document.getElementById("lessonKid").textContent=L.id;
+      document.getElementById("lessonStep").textContent=(lI+1)+" / "+LESSON.length;
+      lProg.innerHTML=LESSON.map((_,i)=>
+        `<button type="button" data-i="${i}" class="${i===lI?"on":i<lI?"done":""}" aria-label="Step ${i+1}"></button>`).join("");
+      lProg.querySelectorAll("button").forEach(b=>b.onclick=()=>{lI=+b.dataset.i;renderLesson();});
+      const prev=document.getElementById("lessonPrev"), next=document.getElementById("lessonNext");
+      prev.disabled=(lI===0);
+      next.textContent=(lI===LESSON.length-1)?"Finish":"Next";
+      const toA=document.getElementById("lessonToAssessor");
+      if(toA) toA.onclick=()=>{closeLesson();gotoView("assessor");openAssessorRow(L.id);};
+      const toH=document.getElementById("lessonHistory");
+      if(toH) toH.onclick=()=>{closeLesson();gotoView("history");};
+    }
+    function openLesson(){lI=0;lesson.hidden=false;document.body.style.overflow="hidden";renderLesson();}
+    function closeLesson(){lesson.hidden=true;document.body.style.overflow="";}
+
+    document.querySelectorAll(".open-lesson").forEach(b=>b.onclick=openLesson);
+    document.getElementById("lessonNext").onclick=()=>{ if(lI<LESSON.length-1){lI++;renderLesson();} else closeLesson(); };
+    document.getElementById("lessonPrev").onclick=()=>{ if(lI>0){lI--;renderLesson();} };
+    document.getElementById("lessonX").onclick=closeLesson;
+    document.getElementById("lessonScrim").onclick=closeLesson;
+    addEventListener("keydown",e=>{ if(lesson.hidden) return;
+      if(e.key==="Escape") closeLesson();
+      else if(e.key==="ArrowRight" && lI<LESSON.length-1){lI++;renderLesson();}
+      else if(e.key==="ArrowLeft" && lI>0){lI--;renderLesson();}
+    });
+  }
+
   /* ---------------- footer ---------------- */
   document.getElementById("footMeta").textContent =
-    `Consolidated Rules v${TC.rules_version||"—"} · generated ${TC.generated} · offering: ksi-mock-rg (Azure US Gov)`;
+    `Consolidated Rules v${TC.rules_version||"-"} · generated ${TC.generated} · offering: ksi-mock-rg (Azure US Gov)`;
 </script>
