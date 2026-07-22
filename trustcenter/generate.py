@@ -233,12 +233,35 @@ def synth_history(indicators: list[dict], generated_iso: str, days: int = 30) ->
             "start": dates[0].isoformat(), "end": dates[-1].isoformat()}
 
 
+# The template is a self-contained <style> + markup + <script> fragment (it was
+# authored to be dropped into a claude.ai Artifact, which supplies the document
+# skeleton at publish time). When the page is hosted as a standalone file instead,
+# nothing supplies that skeleton, so we wrap it here. The <meta charset="utf-8"> is
+# the essential part: a browser handed the UTF-8 bytes with no declared charset
+# falls back to Windows-1252 and mojibakes every emoji/icon (and the en/em glyphs).
+DOCUMENT_HEAD = (
+    "<!DOCTYPE html>\n"
+    "<html lang=\"en\">\n"
+    "<head>\n"
+    "<meta charset=\"utf-8\">\n"
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+    "<title>AGS KSI Trust Center</title>\n"
+    "<link rel=\"icon\" href=\"data:image/svg+xml,"
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>"
+    "<text y='.9em' font-size='90'>%F0%9F%9B%A1</text></svg>\">\n"
+    "</head>\n"
+    "<body>\n"
+)
+DOCUMENT_TAIL = "\n</body>\n</html>\n"
+
+
 def render(model: dict) -> str:
     template = TEMPLATE.read_text(encoding="utf-8")
     if PLACEHOLDER not in template:
         raise SystemExit("template placeholder not found - is trustcenter/template.html intact?")
     payload = json.dumps(model, default=str)
-    return template.replace(PLACEHOLDER, f"/*__TC_DATA__*/ {payload} /*__END__*/")
+    body = template.replace(PLACEHOLDER, f"/*__TC_DATA__*/ {payload} /*__END__*/")
+    return DOCUMENT_HEAD + body + DOCUMENT_TAIL
 
 
 def main() -> int:
