@@ -453,15 +453,6 @@
     opacity:.9;transition:opacity .15s,color .15s,border-color .15s,background .15s}
   .codewrap .copy:hover{opacity:1;color:var(--ink-1);border-color:var(--ink-3)}
   .codewrap .copy.done{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
-  pre.code.cmd{white-space:pre-wrap;word-break:break-word}
-  .repro{margin-top:14px;border:1px solid var(--line);border-left:3px solid var(--accent);
-    border-radius:9px;background:var(--card-2);padding:13px 15px}
-  .repro-h{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;margin-bottom:8px}
-  .repro-h svg{stroke:currentColor;flex:none}
-  .repro > .desc{font-size:12.5px;color:var(--ink-2);margin:0 0 4px}
-  .repro-step{margin-top:11px}
-  .repro-step .desc{font-size:12.5px;color:var(--ink-2);margin:0}
   .repro-verify{margin-top:12px;font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
   .repro-verify b{color:var(--ink-1);font-weight:600}
 
@@ -985,7 +976,7 @@
     const v=b.dataset.view;
     document.querySelectorAll("#nav button").forEach(n=>n.setAttribute("aria-selected",n===b));
     Object.entries(views).forEach(([k,id])=>document.getElementById(id).classList.toggle("on",k===v));
-    window.scrollTo({top:0,behavior:"smooth"});
+    if(!guided) window.scrollTo({top:0,behavior:"smooth"});  // in guided mode the tour positions the page itself
     if(window.__onViewChange) window.__onViewChange(v);
   });
 
@@ -1139,45 +1130,12 @@
     return {tone:"wait",label:"PENDING",sub:"not yet measured"};
   }
 
-  /* ---------------- reproduce + copy ---------------- */
+  /* ---------------- copy to clipboard ---------------- */
   // A code block with a copy-to-clipboard button. The copy handler (delegated,
   // below) reads the <pre> textContent, so entities decode back to the raw text.
   function copyPre(text,cls){
     return `<div class="codewrap"><button class="copy" type="button" aria-label="Copy to clipboard">Copy</button>`+
       `<pre class="code${cls?" "+cls:""}">${esc(text)}</pre></div>`;
-  }
-  // Which read-only collector emits this indicator's evidence (same code the pipeline runs).
-  const TOOL_RUNNER={arg:"collectors/arg/runner.py",graph:"collectors/graph/runner.py",
-    arm:"collectors/graph/runner.py",github:"collectors/github/runner.py",
-    sentinel:"collectors/sentinel/runner.py",defender_policy:"collectors/arg/runner.py",
-    manual:"collectors/manual/runner.py"};
-  // "Reproduce it yourself" - the strongest form of validation. Leads with the exact
-  // repo commands (matching the assessor guide), then a no-checkout direct query for
-  // the KQL tools. Never shown for Manual (there is nothing to query).
-  function reproduceBlock(x){
-    const tool=(x.collectors&&x.collectors[0]&&x.collectors[0].tool)||x.tool;
-    if(x.mode==="Manual") return "";
-    const steps=[];
-    const runner=TOOL_RUNNER[tool];
-    if(runner) steps.push({h:"Re-run this indicator's read-only collector - the exact code the pipeline runs:",
-      c:`python ${runner} --out out/evidence`});
-    steps.push({h:"Or run the whole pipeline and regrade every indicator into a fresh, schema-validated report:",
-      c:`python engine/assert.py --out out/sdr`});
-    if(tool==="arg" && x.query_text) steps.push({
-      h:"Or query Azure Resource Graph directly, no checkout needed (or paste the query into Resource Graph Explorer in the portal):",
-      c:`az cloud set --name AzureUSGovernment\naz login\naz graph query -q "${x.query_text.trim().replace(/"/g,'\\"')}"`});
-    if(tool==="sentinel" && x.query_text) steps.push({
-      h:"Or query the Log Analytics workspace directly:",
-      c:`az rest --method post --resource https://api.loganalytics.us \\\n  --url "https://api.loganalytics.us/v1/workspaces/<workspace-id>/query" \\\n  --body '{"query": "${x.query_text.trim().replace(/\s+/g," ").replace(/"/g,'\\"')}"}'`});
-    const body=steps.map(s=>`<div class="repro-step"><div class="desc">${s.h}</div>${copyPre(s.c,"cmd")}</div>`).join("");
-    const verify=x.pass_criteria
-      ? `<div class="repro-verify">You should get rows shaped like the evidence above. <b>${esc(x.id)}</b> passes when: <b>${esc(x.pass_criteria)}</b></div>`
-      : "";
-    return `<div class="repro">
-      <div class="repro-h"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke-width="1.8">
-        <path d="M4 4v6h6"/><path d="M20 20v-6h-6"/><path d="M20 9A8 8 0 0 0 6 5.3L4 7M4 15a8 8 0 0 0 14 3.7L20 17"/></svg>Reproduce it yourself</div>
-      <div class="desc">Do not take the dashboard's word for it - with read access to the environment you can regenerate this exact evidence.</div>
-      ${body}${verify}</div>`;
   }
 
   function inputStage(x,fail){
@@ -1209,7 +1167,7 @@
     return `<div class="stage in"><div class="node">1</div>
       <h4>Input <span class="tag">${SOURCE[tool]||tool||"collector"}</span></h4>
       <div class="desc">A read-only ${lang==="kql"?"query":"call"} runs against the environment and returns evidence. Read-only, so assessing never changes what is assessed.</div>
-      ${same}${query}${evidence}${(!fail && x.mode!=="Manual")?reproduceBlock(x):""}</div>`;
+      ${same}${query}${evidence}</div>`;
   }
 
   function assertStage(x,fail){
@@ -1596,7 +1554,7 @@
 
   const gFab=document.getElementById("guideFab");
   const ov=document.getElementById("tour"), gRing=document.getElementById("tourRing"), gPop=document.getElementById("tourPop");
-  let guided=false, gSteps=[], gI=0, gEl=null;
+  let guided=false, gSteps=[], gI=0, gEl=null, gLockedY=0, gProg=false;
 
   function gPlace(el,animate){
     const r=el.getBoundingClientRect(), pad=8;
@@ -1617,7 +1575,10 @@
     if(s.pre){try{s.pre();}catch(e){}}
     const el=document.querySelector(s.sel);
     if(!el){ if(gI<gSteps.length-1){gI++;return gRender(animate);} return; }
-    gEl=el; el.scrollIntoView({block:"center",inline:"nearest"});
+    // scroll the step into view programmatically, then remember that position so
+    // the snap-back lock (gScrollLock) can hold the page there.
+    gEl=el; gProg=true; el.scrollIntoView({block:"center",inline:"nearest"});
+    gLockedY=window.scrollY; requestAnimationFrame(()=>{gLockedY=window.scrollY;gProg=false;});
     document.getElementById("tpBadge").textContent=s.badge||"";
     document.getElementById("tpCount").textContent=(gI+1)+" / "+gSteps.length;
     document.getElementById("tpTitle").textContent=s.title;
@@ -1631,14 +1592,20 @@
     document.getElementById("tpDone").textContent=last?"Done":"Skip";
     requestAnimationFrame(()=>gPlace(el,animate));
   }
-  // lock page scroll while guiding, so the walkthrough stays put; programmatic
-  // scrollIntoView still works, we only block user-driven scrolling.
+  // Lock page scroll while guiding, so the walkthrough stays put on the highlighted
+  // step. We do NOT use body{overflow:hidden} - that would also block our own
+  // scrollIntoView. Instead: block wheel/touch, and snap the page back to the step's
+  // position on any scroll we did not initiate (covers scrollbar drag, keyboard,
+  // and trackpad momentum that wheel-blocking alone misses). Scrolling inside the
+  // popup itself is always allowed.
   function gBlock(e){ if(gPop.contains(e.target)) return; e.preventDefault(); }
+  function gScrollLock(){ if(gProg||ov.hidden) return;
+    if(Math.abs(window.scrollY-gLockedY)>1) window.scrollTo(0,gLockedY); }
   function gLock(on){
-    // NOT body{overflow:hidden} - that would also block our own scrollIntoView.
     const m=on?addEventListener:removeEventListener;
     m.call(window,"wheel",gBlock,{passive:false});
     m.call(window,"touchmove",gBlock,{passive:false});
+    m.call(window,"scroll",gScrollLock,{passive:true});
   }
   function gShow(){ov.hidden=false;gLock(true);}
   function gHide(){ov.hidden=true;gLock(false);}
@@ -1714,7 +1681,7 @@
     const LESSON=[
       {badge:"1 · The indicator", title:"Meet one indicator",
         html:()=>`<p>This is <b>one</b> Key Security Indicator. Every one of the ${nAuto} automated indicators in
-          this offering is proven the same five ways you are about to see - so learn it once here and you can read
+          this offering is proven the same four ways you are about to see - so learn it once here and you can read
           them all.</p>
           <div class="lmeta"><span class="kid">${L.id}</span><span class="mode">${L.mode}</span>
             <span class="pill ok"><span class="pd"></span>Verified</span>
@@ -1727,20 +1694,17 @@
           <div class="lbl">Query · ${esc(L.query_ref||"")}</div>${copyPre((L.query_text||"").trim())}
           <div class="lbl">Evidence returned · ${L.row_count} row${L.row_count===1?"":"s"}</div>
           <pre class="code scroll">${esc(JSON.stringify(L.evidence_full||L.evidence||[],null,2))}</pre>`},
-      {badge:"3 · Verify", title:"Reproduce it yourself",
-        html:()=>`<p>You never have to trust this page. Run the same read-only collection yourself and you will get
-          the same rows - reproducing the result is the strongest form of validation.</p>${reproduceBlock(L)}`},
-      {badge:"4 · Assertion", title:"The pass-check",
+      {badge:"3 · Assertion", title:"The pass-check",
         html:()=>`<p>A single Python function turns those evidence rows into pass or fail. The <i>same</i> function
           feeds the signed record and this page, so the two can never disagree.</p>
           <div class="lbl">engine/checks.py · ${esc(L.check_fn||"")}()</div>${copyPre((L.check_source||"").trim())}
           <div class="assert-out">Against the evidence above, <b>${esc(L.check_fn||"")}()</b> returns <b>true</b> &rarr; the indicator passes.</div>`},
-      {badge:"5 · Output", title:"The verdict",
+      {badge:"4 · Output", title:"The verdict",
         html:()=>`<p>The result is written to the Security Decision Record and published here. This indicator is one
           of the ${nVerified} that make up the headline <b>Verified</b> number.</p>
           <div class="verdict ok"><span class="vd"></span>VALIDATED<small>assertion returned true</small></div>
           <div class="kv" style="margin-top:10px">${[L.result!=null?`result <b>${L.result}</b>`:"",`rows <b>${L.row_count}</b>`,`mode <b>${L.mode}</b>`,L.collected_at?`collected <b>${esc(L.collected_at)}</b>`:""].filter(Boolean).join(" · ")}</div>`},
-      {badge:"6 · Prove it can fail", title:"What a finding looks like",
+      {badge:"5 · Prove it can fail", title:"What a finding looks like",
         html:()=>`<p>A trust surface that only ever shows green teaches you nothing. So the <i>same</i> query and the
           <i>same</i> check are run against deliberately broken evidence - and the engine returns <b>false</b>.</p>`+
           (L.fail_example
@@ -1750,7 +1714,7 @@
                <div class="assess-note fail-note"><b>Why it failed.</b> ${esc(L.fail_example.why)}</div>`
             : `<div class="assess-note">Every automated indicator can be shown failing on demand in Assessor mode; this one's fixture is staged.</div>`)+
           `<p style="margin-top:12px;font-size:13px;color:var(--ink-3)">The failure is engine-computed, not hand-drawn, and never touches the live posture count.</p>`},
-      {badge:"7 · Continuous", title:"You can read them all now",
+      {badge:"6 · Continuous", title:"You can read them all now",
         html:()=>`<p>Because the check runs on a schedule, a regression is caught automatically: a passing indicator
           that flips to failing shows up in <b>History</b> and opens a drift issue, then the fix appears as a
           remediation back to validated. That <b>pass &rarr; fail &rarr; remediated</b> arc is what a healthy,
@@ -1758,7 +1722,6 @@
           <p>That is the entire model, on one indicator. All ${nAuto} automated indicators work exactly this way:</p>
           <ul class="lrecap">
             <li><b>Evidence</b> - a read-only query, captured verbatim with a timestamp.</li>
-            <li><b>Reproduce</b> - re-run it yourself and get the same rows.</li>
             <li><b>Assertion</b> - one inspectable function decides pass or fail.</li>
             <li><b>Verdict</b> - written to the signed record; only Auto passes count as Verified.</li>
             <li><b>Prove-it-can-fail</b> - the same check returns false on broken evidence.</li>
