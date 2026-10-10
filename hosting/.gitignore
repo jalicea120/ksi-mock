@@ -1,0 +1,5 @@
+# Local state for this out-of-band hosting root - contains a storage account key.
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
