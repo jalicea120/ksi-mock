@@ -17,6 +17,7 @@ Treat all output as informational, pending review by a qualified professional.
 - Collectors are READ-ONLY. Never modify the environment from a collector.
 - KSI assertions are COMPUTED from collector output. Never hard-code a result. If you cannot measure it, mark it manual/placeholder, do not fake a `true`.
 - Synthetic / placeholder data only. No real or client data in the tenant.
+- The repo and its artifacts are public: anything published (SDR, FedRAMP export, Trust Center) carries evidence only after `engine/redact.py`. Never write raw collector rows to a published output.
 - Disposable. Everything deploys from IaC and tears down with one script.
 
 ## Layout
