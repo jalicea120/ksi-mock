@@ -31,6 +31,7 @@ jobs:
           terraform validate
       - name: Terraform plan (preview, no apply)
         working-directory: infra
-        run: terraform plan -input=false -no-color
+        # PR runs share one remote state: wait for the lock instead of failing.
+        run: terraform plan -input=false -no-color -lock-timeout=5m
       - name: SDR schema check + engine dry-run
         run: python engine/assert.py --dry-run
