@@ -29,6 +29,7 @@ REPO_ROOT = ENGINE_DIR.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from engine import results  # noqa: E402 - path set above so the shared module imports
+from engine.redact import redact  # noqa: E402 - path set above so the shared module imports
 
 MAP_PATH = ENGINE_DIR / "map.yaml"
 SCHEMA_PATH = ENGINE_DIR / "schema" / "fedramp-consolidated-rules.schema.json"
@@ -163,7 +164,7 @@ def build_sdr(doc: dict, assessed: list[dict]) -> dict:
             "run_id": run_id,
             "generated": dt.datetime.now(dt.timezone.utc).isoformat(),
             "rules_version": doc.get("version"),
-            "subscription": os.environ.get("AZURE_SUBSCRIPTION_ID"),
+            "subscription": redact(os.environ.get("AZURE_SUBSCRIPTION_ID")),
             "totals": results.summarize(assessed),
         },
         "assertions": assessed,
