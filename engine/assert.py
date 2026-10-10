@@ -28,6 +28,7 @@ ENGINE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = ENGINE_DIR.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from engine import fedramp_sdr  # noqa: E402 - path set above so the shared module imports
 from engine import results  # noqa: E402 - path set above so the shared module imports
 
 MAP_PATH = ENGINE_DIR / "map.yaml"
@@ -100,7 +101,8 @@ def summarize(doc: dict) -> Counter:
 def check_schema() -> list[str]:
     """Confirm every JSON Schema this engine relies on parses and is well-formed."""
     errors: list[str] = []
-    for path in (SCHEMA_PATH, SDR_SCHEMA_PATH):
+    for path in (SCHEMA_PATH, SDR_SCHEMA_PATH, fedramp_sdr.FEDRAMP_SDR_SCHEMA_PATH,
+                 fedramp_sdr.FEDRAMP_COMMON_SCHEMA_PATH):
         if not path.exists():
             errors.append(f"schema not found at {path}")
             continue
@@ -212,6 +214,9 @@ def main() -> int:
                         help="append a per-run summary line here (trend series)")
     parser.add_argument("--no-history", action="store_true",
                         help="do not append to the history series")
+    parser.add_argument("--fedramp-out", metavar="DIR",
+                        default=str(REPO_ROOT / "out" / "fedramp"),
+                        help="where the FedRAMP Security Decision Record export is written")
     args = parser.parse_args()
 
     doc = load_map()
@@ -254,7 +259,14 @@ def main() -> int:
             for err in sdr_errors:
                 print(f"  - {err}", file=sys.stderr)
             return 1
-        print("dry-run OK: map + schemas valid; SDR conforms to ksi-sdr schema.")
+        fedramp_errors = fedramp_sdr.validate(fedramp_sdr.to_fedramp_sdr(sdr))
+        if fedramp_errors:
+            print("FEDRAMP SDR SCHEMA VALIDATION FAILED:", file=sys.stderr)
+            for err in fedramp_errors:
+                print(f"  - {err}", file=sys.stderr)
+            return 1
+        print("dry-run OK: map + schemas valid; SDR conforms to ksi-sdr schema; "
+              "FedRAMP export conforms to the FedRAMP SDR schema.")
         return 0
 
     if args.out:
@@ -280,6 +292,16 @@ def main() -> int:
         print(f"wrote SDR -> {out_path}")
         print(f"assertions: {t['verified']}/{t['automated_total']} automated verified "
               f"(pass={t['pass']} fail={t['fail']} pending={t['pending']}) over {t['total']} indicators")
+        # The FedRAMP-shaped export is derived from the native SDR written above,
+        # so a fault here fails the run without losing the native record.
+        fedramp_doc = fedramp_sdr.to_fedramp_sdr(sdr)
+        fedramp_errors = fedramp_sdr.validate(fedramp_doc)
+        if fedramp_errors:
+            print("FEDRAMP SDR SCHEMA VALIDATION FAILED (not writing):", file=sys.stderr)
+            for err in fedramp_errors:
+                print(f"  - {err}", file=sys.stderr)
+            return 1
+        print(f"wrote FedRAMP SDR -> {fedramp_sdr.write(fedramp_doc, Path(args.fedramp_out))}")
         return 0
 
     print("nothing to do (pass --dry-run or --out DIR).")

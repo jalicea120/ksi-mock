@@ -12,6 +12,7 @@ assertion engine that computes KSI assertions and writes Security Decision Recor
 1. **Mock workload** - minimal Azure Gov footprint (Terraform IaC) touching every KSI family.
 2. **Collectors** (read-only) - Azure Resource Graph, Microsoft Graph, Azure Policy + Defender assessments, Log Analytics / Sentinel, GitHub REST.
 3. **Assertion engine** - `engine/assert.py` reads `engine/map.yaml`, runs mapped collectors, computes a boolean per indicator, writes `out/sdr/<run-id>.json` validated against the CR26 schema.
+4. **FedRAMP SDR export** - `engine/fedramp_sdr.py` converts each run into a FedRAMP Security Decision Record at `out/fedramp/security-decision-record.json`, validated against the vendored FedRAMP schema (draft, dated 2026-06-24). The native `out/sdr/` record is this project's own format and shares only the initials. Fields the engine cannot source (`ksiImplementation`, `ksiAssessment`, `fedRampRequirements`) are emitted empty, never invented.
 
 ## Layout
 
@@ -20,6 +21,7 @@ infra/        Terraform (azurerm, Azure Government, OIDC + remote state)
 collectors/   arg/ graph/ defender_policy/ sentinel/ github/
 engine/       map.yaml, assert.py, schema/
 out/sdr/      generated evidence + assertions (gitignored)
+out/fedramp/  FedRAMP Security Decision Record export (gitignored)
 scripts/      deploy.sh, teardown.sh, run_assertions.sh
 .github/      workflows: ci.yml (PR gate), deploy.yml, assertions.yml (scheduled drift)
 ```

@@ -1,6 +1,7 @@
 out/sdr/*
 out/evidence/
 out/trustcenter/
+out/fedramp/
 .env
 *.env
 __pycache__/
