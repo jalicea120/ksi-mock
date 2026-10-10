@@ -1,8 +1,8 @@
 {
   "info": {
     "sdr_version": "ksi-sdr/0.1",
-    "run_id": "20261010T161734Z-6d24a205",
-    "generated": "2026-10-10T16:17:34.760249+00:00",
+    "run_id": "20261010T170624Z-8eb379f4",
+    "generated": "2026-10-10T17:06:24.382772+00:00",
     "rules_version": "2026.07.06.01",
     "subscription": "00000000-0000-0000-0000-7ab32c7873e8",
     "totals": {
@@ -28,19 +28,19 @@
       "pass_criteria": "Real-time inventory of all information resources generated on demand from authoritative sources.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-piy-giv.kql",
-      "collected_at": "2026-10-10T16:17:20.703003+00:00",
+      "collected_at": "2026-10-10T17:06:09.489179+00:00",
       "row_count": 15,
       "evidence": [
-        {
-          "type": "microsoft.network/networkinterfaces",
-          "resource_count": 2
-        },
         {
           "type": "microsoft.network/privatednszones/virtualnetworklinks",
           "resource_count": 2
         },
         {
           "type": "microsoft.network/privateendpoints",
+          "resource_count": 2
+        },
+        {
+          "type": "microsoft.network/networkinterfaces",
           "resource_count": 2
         },
         {
@@ -73,7 +73,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-piy-res.md",
-        "collected_at": "2026-10-10T16:17:34.741908+00:00"
+        "collected_at": "2026-10-10T17:06:24.363651+00:00"
       }
     },
     {
@@ -98,7 +98,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-piy-ris.md",
-        "collected_at": "2026-10-10T16:17:34.742846+00:00"
+        "collected_at": "2026-10-10T17:06:24.364592+00:00"
       }
     },
     {
@@ -112,7 +112,7 @@
       "pass_criteria": "Security/privacy built into the SDLC, aligned to CISA Secure by Design; persistently reviewed.",
       "tool": "github",
       "query_ref": "collectors/github/ksi-piy-rsd.json",
-      "collected_at": "2026-10-10T16:17:29.638771+00:00",
+      "collected_at": "2026-10-10T17:06:19.374129+00:00",
       "row_count": 20,
       "evidence": [
         {
@@ -156,7 +156,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-piy-rsd.md",
-        "collected_at": "2026-10-10T16:17:34.743861+00:00"
+        "collected_at": "2026-10-10T17:06:24.365564+00:00"
       }
     },
     {
@@ -181,7 +181,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-piy-rvd.md",
-        "collected_at": "2026-10-10T16:17:34.745153+00:00"
+        "collected_at": "2026-10-10T17:06:24.366831+00:00"
       }
     },
     {
@@ -195,7 +195,7 @@
       "pass_criteria": "Least-privilege custom roles and allowed-resource-type policies enforced; privileges explicitly scoped.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-dfp.kql",
-      "collected_at": "2026-10-10T16:17:18.713522+00:00",
+      "collected_at": "2026-10-10T17:06:07.930492+00:00",
       "row_count": 2,
       "evidence": [
         {
@@ -225,7 +225,7 @@
       "pass_criteria": "Automated assessment + enforcement of intended state; drift auto-remediated (Class C required; Class B optional).",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-eis.kql",
-      "collected_at": "2026-10-10T16:17:18.965034+00:00",
+      "collected_at": "2026-10-10T17:06:08.072430+00:00",
       "row_count": 2,
       "evidence": [
         {
@@ -253,7 +253,7 @@
       "pass_criteria": "Vendor/CIS benchmark initiative assigned; high compliance against provider best practices for third-party resources.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-ibp.kql",
-      "collected_at": "2026-10-10T16:17:19.119125+00:00",
+      "collected_at": "2026-10-10T17:06:08.221121+00:00",
       "row_count": 27,
       "evidence": [
         {
@@ -291,7 +291,7 @@
       "pass_criteria": "No unnecessary public exposure; segmentation limits lateral movement.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-mat.kql",
-      "collected_at": "2026-10-10T16:17:19.297086+00:00",
+      "collected_at": "2026-10-10T17:06:08.403245+00:00",
       "row_count": 0,
       "evidence": [],
       "error": null,
@@ -325,7 +325,7 @@
       "pass_criteria": "Default-deny with explicit allow rules for inbound and outbound traffic.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-rnt.kql",
-      "collected_at": "2026-10-10T16:17:19.474595+00:00",
+      "collected_at": "2026-10-10T17:06:08.510088+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -366,7 +366,7 @@
       "pass_criteria": "Logical segmentation and enforced routing implement traffic-flow controls.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-cna-uln.kql",
-      "collected_at": "2026-10-10T16:17:19.576971+00:00",
+      "collected_at": "2026-10-10T17:06:08.702052+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -409,7 +409,7 @@
       "pass_criteria": "Secrets/keys/certs managed in Key Vault with automated rotation; no hardcoded secrets.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-svc-asm.kql",
-      "collected_at": "2026-10-10T16:17:21.206453+00:00",
+      "collected_at": "2026-10-10T17:06:09.812224+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -434,7 +434,7 @@
       "pass_criteria": "Security persistently evaluated for improvements and those improvements persistently made.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-svc-eis.kql",
-      "collected_at": "2026-10-10T16:17:21.360627+00:00",
+      "collected_at": "2026-10-10T17:06:10.044951+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -469,7 +469,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-svc-prr.md",
-        "collected_at": "2026-10-10T16:17:34.749165+00:00"
+        "collected_at": "2026-10-10T17:06:24.370874+00:00"
       }
     },
     {
@@ -494,7 +494,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-svc-rud.md",
-        "collected_at": "2026-10-10T16:17:34.750238+00:00"
+        "collected_at": "2026-10-10T17:06:24.371993+00:00"
       }
     },
     {
@@ -508,7 +508,7 @@
       "pass_criteria": "Information encrypted at rest and TLS 1.2+ in transit everywhere.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-svc-sin.kql",
-      "collected_at": "2026-10-10T16:17:21.468005+00:00",
+      "collected_at": "2026-10-10T17:06:10.151780+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -534,7 +534,7 @@
       "pass_criteria": "Authenticity and integrity of machine-to-machine comms validated via automation (Class C required; Class B optional).",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-svc-vcm.kql",
-      "collected_at": "2026-10-10T16:17:21.644629+00:00",
+      "collected_at": "2026-10-10T17:06:10.334933+00:00",
       "row_count": 2,
       "evidence": [
         {
@@ -581,10 +581,10 @@
       "pass_criteria": "Automated joiner/mover/leaver provisioning and de-provisioning; recurring access reviews.",
       "tool": "graph",
       "query_ref": "collectors/graph/ksi-iam-aam.json",
-      "collected_at": "2026-10-10T16:17:21.877326+00:00",
+      "collected_at": "2026-10-10T17:06:10.577656+00:00",
       "row_count": 0,
       "evidence": null,
-      "error": "HTTP 403: {\"error\":{\"code\":\"\",\"message\":\"Attempted to perform an unauthorized operation.\",\"innerError\":{\"date\":\"2026-10-10T16:17:23\",\"request-id\":\"00000000-0000-0000-0000-490649da260f\",\"client-request-id\":\"6004",
+      "error": "HTTP 403: {\"error\":{\"code\":\"\",\"message\":\"Attempted to perform an unauthorized operation.\",\"innerError\":{\"date\":\"2026-10-10T17:06:12\",\"request-id\":\"00000000-0000-0000-0000-7df2422346af\",\"client-request-id\":\"1328",
       "attestation": null
     },
     {
@@ -598,10 +598,10 @@
       "pass_criteria": "Passwordless methods in use where feasible; otherwise strong passwords + phishing-resistant MFA enforced by CA.",
       "tool": "graph",
       "query_ref": "collectors/graph/ksi-iam-apm.json",
-      "collected_at": "2026-10-10T16:17:23.350003+00:00",
+      "collected_at": "2026-10-10T17:06:12.074726+00:00",
       "row_count": 0,
       "evidence": null,
-      "error": "HTTP 403: {\"error\":{\"code\":\"AccessDenied\",\"message\":\"You cannot perform the requested operation, required scopes are missing in the token.\",\"innerError\":{\"date\":\"2026-10-10T16:17:24\",\"request-id\":\"aa803933-e3d6",
+      "error": "HTTP 403: {\"error\":{\"code\":\"AccessDenied\",\"message\":\"You cannot perform the requested operation, required scopes are missing in the token.\",\"innerError\":{\"date\":\"2026-10-10T17:06:12\",\"request-id\":\"b2549824-f1b0",
       "attestation": null
     },
     {
@@ -615,19 +615,19 @@
       "pass_criteria": "Access scoped to need; least privilege persistently reviewed.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-iam-elp.kql",
-      "collected_at": "2026-10-10T16:17:20.207046+00:00",
+      "collected_at": "2026-10-10T17:06:09.077835+00:00",
       "row_count": 2,
       "evidence": [
         {
           "principal_id": "00000000-0000-0000-0000-7266b408b875",
           "principal_type": "ServicePrincipal",
-          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/00000000-0000-0000-0000-baf8f3810751",
+          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/00000000-0000-0000-0000-fe1e07b465de",
           "scope": "/subscriptions/00000000-0000-0000-0000-7ab32c7873e8/resourceGroups/ksi-mock-rg"
         },
         {
           "principal_id": "00000000-0000-0000-0000-7266b408b875",
           "principal_type": "ServicePrincipal",
-          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/00000000-0000-0000-0000-fe1e07b465de",
+          "role_definition_id": "/providers/Microsoft.Authorization/RoleDefinitions/00000000-0000-0000-0000-baf8f3810751",
           "scope": "/subscriptions/00000000-0000-0000-0000-7ab32c7873e8/resourceGroups/ksi-mock-rg"
         }
       ],
@@ -645,7 +645,7 @@
       "pass_criteria": "Privileged roles are PIM-eligible (not permanent); activation gated by approval + MFA; applies to user and non-user.",
       "tool": "arm",
       "query_ref": "collectors/graph/ksi-iam-jit.json",
-      "collected_at": "2026-10-10T16:17:24.108315+00:00",
+      "collected_at": "2026-10-10T17:06:12.834177+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -697,7 +697,7 @@
       "pass_criteria": "Non-user auth uses managed identities / federation; no stale long-lived service-principal secrets.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-iam-snu.kql",
-      "collected_at": "2026-10-10T16:17:20.308496+00:00",
+      "collected_at": "2026-10-10T17:06:09.188601+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -721,10 +721,10 @@
       "pass_criteria": "Risk-based policies disable/secure privileged accounts automatically on suspicious activity.",
       "tool": "graph",
       "query_ref": "collectors/graph/ksi-iam-sus.json",
-      "collected_at": "2026-10-10T16:17:26.472997+00:00",
+      "collected_at": "2026-10-10T17:06:16.355714+00:00",
       "row_count": 0,
       "evidence": null,
-      "error": "HTTP 403: {\"error\":{\"code\":\"AccessDenied\",\"message\":\"You cannot perform the requested operation, required scopes are missing in the token.\",\"innerError\":{\"date\":\"2026-10-10T16:17:26\",\"request-id\":\"0a1b68ba-0632",
+      "error": "HTTP 403: {\"error\":{\"code\":\"AccessDenied\",\"message\":\"You cannot perform the requested operation, required scopes are missing in the token.\",\"innerError\":{\"date\":\"2026-10-10T17:06:16\",\"request-id\":\"93014c02-2f36",
       "attestation": null
     },
     {
@@ -789,7 +789,7 @@
       "pass_criteria": "SIEM in use with centralized, tamper-resistant logging; persistently reviewed.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-mla-osm.kql",
-      "collected_at": "2026-10-10T16:17:20.514367+00:00",
+      "collected_at": "2026-10-10T17:06:09.384013+00:00",
       "row_count": 1,
       "evidence": [
         {
@@ -825,7 +825,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-mla-rvl.md",
-        "collected_at": "2026-10-10T16:17:34.740770+00:00"
+        "collected_at": "2026-10-10T17:06:24.362529+00:00"
       }
     },
     {
@@ -839,7 +839,7 @@
       "pass_criteria": "Activity logging enabled and shipped to Log Analytics for all in-scope resources; changes monitored/alerted.",
       "tool": "sentinel",
       "query_ref": "collectors/sentinel/ksi-cmt-lmc.kql",
-      "collected_at": "2026-10-10T16:17:31.463806+00:00",
+      "collected_at": "2026-10-10T17:06:21.257849+00:00",
       "row_count": 4,
       "evidence": [
         {
@@ -881,7 +881,7 @@
       "pass_criteria": "Changes traceable to version-controlled redeployments; minimal out-of-band manual modification.",
       "tool": "github",
       "query_ref": "collectors/github/ksi-cmt-rmv.json",
-      "collected_at": "2026-10-10T16:17:27.366145+00:00",
+      "collected_at": "2026-10-10T17:06:17.450220+00:00",
       "row_count": 30,
       "evidence": [
         {
@@ -946,7 +946,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-cmt-rvp.md",
-        "collected_at": "2026-10-10T16:17:34.736086+00:00"
+        "collected_at": "2026-10-10T17:06:24.357977+00:00"
       }
     },
     {
@@ -960,17 +960,26 @@
       "pass_criteria": "Every deployment passes automated tests and policy checks before promotion.",
       "tool": "github",
       "query_ref": "collectors/github/ksi-cmt-vtd.json",
-      "collected_at": "2026-10-10T16:17:28.372536+00:00",
+      "collected_at": "2026-10-10T17:06:18.345827+00:00",
       "row_count": 50,
       "evidence": [
         {
           "branch": "main",
           "conclusion": null,
+          "created_at": "2026-10-10T17:05:20Z",
+          "event": "schedule",
+          "name": "assertions",
+          "path": ".github/workflows/assertions.yml",
+          "status": "in_progress"
+        },
+        {
+          "branch": "main",
+          "conclusion": "success",
           "created_at": "2026-10-10T16:16:37Z",
           "event": "workflow_dispatch",
           "name": "assertions",
           "path": ".github/workflows/assertions.yml",
-          "status": "in_progress"
+          "status": "completed"
         },
         {
           "branch": "main",
@@ -989,15 +998,6 @@
           "name": "deploy",
           "path": ".github/workflows/deploy.yml",
           "status": "completed"
-        },
-        {
-          "branch": "chore/ruff-0.17-lint",
-          "conclusion": "success",
-          "created_at": "2026-10-10T16:12:25Z",
-          "event": "pull_request",
-          "name": "ci",
-          "path": ".github/workflows/ci.yml",
-          "status": "completed"
         }
       ],
       "error": null,
@@ -1014,7 +1014,7 @@
       "pass_criteria": "Backups aligned to defined recovery objectives; protection coverage persistently reviewed.",
       "tool": "arg",
       "query_ref": "collectors/arg/ksi-rpl-abo.kql",
-      "collected_at": "2026-10-10T16:17:21.092251+00:00",
+      "collected_at": "2026-10-10T17:06:09.627495+00:00",
       "row_count": 4,
       "evidence": [
         {
@@ -1071,7 +1071,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-rpl-arp.md",
-        "collected_at": "2026-10-10T16:17:34.746080+00:00"
+        "collected_at": "2026-10-10T17:06:24.367766+00:00"
       }
     },
     {
@@ -1096,7 +1096,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-rpl-rro.md",
-        "collected_at": "2026-10-10T16:17:34.747154+00:00"
+        "collected_at": "2026-10-10T17:06:24.368854+00:00"
       }
     },
     {
@@ -1138,7 +1138,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-scr-mit.md",
-        "collected_at": "2026-10-10T16:17:34.748084+00:00"
+        "collected_at": "2026-10-10T17:06:24.369780+00:00"
       }
     },
     {
@@ -1152,7 +1152,7 @@
       "pass_criteria": "Third-party software automatically monitored for upstream vulnerabilities with alerting.",
       "tool": "github",
       "query_ref": "collectors/github/ksi-scr-mon.json",
-      "collected_at": "2026-10-10T16:17:29.955792+00:00",
+      "collected_at": "2026-10-10T17:06:19.700166+00:00",
       "row_count": 0,
       "evidence": null,
       "error": "gh: Resource not accessible by integration (HTTP 403)",
@@ -1180,7 +1180,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-inr-aar.md",
-        "collected_at": "2026-10-10T16:17:34.737293+00:00"
+        "collected_at": "2026-10-10T17:06:24.359227+00:00"
       }
     },
     {
@@ -1205,7 +1205,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-inr-rir.md",
-        "collected_at": "2026-10-10T16:17:34.738602+00:00"
+        "collected_at": "2026-10-10T17:06:24.360402+00:00"
       }
     },
     {
@@ -1219,7 +1219,7 @@
       "pass_criteria": "Past incidents persistently reviewed for previously unidentified patterns/vulnerabilities.",
       "tool": "sentinel",
       "query_ref": "collectors/sentinel/ksi-inr-rpi.kql",
-      "collected_at": "2026-10-10T16:17:33.924824+00:00",
+      "collected_at": "2026-10-10T17:06:23.512344+00:00",
       "row_count": 0,
       "evidence": [],
       "error": null,
@@ -1230,7 +1230,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-inr-rpi.md",
-        "collected_at": "2026-10-10T16:17:34.739632+00:00"
+        "collected_at": "2026-10-10T17:06:24.361398+00:00"
       }
     },
     {
@@ -1255,7 +1255,7 @@
         "review_cadence": "annual",
         "next_review_due": null,
         "doc": "docs/manual/ksi-ced-rat.md",
-        "collected_at": "2026-10-10T16:17:34.734773+00:00"
+        "collected_at": "2026-10-10T17:06:24.356563+00:00"
       }
     }
   ]
