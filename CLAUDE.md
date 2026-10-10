@@ -17,6 +17,7 @@ Treat all output as informational, pending review by a qualified professional.
 - Collectors are READ-ONLY. Never modify the environment from a collector.
 - KSI assertions are COMPUTED from collector output. Never hard-code a result. If you cannot measure it, mark it manual/placeholder, do not fake a `true`.
 - Synthetic / placeholder data only. No real or client data in the tenant.
+- The repo and its artifacts are public: anything published (SDR, FedRAMP export, Trust Center) carries evidence only after `engine/redact.py`. Never write raw collector rows to a published output.
 - Disposable. Everything deploys from IaC and tears down with one script.
 
 ## Layout
@@ -25,6 +26,7 @@ Treat all output as informational, pending review by a qualified professional.
 - `collectors/{arg,graph,defender_policy,sentinel,github}` - read-only evidence collectors
 - `engine/{map.yaml,assert.py,schema}` - assertion engine
 - `out/sdr/` - generated evidence + assertions per run (gitignored)
+- `engine/fedramp_sdr.py` -> `out/fedramp/` - the same run exported as a FedRAMP Security Decision Record (gitignored)
 - `scripts/` - deploy.sh / teardown.sh / run_assertions.sh
 - `.github/workflows/` - ci.yml / deploy.yml / assertions.yml
 

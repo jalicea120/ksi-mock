@@ -7,7 +7,9 @@ this module only wires evidence to indicators and applies the honesty rules:
 
   * a collector that errored (missing permission / absent table) is "not
     measured" -> Pending, never a fabricated fail;
-  * an indicator with no registered check is Pending (staged), not a pass.
+  * an indicator with no registered check is Pending (staged), not a pass;
+  * evidence and collector errors are redacted (``engine.redact``) after the
+    check has run, because every consumer of these results publishes them.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ import json
 from pathlib import Path
 
 from engine import checks
+from engine.redact import redact
 
 SAMPLE_ROWS = 4
 
@@ -80,8 +83,8 @@ def assess_indicator(item: dict, evidence: dict[str, dict],
         "query_ref": payload.get("query_ref") if payload else None,
         "collected_at": payload.get("collected_at") if payload else None,
         "row_count": payload.get("row_count") if payload else None,
-        "evidence": usable["rows"][:SAMPLE_ROWS] if usable else None,
-        "error": payload.get("error") if errored else None,
+        "evidence": redact(usable["rows"][:SAMPLE_ROWS]) if usable else None,
+        "error": redact(payload.get("error")) if errored else None,
         "attestation": _attestation((attestations or {}).get(indicator_id)),
     }
 

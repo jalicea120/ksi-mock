@@ -30,6 +30,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from engine import checks  # noqa: E402 - path set above so the shared module imports
 from engine import results  # noqa: E402 - path set above so the shared module imports
+from engine.redact import redact  # noqa: E402 - path set above so the shared module imports
 
 TEMPLATE = REPO_ROOT / "trustcenter" / "template.html"
 FAIL_EXAMPLES = REPO_ROOT / "trustcenter" / "fail_examples.json"
@@ -136,7 +137,7 @@ def enrich_assessor(indicators: list[dict]) -> list[dict]:
         x["collectors"] = item.get("collectors", [])
         payload = full_evidence.get(x["id"])
         if payload and not payload.get("error") and payload.get("rows"):
-            x["evidence_full"] = payload["rows"]
+            x["evidence_full"] = redact(payload["rows"])
         # Prefer the query the evidence was actually collected from; fall back to
         # the first non-manual collector declared in the map for staged indicators.
         ref = x.get("query_ref")
