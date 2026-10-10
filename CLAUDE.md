@@ -26,6 +26,7 @@ Treat all output as informational, pending review by a qualified professional.
 - `collectors/{arg,graph,defender_policy,sentinel,github}` - read-only evidence collectors
 - `engine/{map.yaml,assert.py,schema}` - assertion engine
 - `out/sdr/` - generated evidence + assertions per run (gitignored)
+- `engine/fedramp_sdr.py` -> `out/fedramp/` - the same run exported as a FedRAMP Security Decision Record (gitignored)
 - `scripts/` - deploy.sh / teardown.sh / run_assertions.sh
 - `.github/workflows/` - ci.yml / deploy.yml / assertions.yml
 

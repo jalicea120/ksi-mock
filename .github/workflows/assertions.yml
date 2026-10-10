@@ -70,6 +70,7 @@ jobs:
           name: ksi-sdr-${{ github.run_id }}
           path: |
             out/sdr/
+            out/fedramp/
             out/trustcenter/index.html
 
       - name: Persist SDR history
